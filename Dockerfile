@@ -1,25 +1,16 @@
-FROM node:20-slim AS deps
-WORKDIR /app
+FROM node:20-slim AS base
 
+# ✅ ติดตั้ง native build tool สำหรับ lightningcss
 RUN apt-get update && apt-get install -y python3 make g++ libc6-dev
+
+WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
 
-FROM node:20-slim AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
 RUN npm run build
-
-FROM node:20-slim AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
 
 EXPOSE 3000
 CMD ["npm", "start"]
