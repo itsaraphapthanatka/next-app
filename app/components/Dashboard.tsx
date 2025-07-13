@@ -1,6 +1,5 @@
 "use client";
 import { Building2, FileText, ClipboardList, FolderOpen, BarChart3, Users, LogOut } from "lucide-react";
-import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { ProfileHeader } from "./ProfileHeader";
 import { MenuCard } from "./MenuCard";
 import { toast } from "sonner";
