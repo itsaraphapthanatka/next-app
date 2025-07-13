@@ -1,6 +1,5 @@
 "use client";
-import { SessionProvider, signOut, useSession } from "next-auth/react";
-import { ProfileHeader } from "../components/ProfileHeader";
+import { SessionProvider } from "next-auth/react";
 import { Dashboard } from "../components/Dashboard";
 
 export default function MenuPage() {
@@ -12,7 +11,6 @@ export default function MenuPage() {
 }
 
 function MenuContent() {
-  const { data: session } = useSession();
   return (
     <>
       <div className="bg-gray-100 max-w-md mx-auto p-4">
