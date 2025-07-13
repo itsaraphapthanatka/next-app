@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Google OAuth Setup
+
+1. ไปที่ [Google Cloud Console](https://console.cloud.google.com/)
+2. สร้าง OAuth 2.0 Client ID และตั้งค่า redirect URI เป็น:
+   - `http://localhost:3000/api/auth/callback/google`
+3. เพิ่ม environment variables ในไฟล์ `.env.local`:
+
+```
+GOOGLE_CLIENT_ID=207976689085-981ba6dpm7139egeiorqolgtppjkhmup.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+```
