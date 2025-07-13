@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { NextRequest, NextResponse } from "next/server";
 
 const handler = NextAuth({
   providers: [
@@ -12,4 +11,4 @@ const handler = NextAuth({
   // สามารถเพิ่ม options อื่น ๆ ได้ที่นี่ เช่น callbacks, pages, ฯลฯ
 });
 
-export { handler as GET, handler as POST }; 
+export { handler as GET, handler as POST };
