@@ -1,5 +1,6 @@
 "use client";
 import { Building2, FileText, ClipboardList, FolderOpen, BarChart3, Users, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import { ProfileHeader } from "./ProfileHeader";
 import { MenuCard } from "./MenuCard";
 import { toast } from "sonner";
@@ -26,7 +27,9 @@ export function Dashboard() {
       "ออกจากระบบ\nกำลังออกจากระบบ...",
       { className: "bg-red-50 text-red-700" }
     );
+    signOut({ callbackUrl: "/" });
   };
+  
   const { data: session } = useSession();
 
   return (
@@ -49,7 +52,7 @@ export function Dashboard() {
           <MenuCard
             title="Log Out"
             icon={LogOut}
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={handleLogout}
             className="bg-white border-red-200 hover:bg-red-50 hover:border-red-300"
           />
         </div>
