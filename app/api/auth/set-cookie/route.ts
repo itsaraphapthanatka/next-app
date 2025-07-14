@@ -8,23 +8,23 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Missing token" }, { status: 400 });
     }
 
-        // ✅ เรียก Google User Info API
-        const googleRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // // ✅ เรียก Google User Info API
+        // const googleRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
     
-        if (!googleRes.ok) {
-          console.error("❌ Failed to fetch Google user info");
-          return NextResponse.json(
-            { error: "Failed to fetch user info from Google" },
-            { status: 401 }
-          );
-        }
+        // if (!googleRes.ok) {
+        //   console.error("❌ Failed to fetch Google user info");
+        //   return NextResponse.json(
+        //     { error: "Failed to fetch user info from Google" },
+        //     { status: 401 }
+        //   );
+        // }
     
-        const user = await googleRes.json();
-        console.log("✅ Google User Info:", user);
+        // const user = await googleRes.json();
+        // console.log("✅ Google User Info:", user);
 
     // ✅ สร้าง response object ก่อน
     const response = NextResponse.redirect(new URL("/menu", req.url));
