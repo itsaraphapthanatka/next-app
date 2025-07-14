@@ -1,12 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   experimental: {
     optimizeCss: false,
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/auth/callback",
+        destination: "/auth/callback",
+      },
+    ];
   },
 };
 
 export default nextConfig;
-
-
