@@ -18,15 +18,19 @@ export async function GET(req: NextRequest) {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        maxAge: 60 * 60 * 24, // 1 วัน
+        maxAge: 60 * 60 * 24,
       })
     );
 
     return response;
-  } catch (err: any) {
-    console.error("❌ API /auth/set-cookie ERROR:", err);
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Unknown error";
+
+    console.error("❌ API /auth/set-cookie ERROR:", errorMessage);
+
     return NextResponse.json(
-      { error: "Internal server error", details: err?.message || err },
+      { error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
