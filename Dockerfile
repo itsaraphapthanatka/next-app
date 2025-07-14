@@ -2,7 +2,7 @@
 FROM node:20-slim AS base
 
 RUN npm install -g npm@latest
-
+ENV TAILWIND_MODE=watch
 # ✅ ติดตั้ง build tools ที่จำเป็น
 RUN apt-get update && apt-get install -y \
   python3 \
