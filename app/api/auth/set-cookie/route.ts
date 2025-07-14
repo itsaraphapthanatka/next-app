@@ -4,6 +4,7 @@ import { serialize } from "cookie";
 export async function GET(req: NextRequest) {
   try {
     const token = req.nextUrl.searchParams.get("token");
+    console.log(token);
 
     if (!token) {
       return NextResponse.json({ error: "Missing token" }, { status: 400 });
