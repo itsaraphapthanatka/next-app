@@ -40,7 +40,7 @@
         const token = urlParams.get("token");
         if (token) {
           // Redirect to /api/auth/callback with token as param
-          window.location.href = `https://serve.appreview.asia/api/auth/callback?token=${encodeURIComponent(token)}`;
+          window.location.href = `http://localhost:3000/api/auth/callback?token=${encodeURIComponent(token)}`;
         }
       }
     }, []);
@@ -108,7 +108,7 @@
                 <GoogleIcon />
               )}
               <span className="text-base">
-                {isLoading ? "กำลังเข้าสู..." : "Sign in with Goo"}
+                {isLoading ? "กำลังเข้าสู..." : "Sign in with Go"}
               </span>
             </button>
           </div>
