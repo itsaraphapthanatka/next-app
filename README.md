@@ -43,6 +43,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 3. เพิ่ม environment variables ในไฟล์ `.env.local`:
 
 ```
-GOOGLE_CLIENT_ID=207976689085-981ba6dpm7139egeiorqolgtppjkhmup.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
