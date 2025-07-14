@@ -13,7 +13,7 @@ export default function MenuPage() {
 function MenuContent() {
   return (
     <>
-      <div className="bg-gray-100 max-w-md mx-auto p-4">
+      <div className="bg-gray-100 max-w-screen-xl mx-auto p-4">
         <Dashboard />
       </div>
     </>
