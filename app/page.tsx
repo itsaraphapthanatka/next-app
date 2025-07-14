@@ -8,8 +8,20 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
+    try {
+      const res = await fetch("https://api.serve.co.th/account/login", {
+        method: "GET",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error("Login API failed");
+      }
+      // You can handle the response here if needed
+    } catch (error) {
+      console.error(error);
+    }
     // Redirect to /menu after successful login
-    await signIn("google", { callbackUrl: "/menu" });
+    // await signIn("google", { callbackUrl: "/menu" });
     setIsLoading(false);
   };
 
