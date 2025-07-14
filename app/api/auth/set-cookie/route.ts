@@ -4,24 +4,24 @@ import { serialize } from "cookie";
 export async function GET(req: NextRequest) {
   try {
     const token = req.nextUrl.searchParams.get("token");
-    console.log(token);
 
     if (!token) {
       return NextResponse.json({ error: "Missing token" }, { status: 400 });
     }
 
+    // ✅ สร้าง response object ก่อน
     const response = NextResponse.redirect(new URL("/menu", req.url));
 
-    response.headers.set(
-      "Set-Cookie",
-      serialize("serve_token", token, {
-        path: "/",
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24,
-      })
-    );
+    // ✅ ใช้ response.cookies.set แทน
+    response.cookies.set({
+      name: "serve_token",
+      value: token,
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 1 วัน
+    });
 
     return response;
   } catch (err: unknown) {
