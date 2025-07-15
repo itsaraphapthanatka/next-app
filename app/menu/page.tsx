@@ -3,8 +3,18 @@ import { useEffect, useState } from "react";
 import { Dashboard } from "../components/Dashboard";
 import { useRouter } from "next/navigation";
 
+type Session = {
+  user: {
+    id: string;
+    name?: string;
+    email?: string;
+    // Add other user properties as needed
+  };
+  // Add other session properties as needed
+} | null;
+
 export default function MenuPage() {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -18,7 +28,7 @@ export default function MenuPage() {
           credentials: "include",
         });
         if (res.ok) {
-          const data = await res.json();
+          const data: Session = await res.json();
           if (data && data.user) {
             setSession(data);
           } else {
@@ -27,7 +37,7 @@ export default function MenuPage() {
         } else {
           setSession(null);
         }
-      } catch (err) {
+      } catch {
         setSession(null);
       } finally {
         setLoading(false);
