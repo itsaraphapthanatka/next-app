@@ -14,13 +14,7 @@ export async function GET(req: NextRequest) {
     const session = JSON.parse(json);
 
     if (session?.user?.id) {
-      const isExpired = Date.now() - session.createdAt > 5 * 60 * 1000;
-      console.log("isExpired", isExpired);
-      if (isExpired) {
-        window.location.href = "/";
-      } else {
-        return NextResponse.json({ loggedIn: true }, { status: 200 });
-      }
+      return NextResponse.json({ loggedIn: true }, { status: 200 });
     }
   } catch {
     // ignore error
@@ -28,4 +22,3 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ loggedIn: false }, { status: 200 });
 }
-
