@@ -6,7 +6,7 @@ interface ProfileHeaderProps {
   userRole?: string;
 }
 
-export function ProfileHeader({ userName = "คุณ, ตัวอย่าง สมมติ", userRole = "ขอให้ทำงานอย่างมีความสุข" }: ProfileHeaderProps) {
+export function ProfileHeader({ userName = "คุณ, ตัวอย่าง สมมติ", userRole = "ขอให้ทำงานอย่างมีความสุข สวัสดีครับ" }: ProfileHeaderProps) {
   return (
     <header className="bg-white rounded-xl p-4 mb-6 shadow-sm">
       <div className="flex items-center justify-between">
