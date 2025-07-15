@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Navbar } from "../components/navbar";
 import { ArrowBigLeftIcon } from "lucide-react";
+import Link from "next/link";
 
 interface SessionUser {
   firstName?: string;
@@ -34,10 +35,12 @@ export default async function PropertyPage() {
       <Navbar />
       <div className="max-w-md mx-auto p-4">
         <div className="flex items-center gap-2">
-          <ArrowBigLeftIcon
-            className="w-6 h-6 cursor-pointer"
-            onClick={() => (window.location.href = "/menu")}
-          />
+          <Link href="/menu" passHref>
+            <ArrowBigLeftIcon
+              className="w-6 h-6 cursor-pointer"
+              aria-label="Back to menu"
+            />
+          </Link>
           <h1>Property Management by {userName}</h1>
         </div>
       </div>
