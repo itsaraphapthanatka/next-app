@@ -4,14 +4,25 @@ import { redirect } from "next/navigation";
 import { Navbar } from "../components/navbar";
 import { ArrowBigLeftIcon } from "lucide-react";
 
+interface SessionUser {
+  firstName?: string;
+  [key: string]: unknown;
+}
+
+interface Session {
+  user?: SessionUser;
+  [key: string]: unknown;
+}
+
 export default async function PropertyPage() {
   const cookieStore = await cookies();
   const cookie = cookieStore.get("serve_session");
   if (!cookie) return redirect("/");
 
-  let session: any;
+  let session: Session;
+  
   try {
-    session = JSON.parse(Buffer.from(cookie.value, "base64").toString("utf-8"));
+    session = JSON.parse(Buffer.from(cookie.value, "base64").toString("utf-8")) as Session;
   } catch {
     return redirect("/");
   }
