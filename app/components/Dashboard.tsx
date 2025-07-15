@@ -1,39 +1,19 @@
 "use client";
+
 import { Building2, FileText, ClipboardList, FolderOpen, BarChart3, Users, LogOut } from "lucide-react";
 import { ProfileHeader } from "./ProfileHeader";
 import { MenuCard } from "./MenuCard";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
 
-// Session management using only localStorage/sessionStorage (no cookies)
-const SESSION_KEY = "serve_session";
-
-// Define a type for the session object
-type UserSession = {
-  user?: {
-    name?: string;
+type DashboardProps = {
+  session: {
+    user?: {
+      name?: string;
+      [key: string]: unknown;
+    };
     [key: string]: unknown;
   };
-  [key: string]: unknown;
-} | null;
-
-// Utility to get session from storage
-function getSession(): UserSession {
-  if (typeof window === "undefined") return null;
-  try {
-    const sessionStr = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
-    return sessionStr ? JSON.parse(sessionStr) : null;
-  } catch {
-    return null;
-  }
-}
-
-// Utility to clear session from storage
-function clearSession(): void {
-  if (typeof window === "undefined") return;
-  localStorage.removeItem(SESSION_KEY);
-  sessionStorage.removeItem(SESSION_KEY);
-}
+};
 
 const menuItems = [
   { title: "Property", icon: Building2, href: "/property" },
@@ -44,39 +24,19 @@ const menuItems = [
   { title: "Leads Management", icon: Users, href: "/leads-management" },
 ];
 
-export function Dashboard() {
-  const [session, setSessionState] = useState<UserSession>(null);
-
-  // Load session from storage on mount
-  useEffect(() => {
-    setSessionState(getSession());
-  }, []);
-
-  // Listen for session changes in other tabs
-  useEffect(() => {
-    function handleStorage(e: StorageEvent) {
-      if (e.key === SESSION_KEY) {
-        setSessionState(getSession());
-      }
-    }
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
-
+export function Dashboard({ session }: DashboardProps) {
   const handleMenuClick = (itemTitle: string) => {
-    toast(
-      `เมนู ${itemTitle}\nคลิกเมนู ${itemTitle} เรียบร้อยแล้ว`
-    );
+    toast(`เมนู ${itemTitle}\nคลิกเมนู ${itemTitle} เรียบร้อยแล้ว`);
   };
 
-  // Sign out: clear session from storage and redirect
   const handleLogout = async () => {
-    toast(
-      "ออกจากระบบ\nกำลังออกจากระบบ...",
-      { className: "bg-red-50 text-red-700" }
-    );
-    clearSession();
-    setSessionState(null);
+    toast("ออกจากระบบ\nกำลังออกจากระบบ...", {
+      className: "bg-red-50 text-red-700",
+    });
+
+    // ล้าง cookie โดยเรียก /api/auth/logout หรือใช้ document.cookie
+    // เราจะแนะนำให้ใช้ endpoint ดีกว่า
+    await fetch("/api/auth/logout"); // ทำ endpoint นี้แยก
     window.location.href = "/";
   };
 
@@ -84,7 +44,7 @@ export function Dashboard() {
     <div className="min-h-screen bg-dashboard-bg font-prompt">
       <div className="max-w-md mx-auto p-4">
         <div className="space-y-3">
-          <ProfileHeader userName={session?.user?.name ?? undefined} />
+          <ProfileHeader userName={session?.user?.name ?? "Guest"} />
 
           {menuItems.map((item, index) => (
             <MenuCard

@@ -1,19 +1,25 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Dashboard } from "../components/Dashboard";
-import { getSession } from "../lib/session"; // Assume you have a session utility
+import { Dashboard } from "@/app/components/Dashboard";
 
 export default async function MenuPage() {
-  const session = await getSession();
+  const cookieStore = await cookies(); // ✅ ต้อง await
+  const sessionCookie = cookieStore.get("serve_session");
 
-  if (!session) {
+  if (!sessionCookie) {
     redirect("/");
   }
 
-  console.log(session);
+  try {
+    const json = Buffer.from(sessionCookie.value, "base64").toString("utf-8");
+    const session = JSON.parse(json);
 
-  return (
-    <div className="bg-gray-100 max-w-screen-xl mx-auto p-4">
-      <Dashboard />
-    </div>
-  );
+    return (
+      <div className="bg-gray-100 max-w-screen-xl mx-auto p-4">
+        <Dashboard session={session} />
+      </div>
+    );
+  } catch {
+    redirect("/");
+  }
 }

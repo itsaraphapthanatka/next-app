@@ -1,17 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Optimization: Use session endpoint instead of directly reading cookie
-export async function middleware(req: NextRequest) {
-  // Call the session API route to check for a valid session
-  const sessionRes = await fetch(new URL("/api/auth/session", req.url), {
-    headers: {
-      cookie: req.headers.get("cookie") || "",
-    },
-  });
+export function middleware(req: NextRequest) {
+  const sessionCookie = req.cookies.get("serve_session");
 
-  const session = await sessionRes.json();
-
-  if (!session) {
+  if (!sessionCookie) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -19,5 +11,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/menu"],
+  matcher: ["/menu", "/dashboard", "/property", "/assign"], // เส้นทางที่ต้อง login
 };
