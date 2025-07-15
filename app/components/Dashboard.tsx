@@ -8,7 +8,8 @@ import { toast } from "sonner";
 type DashboardProps = {
   session: {
     user?: {
-      name?: string;
+      firstName?: string;
+      email?: string;
       [key: string]: unknown;
     };
     [key: string]: unknown;
@@ -37,7 +38,7 @@ export function Dashboard({ session }: DashboardProps) {
     <div className="min-h-screen bg-dashboard-bg font-prompt">
       <div className="max-w-md mx-auto p-4">
         <div className="space-y-3">
-          <ProfileHeader userName={session?.user?.name ?? "Guest"} />
+          <ProfileHeader userName={session?.user?.firstName ?? "Guest"} />
 
           {menuItems.map((item, index) => (
             <MenuCard
