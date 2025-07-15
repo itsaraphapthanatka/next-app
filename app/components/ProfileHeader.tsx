@@ -9,7 +9,7 @@ interface ProfileHeaderProps {
 export function ProfileHeader({ userName = "คุณ, ตัวอย่าง สมมติ", userRole = "ขอให้ทำงานอย่างมีความสุข" }: ProfileHeaderProps) {
   return (
     <header className="bg-white rounded-xl p-4 mb-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-profile-bg rounded-full flex items-center justify-center">
             <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
@@ -22,7 +22,7 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
           </div>
         </div>
         
-        <div className="flex items-center"> 
+        <div className="flex items-center mb-6"> 
           <button className="p-1 hover:bg-secondary rounded-full transition-colors">
             <Clock className="w-5 h-5 text-muted-foreground" />
           </button>
