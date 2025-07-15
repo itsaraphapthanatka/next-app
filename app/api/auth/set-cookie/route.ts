@@ -65,6 +65,7 @@ export async function GET(req: NextRequest) {
     console.log("✅ Session Data:", sessionData);
 
     // return response;
+    return NextResponse.json({ message: "Session data set successfully" });
   } catch (err: unknown) {
     const errorMessage =
       err instanceof Error ? err.message : "Unknown error";
