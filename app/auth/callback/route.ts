@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   if (!userRes.ok) return NextResponse.redirect(new URL("/", req.url));
 
   const user = await userRes.json();
-
+  console.log("user", user);
   const session = {
     user: {
       id: user.id,
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   };
 
   const encoded = Buffer.from(JSON.stringify(session)).toString("base64");
-  console.log("encoded", encoded);
+ 
 
   const response = NextResponse.redirect(new URL("/menu", req.url));
   response.cookies.set("serve_session", encoded, {
