@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 export default function MenuPage() {
   const router = useRouter();
   const sessionResult = useSession();
+  console.log(sessionResult);
 
   // Handle the case where useSession might be undefined
   const status = sessionResult?.status;
@@ -15,13 +16,7 @@ export default function MenuPage() {
     return <div>Loading...</div>;
   }
 
-  if (!session) {
-    // Redirect to home if not authenticated
-    if (typeof window !== "undefined") {
-      router.push("/");
-    }
-    return null;
-  }
+
 
   return (
     <div className="bg-gray-100 max-w-screen-xl mx-auto p-4">
