@@ -39,20 +39,7 @@ const GoogleIcon = memo(function GoogleIcon() {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-  
-  //   const url = new URL(window.location.href);
-  //   const token = url.searchParams.get("token");
-  
-  //   if (token) {
-  //     // 🔁 ล้าง query ออกก่อน redirect เพื่อไม่ให้ loop
-  //     window.history.replaceState({}, "", url.pathname);
-  
-  //     // 🔀 Redirect ไปให้ server set cookie
-  //     window.location.href = `${getBaseUrl()}/api/auth/callback?token=${encodeURIComponent(token)}`;
-  //   }
-  // }, []);
+
   
 
   const handleGoogleSignIn = useCallback(() => {
