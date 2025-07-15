@@ -1,36 +1,53 @@
 "use client";
-import { SessionProvider, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dashboard } from "../components/Dashboard";
 import { useRouter } from "next/navigation";
 
 export default function MenuPage() {
-  return (
-    <SessionProvider>
-      <MenuContent />
-    </SessionProvider>
-  );
-}
-
-function MenuContent() {
-  const { data: session, status } = useSession();
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  console.log(session);
 
   useEffect(() => {
-    if (status === "loading") return; // Wait for session to load
+    // Check session by reading the cookie
+    async function checkSession() {
+      try {
+        // Try to fetch session info from an API route or check cookie
+        // For demonstration, we'll check for the presence of the cookie
+        const res = await fetch("/api/auth/session", {
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.user) {
+            setSession(data);
+          } else {
+            setSession(null);
+          }
+        } else {
+          setSession(null);
+        }
+      } catch (err) {
+        setSession(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkSession();
+  }, []);
 
-    if (!session) {
+  useEffect(() => {
+    if (!loading && !session) {
       router.push("/login");
     }
-  }, [session, status, router]);
+  }, [loading, session, router]);
 
-  if (status === "loading") {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
   if (!session) {
-    return null; // Or a loading spinner, since redirect is happening
+    return null;
   }
 
   return (
