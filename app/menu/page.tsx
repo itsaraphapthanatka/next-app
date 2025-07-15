@@ -5,7 +5,7 @@ import { Dashboard } from "@/app/components/Dashboard";
 export default async function MenuPage() {
   const cookieStore = await cookies(); // ✅ ต้อง await
   const sessionCookie = cookieStore.get("serve_session");
-  console.log(sessionCookie);
+  console.log("sessionCookieTest", sessionCookie);
 
   if (!sessionCookie) {
     redirect("/");
