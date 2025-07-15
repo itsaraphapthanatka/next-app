@@ -22,14 +22,21 @@ export function Dashboard() {
     );
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     toast(
       "ออกจากระบบ\nกำลังออกจากระบบ...",
       { className: "bg-red-50 text-red-700" }
     );
+
+    // Clear session cookie by calling API endpoint to remove cookie
+    await fetch("/api/auth/session", {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    // Optionally, clear client-side session if needed (for next-auth)
     signOut({ callbackUrl: "/" });
   };
-  
   const { data: session } = useSession();
 
   return (
