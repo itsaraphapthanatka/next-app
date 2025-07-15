@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  // Add other properties if needed
+}
+
 // Simple session utility (for demonstration, not production-ready)
-function createSessionData(user: any, token: string) {
+function createSessionData(user: User, token: string) {
   // You might want to store only necessary user info
   return JSON.stringify({
     user: {
@@ -37,7 +44,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const user = await googleRes.json();
+    const user: User = await googleRes.json();
     console.log("✅ Google User Info:", user);
 
     // Create session data
