@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   // Read the session cookie (e.g., "serve_session")
   const cookie = req.cookies.get("serve_session");
+  console.log(cookie);
 
   if (!cookie) {
     // No session cookie, return null session
@@ -16,7 +17,7 @@ export async function GET(req: NextRequest) {
   try {
     const base64 = cookie.value;
     const json = Buffer.from(base64, "base64").toString("utf-8");
-    console.log("Decoded cookie:", json);
+    // console.log("Decoded cookie:", json);
     const session = JSON.parse(json);
     return NextResponse.json(session, { status: 200 });
   } catch (err) {
