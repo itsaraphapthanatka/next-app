@@ -36,6 +36,8 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    console.log("✅ Google User Info:", googleRes);
+
     if (!googleRes.ok) {
       console.error("❌ Failed to fetch Google user info");
       return NextResponse.json(
