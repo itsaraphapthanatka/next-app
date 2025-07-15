@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useCallback, useEffect, memo } from "react";
+import { useState, useCallback, memo } from "react";
 
 const GOOGLE_LOGIN_URL = "https://api.serve.co.th/account/login";
 
@@ -39,7 +39,7 @@ const GoogleIcon = memo(function GoogleIcon() {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-
+ 
   
 
   const handleGoogleSignIn = useCallback(() => {
