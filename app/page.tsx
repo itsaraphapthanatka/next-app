@@ -1,23 +1,20 @@
-  "use client";
-  import Image from "next/image";
-  import { useState, useCallback, useEffect, memo } from "react";
+"use client";
+import Image from "next/image";
+import { useState, useCallback, useEffect, memo } from "react";
 
-  const GOOGLE_LOGIN_URL = "https://api.serve.co.th/account/login";
+const GOOGLE_LOGIN_URL = "https://api.serve.co.th/account/login";
 
-  // Helper to get the correct base URL for callback and redirect
-  function getBaseUrl() {
-    if (typeof window === "undefined") return "http://localhost:3000";
-    // If running on localhost, use localhost, otherwise use current origin
-    if (
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1"
-    ) {
-      return "http://localhost:3000";
-    }
-    return window.location.origin;
-  }
+// Helper to get the correct base URL for callback and redirect
+const getBaseUrl = () => {
+  if (typeof window === "undefined") return "http://localhost:3000";
+  const { hostname, origin } = window.location;
+  return (hostname === "localhost" || hostname === "127.0.0.1")
+    ? "http://localhost:3000"
+    : origin;
+};
 
-  const GoogleIcon = memo(() => (
+const GoogleIcon = memo(function GoogleIcon() {
+  return (
     <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
       <path
         fill="#4285F4"
@@ -36,88 +33,83 @@
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
       />
     </svg>
-  ));
-  GoogleIcon.displayName = "GoogleIcon";
+  );
+});
 
-  export default function LoginPage() {
-    const [isLoading, setIsLoading] = useState(false);
+export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
 
-    // Get token from URL param and redirect if present
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-        if (token) {
-          // Redirect to /api/auth/callback with token as param
-          const baseUrl = getBaseUrl();
-          window.location.href = `${baseUrl}/api/auth/callback?token=${encodeURIComponent(token)}`;
-        }
-      }
-    }, []);
+  // Get token from URL param and redirect if present
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      window.location.href = `${getBaseUrl()}/api/auth/callback?token=${encodeURIComponent(token)}`;
+    }
+  }, []);
 
-    const handleGoogleSignIn = useCallback(() => {
-      setIsLoading(true);
+  const handleGoogleSignIn = useCallback(() => {
+    setIsLoading(true);
+    const callbackUrl = encodeURIComponent(`${getBaseUrl()}/menu`);
+    window.location.href = `${GOOGLE_LOGIN_URL}?callback_url=${callbackUrl}`;
+  }, []);
 
-      // Use getBaseUrl for dynamic domain in production or localhost
-      const callbackUrl = encodeURIComponent(`${getBaseUrl()}/menu`);
-      window.location.href = `${GOOGLE_LOGIN_URL}?callback_url=${callbackUrl}`;
-    }, []);
-
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        {/* Logo positioned on the image with a linear gradient overlay */}
-        <div className="relative overflow-hidden h-[65vh] min-h-[300px] w-full">
-          <Image
-            src="/image1.png"
-            alt="background"
-            fill
-            style={{ objectFit: "cover" }}
-            className="z-0"
-            priority
-          />
-          <div
-            className="absolute inset-0 z-10 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(49, 49, 49, 0.45) 0%, rgba(0,0,0,0.15) 60%, rgba(255, 255, 255, 100) 100%)",
-            }}
-          />
-          <div className="absolute inset-0 flex items-end justify-center z-20 pb-10">
-            <div className="text-center">
-              <Image src="/logo.png" alt="logo" width={233} height={108} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 bg-white px-6 py-8 flex flex-col justify-center">
-          <div className="max-w-sm mx-auto w-full">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-800 mb-2">
-                เข้าสู่ระบบ
-              </h2>
-              <p className="text-gray-500 text-sm">
-                ยินดีต้อนรับเข้าสู่ Serve Property Management
-              </p>
-            </div>
-
-            <button
-              onClick={handleGoogleSignIn}
-              disabled={isLoading}
-              className="w-full bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-medium py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-busy={isLoading}
-              aria-label="Sign in with Google"
-            >
-              {isLoading ? (
-                <span className="w-5 h-5 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin" />
-              ) : (
-                <GoogleIcon />
-              )}
-              <span className="text-base">
-                {isLoading ? "กำลังเข้าสู..." : "Sign in with Go"}
-              </span>
-            </button>
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Logo positioned on the image with a linear gradient overlay */}
+      <div className="relative overflow-hidden h-[65vh] min-h-[300px] w-full">
+        <Image
+          src="/image1.png"
+          alt="background"
+          fill
+          style={{ objectFit: "cover" }}
+          className="z-0"
+          priority
+        />
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(49, 49, 49, 0.45) 0%, rgba(0,0,0,0.15) 60%, rgba(255, 255, 255, 100) 100%)",
+          }}
+        />
+        <div className="absolute inset-0 flex items-end justify-center z-20 pb-10">
+          <div className="text-center">
+            <Image src="/logo.png" alt="logo" width={233} height={108} />
           </div>
         </div>
       </div>
-    );
-  }
+
+      <div className="flex-1 bg-white px-6 py-8 flex flex-col justify-center">
+        <div className="max-w-sm mx-auto w-full">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-light text-gray-800 mb-2">
+              เข้าสู่ระบบ
+            </h2>
+            <p className="text-gray-500 text-sm">
+              ยินดีต้อนรับเข้าสู่ Serve Property Management
+            </p>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className="w-full bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-medium py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-busy={isLoading}
+            aria-label="Sign in with Google"
+          >
+            {isLoading ? (
+              <span className="w-5 h-5 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin" />
+            ) : (
+              <GoogleIcon />
+            )}
+            <span className="text-base">
+              {isLoading ? "กำลังเข้าสู..." : "Sign in with Go"}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
