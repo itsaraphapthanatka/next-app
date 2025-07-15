@@ -3,10 +3,19 @@
   import { useState, useCallback, useEffect, memo } from "react";
 
   const GOOGLE_LOGIN_URL = "https://api.serve.co.th/account/login";
-  const CALLBACK_URL =
-    typeof window !== "undefined"
-      ? encodeURIComponent(`${window.location.origin}/menu`)
-      : encodeURIComponent("http://localhost:3000/menu");
+
+  // Helper to get the correct base URL for callback and redirect
+  function getBaseUrl() {
+    if (typeof window === "undefined") return "http://localhost:3000";
+    // If running on localhost, use localhost, otherwise use current origin
+    if (
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+    ) {
+      return "http://localhost:3000";
+    }
+    return window.location.origin;
+  }
 
   const GoogleIcon = memo(() => (
     <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
@@ -40,7 +49,8 @@
         const token = urlParams.get("token");
         if (token) {
           // Redirect to /api/auth/callback with token as param
-          window.location.href = `http://localhost:3000/api/auth/callback?token=${encodeURIComponent(token)}`;
+          const baseUrl = getBaseUrl();
+          window.location.href = `${baseUrl}/api/auth/callback?token=${encodeURIComponent(token)}`;
         }
       }
     }, []);
@@ -48,13 +58,8 @@
     const handleGoogleSignIn = useCallback(() => {
       setIsLoading(true);
 
-      // Use window.location.origin for dynamic domain in production
-      console.log("GOOGLE_LOGIN_URL", GOOGLE_LOGIN_URL);
-      const callbackUrl =
-        typeof window !== "undefined"
-          ? encodeURIComponent(`${window.location.origin}/menu`)
-          : CALLBACK_URL;
-      // Redirect to external Google login, with callback_url param
+      // Use getBaseUrl for dynamic domain in production or localhost
+      const callbackUrl = encodeURIComponent(`${getBaseUrl()}/menu`);
       window.location.href = `${GOOGLE_LOGIN_URL}?callback_url=${callbackUrl}`;
     }, []);
 

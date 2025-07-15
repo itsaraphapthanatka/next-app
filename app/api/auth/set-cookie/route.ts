@@ -53,21 +53,20 @@ export async function GET(req: NextRequest) {
     const sessionData = createSessionData(user, token);
 
     // Set session cookie
-    // const response = NextResponse.redirect(new URL("/menu", req.url));
-    // response.cookies.set({
-    //   name: "serve_session",
-    //   value: Buffer.from(sessionData).toString("base64"),
-    //   path: "/",
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: "lax",
-    //   maxAge: 60 * 60 * 24, // 1 day
-    // });
+    const response = NextResponse.redirect(new URL("/menu", req.url));
+    response.cookies.set({
+      name: "serve_session",
+      value: Buffer.from(sessionData).toString("base64"),
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 1 day
+    });
 
     console.log("✅ Session Data:", sessionData);
 
-    // return response;
-    return NextResponse.json({ message: "Session data set successfully" });
+    return response;
   } catch (err: unknown) {
     const errorMessage =
       err instanceof Error ? err.message : "Unknown error";
