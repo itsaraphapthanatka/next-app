@@ -70,7 +70,6 @@ export default function LoginPage() {
         />
         <div
           className="absolute inset-0 z-10 pointer-events-none"
-          
           style={{
             background:
               "linear-gradient(180deg, rgba(49, 49, 49, 0.45) 0%, rgba(0,0,0,0.15) 60%, rgba(255, 255, 255, 100) 100%)",
