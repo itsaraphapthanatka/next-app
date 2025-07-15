@@ -14,11 +14,7 @@ export default async function MenuPage() {
   try {
     const json = Buffer.from(sessionCookie.value, "base64").toString("utf-8");
     const session = JSON.parse(json);
-    // Check session expiration (1 day = 86400000 ms)
-    // 1 นาที = 60000 ms 
-    if (!session.createdAt || Date.now() - session.createdAt > 60000) {
-      redirect("/");
-    }
+
     console.log("session in menu", session);
     return (
       <div className="bg-gray-100 max-w-screen-xl mx-auto p-4">

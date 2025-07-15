@@ -31,7 +31,8 @@ export async function GET(req: NextRequest) {
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 วัน
+    maxAge: 60, // 1 วัน
+    // maxAge: 60 * 60 * 24, // 1 วัน
   });
   return response;
 }
