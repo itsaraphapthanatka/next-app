@@ -2,8 +2,10 @@
 import { Dashboard } from "../components/Dashboard";
 import { useEffect, useState } from "react";
 
+type Session = Record<string, unknown> | null;
+
 export default function MenuPage() {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,7 +14,7 @@ export default function MenuPage() {
         const res = await fetch("/api/auth/session");
         const data = await res.json();
         setSession(data);
-      } catch (err) {
+      } catch {
         setSession(null);
       } finally {
         setLoading(false);
