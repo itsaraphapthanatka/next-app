@@ -39,12 +39,12 @@ const GoogleIcon = memo(function GoogleIcon() {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
- 
+  
   
 
   const handleGoogleSignIn = useCallback(() => {
     setIsLoading(true);
-    const callbackUrl = encodeURIComponent(`${getBaseUrl()}/menu`);
+    const callbackUrl = encodeURIComponent(`${getBaseUrl()}/auth/callback`);
     window.location.href = `${GOOGLE_LOGIN_URL}?callback_url=${callbackUrl}`;
   }, []);
 
