@@ -15,7 +15,12 @@ export async function GET(req: NextRequest) {
 
     if (session?.user?.id) {
       const isExpired = Date.now() - session.createdAt > 5 * 60 * 1000;
-      return NextResponse.json({ loggedIn: !isExpired }, { status: 200 });
+      console.log("isExpired", isExpired);
+      if (isExpired) {
+        window.location.href = "/";
+      } else {
+        return NextResponse.json({ loggedIn: true }, { status: 200 });
+      }
     }
   } catch {
     // ignore error
