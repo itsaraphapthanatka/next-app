@@ -39,20 +39,20 @@ const GoogleIcon = memo(function GoogleIcon() {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
   
-    const url = new URL(window.location.href);
-    const token = url.searchParams.get("token");
+  //   const url = new URL(window.location.href);
+  //   const token = url.searchParams.get("token");
   
-    if (token) {
-      // 🔁 ล้าง query ออกก่อน redirect เพื่อไม่ให้ loop
-      window.history.replaceState({}, "", url.pathname);
+  //   if (token) {
+  //     // 🔁 ล้าง query ออกก่อน redirect เพื่อไม่ให้ loop
+  //     window.history.replaceState({}, "", url.pathname);
   
-      // 🔀 Redirect ไปให้ server set cookie
-      window.location.href = `${getBaseUrl()}/api/auth/callback?token=${encodeURIComponent(token)}`;
-    }
-  }, []);
+  //     // 🔀 Redirect ไปให้ server set cookie
+  //     window.location.href = `${getBaseUrl()}/api/auth/callback?token=${encodeURIComponent(token)}`;
+  //   }
+  // }, []);
   
 
   const handleGoogleSignIn = useCallback(() => {
@@ -111,7 +111,7 @@ export default function LoginPage() {
               <GoogleIcon />
             )}
             <span className="text-base">
-              {isLoading ? "กำลังเข้าสู..." : "Sign in with Go"}
+              {isLoading ? "กำลังเข้าสู่ระบบ..." : "Sign in with Google"}
             </span>
           </button>
         </div>
