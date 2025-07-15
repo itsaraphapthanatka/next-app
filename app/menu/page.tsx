@@ -26,7 +26,7 @@ export default function MenuPage() {
   }
 
   // Optionally, you can use session data here or pass it to Dashboard
-  // console.log(session);
+  console.log(session);
 
   return (
     <div className="bg-gray-100 max-w-screen-xl mx-auto p-4">
