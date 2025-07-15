@@ -21,6 +21,21 @@ function createSessionData(user: User, token: string) {
   });
 }
 
+// Helper to set session data (could be expanded for other storage mechanisms)
+async function setSessionData(response: NextResponse, user: User, token: string) {
+  const sessionData = createSessionData(user, token);
+  response.cookies.set({
+    name: "serve_session",
+    value: Buffer.from(sessionData).toString("base64"),
+    path: "/",
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24, // 1 day
+  });
+  console.log("✅ Session Data Set:", sessionData);
+}
+
 export async function GET(req: NextRequest) {
   try {
     const token = req.nextUrl.searchParams.get("token");
@@ -49,22 +64,9 @@ export async function GET(req: NextRequest) {
     const user: User = await googleRes.json();
     console.log("✅ Google User Info:", user);
 
-    // Create session data
-    const sessionData = createSessionData(user, token);
-
-    // Set session cookie
+    // Create response and set session data
     const response = NextResponse.redirect(new URL("/menu", req.url));
-    response.cookies.set({
-      name: "serve_session",
-      value: Buffer.from(sessionData).toString("base64"),
-      path: "/",
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 1 day
-    });
-
-    console.log("✅ Session Data:", sessionData);
+    await setSessionData(response, user, token);
 
     return response;
   } catch (err: unknown) {
