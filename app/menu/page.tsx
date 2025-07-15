@@ -1,17 +1,14 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Dashboard } from "../components/Dashboard";
+import { getSession } from "../lib/session"; // Assume you have a session utility
 
 export default async function MenuPage() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("serve_session");
+  const session = await getSession();
 
-  if (!sessionCookie) {
+  if (!session) {
     redirect("/");
   }
 
-  const json = Buffer.from(sessionCookie.value, "base64").toString("utf-8");
-  const session = JSON.parse(json);
   console.log(session);
 
   return (
