@@ -33,7 +33,6 @@ async function setSessionData(response: NextResponse, user: User, token: string)
     sameSite: "lax",
     maxAge: 60 * 60 * 24, // 1 day
   });
-  console.log("✅ Session Data Set:", sessionData);
 }
 
 export async function GET(req: NextRequest) {
@@ -51,7 +50,6 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    console.log("✅ Google User Info:", googleRes);
 
     if (!googleRes.ok) {
       console.error("❌ Failed to fetch Google user info");
@@ -62,7 +60,6 @@ export async function GET(req: NextRequest) {
     }
 
     const user: User = await googleRes.json();
-    console.log("✅ Google User Info:", user);
 
     // Create response and set session data
     const response = NextResponse.redirect(new URL("/menu", req.url));
