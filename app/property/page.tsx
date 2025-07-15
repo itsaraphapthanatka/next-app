@@ -12,6 +12,7 @@ interface SessionUser {
 
 interface Session {
   user?: SessionUser;
+  createdAt?: number; // Added createdAt field
   [key: string]: unknown;
 }
 
@@ -24,6 +25,11 @@ export default async function PropertyPage() {
   
   try {
     session = JSON.parse(Buffer.from(cookie.value, "base64").toString("utf-8")) as Session;
+    // Check session expiration (1 day = 86400000 ms)
+    // 1 นาที = 60000 ms 
+    if (!session.createdAt || Date.now() - session.createdAt > 60000) {
+      return redirect("/");
+    }
   } catch {
     return redirect("/");
   }
