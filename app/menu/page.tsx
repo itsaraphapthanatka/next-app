@@ -1,39 +1,58 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Dashboard } from "../components/Dashboard";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-// If you are using next-auth, import useSession safely:
-let useSession: any;
-try {
-  // Dynamically require to avoid SSR issues or undefined errors
-  // @ts-ignore
-  useSession = require("next-auth/react").useSession;
-} catch {
-  useSession = undefined;
-}
+type Session = {
+  user: {
+    id: string;
+    name?: string;
+    email?: string;
+    // Add other user properties as needed
+  };
+  // Add other session properties as needed
+} | null;
 
 export default function MenuPage() {
+  const [session, setSession] = useState<Session>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Defensive: If useSession is not available, treat as not authenticated
-  if (!useSession) {
-    useEffect(() => {
-      router.push("/");
-    }, [router]);
-    return <div>Loading...</div>;
-  }
-
-  // Always destructure with fallback to empty object to avoid TypeError
-  const { data: session, status } = useSession() || {};
+  useEffect(() => {
+    // Check session by reading the cookie
+    async function checkSession() {
+      try {
+        // Try to fetch session info from an API route or check cookie
+        // For demonstration, we'll check for the presence of the cookie
+        const res = await fetch("/api/auth/session", {
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data: Session = await res.json();
+          if (data && data.user) {
+            setSession(data);
+          } else {
+            setSession(null);
+          }
+        } else {
+          setSession(null);
+        }
+      } catch {
+        setSession(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkSession();
+  }, []);
 
   useEffect(() => {
-    if (status === "unauthenticated" || (!session && status !== "loading")) {
+    if (!loading && !session) {
       router.push("/");
     }
-  }, [session, status, router]);
+  }, [loading, session, router]);
 
-  if (status === "loading") {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
