@@ -12,18 +12,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(null, { status: 200 });
   }
 
+ 
   try {
-    // For demonstration, assume the cookie is a JWT or JSON string with user info
-    // In production, you should verify and decode the cookie securely!
     const base64 = cookie.value;
-    // Try to decode as base64-encoded JSON
     const json = Buffer.from(base64, "base64").toString("utf-8");
+    console.log("Decoded cookie:", json);
     const session = JSON.parse(json);
-
-    // Return the session object (should contain at least a user property)
     return NextResponse.json(session, { status: 200 });
-  } catch {
-    // Invalid cookie format
+  } catch (err) {
+    console.error("Session decoding error:", err);
     return NextResponse.json(null, { status: 200 });
   }
+  
 }
