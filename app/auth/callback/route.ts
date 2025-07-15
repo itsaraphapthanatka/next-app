@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  // Check if session already exists
+  const cookie = req.cookies.get("serve_session");
+  if (cookie) {
+    try {
+      const json = Buffer.from(cookie.value, "base64").toString("utf-8");
+      const session = JSON.parse(json);
+      if (session?.user?.id) {
+        // Session valid, redirect to /menu
+        return NextResponse.redirect(new URL("/menu", req.url));
+      }
+    } catch {
+      // ignore error, proceed to login
+    }
+  }
+
+  // No valid session, proceed with token
   const token = req.nextUrl.searchParams.get("token");
   if (!token) return NextResponse.redirect(new URL("/", req.url));
 
@@ -11,7 +27,6 @@ export async function GET(req: NextRequest) {
   if (!userRes.ok) return NextResponse.redirect(new URL("/", req.url));
 
   const user = await userRes.json();
-  console.log("user", user);
   const session = {
     user: {
       id: user.id,
@@ -23,7 +38,6 @@ export async function GET(req: NextRequest) {
   };
 
   const encoded = Buffer.from(JSON.stringify(session)).toString("base64");
- 
 
   const response = NextResponse.redirect(new URL("/menu", req.url));
   response.cookies.set("serve_session", encoded, {

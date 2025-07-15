@@ -8,14 +8,14 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    // decode cookie, but don't return full session
     const base64 = cookie.value;
     const json = Buffer.from(base64, "base64").toString("utf-8");
     const session = JSON.parse(json);
 
-    // เช็ค session ถ้าไม่หมดอายุ (มี user.id)
     if (session?.user?.id) {
-      // redirect ไป /menu
-      return NextResponse.redirect(new URL("/menu", req.url));
+      window.location.href = "/menu";
+      return NextResponse.json({ loggedIn: true }, { status: 200 });
     }
   } catch {
     // ignore error
