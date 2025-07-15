@@ -29,16 +29,9 @@ export function Dashboard({ session }: DashboardProps) {
     toast(`เมนู ${itemTitle}\nคลิกเมนู ${itemTitle} เรียบร้อยแล้ว`);
   };
 
-  const handleLogout = async () => {
-    toast("ออกจากระบบ\nกำลังออกจากระบบ...", {
-      className: "bg-red-50 text-red-700",
-    });
 
-    // ล้าง cookie โดยเรียก /api/auth/logout หรือใช้ document.cookie
-    // เราจะแนะนำให้ใช้ endpoint ดีกว่า
-    await fetch("/api/auth/logout"); // ทำ endpoint นี้แยก
-    window.location.href = "/";
-  };
+
+
 
   return (
     <div className="min-h-screen bg-dashboard-bg font-prompt">
@@ -59,7 +52,10 @@ export function Dashboard({ session }: DashboardProps) {
           <MenuCard
             title="Log Out"
             icon={LogOut}
-            onClick={handleLogout}
+            onClick={() => {
+              fetch("/api/auth/logout", { method: "POST" });
+              window.location.href = "/";
+            }}
             className="bg-white border-red-200 hover:bg-red-50 hover:border-red-300"
           />
         </div>
