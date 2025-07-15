@@ -8,8 +8,17 @@ import { useEffect, useState } from "react";
 // Session management using only localStorage/sessionStorage (no cookies)
 const SESSION_KEY = "serve_session";
 
+// Define a type for the session object
+type UserSession = {
+  user?: {
+    name?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+} | null;
+
 // Utility to get session from storage
-function getSession() {
+function getSession(): UserSession {
   if (typeof window === "undefined") return null;
   try {
     const sessionStr = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
@@ -19,21 +28,8 @@ function getSession() {
   }
 }
 
-// Utility to set session in storage
-function setSession(session: any) {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  } catch {
-    // fallback to sessionStorage if localStorage fails
-    try {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    } catch {}
-  }
-}
-
 // Utility to clear session from storage
-function clearSession() {
+function clearSession(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(SESSION_KEY);
@@ -49,7 +45,7 @@ const menuItems = [
 ];
 
 export function Dashboard() {
-  const [session, setSessionState] = useState<any>(null);
+  const [session, setSessionState] = useState<UserSession>(null);
 
   // Load session from storage on mount
   useEffect(() => {

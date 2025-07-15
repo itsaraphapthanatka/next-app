@@ -1,28 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// This is a simple session endpoint that reads the session cookie and returns user info if present.
-// In a real app, you would verify the cookie and fetch user data from a database or session store.
+// Optimization: Use session from in-memory or header, not cookie
+// This endpoint expects the client to send session data via Authorization header or custom header
 
 export async function GET(req: NextRequest) {
-  // Read the session cookie (e.g., "serve_session")
-  const cookie = req.cookies.get("serve_session");
-  console.log(cookie);
+  // Try to get session from Authorization header (e.g., Bearer <base64>)
+  const authHeader = req.headers.get("authorization");
+  let session = null;
 
-  if (!cookie) {
-    // No session cookie, return null session
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const base64 = authHeader.replace("Bearer ", "");
+    try {
+      const json = Buffer.from(base64, "base64").toString("utf-8");
+      session = JSON.parse(json);
+    } catch (err) {
+      console.error("Session decoding error from Authorization header:", err);
+      session = null;
+    }
+  } else {
+    // Optionally, try a custom header (e.g., x-serve-session)
+    const base64 = req.headers.get("x-serve-session");
+    if (base64) {
+      try {
+        const json = Buffer.from(base64, "base64").toString("utf-8");
+        session = JSON.parse(json);
+      } catch (err) {
+        console.error("Session decoding error from x-serve-session header:", err);
+        session = null;
+      }
+    }
+  }
+
+  // If no session found, return null
+  if (!session) {
     return NextResponse.json(null, { status: 200 });
   }
 
- 
-  try {
-    const base64 = cookie.value;
-    const json = Buffer.from(base64, "base64").toString("utf-8");
-    // console.log("Decoded cookie:", json);
-    const session = JSON.parse(json);
-    return NextResponse.json(session, { status: 200 });
-  } catch (err) {
-    console.error("Session decoding error:", err);
-    return NextResponse.json(null, { status: 200 });
-  }
-  
+  return NextResponse.json(session, { status: 200 });
 }
