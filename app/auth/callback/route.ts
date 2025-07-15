@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
-  console.log("auth callback", token);
   if (!token) return NextResponse.redirect(new URL("/", req.url));
 
   const userRes = await fetch("https://api.serve.co.th/users/me", {
@@ -24,7 +23,7 @@ export async function GET(req: NextRequest) {
   };
 
   const encoded = Buffer.from(JSON.stringify(session)).toString("base64");
-  
+  console.log("encoded", encoded);
 
   const response = NextResponse.redirect(new URL("/menu", req.url));
   response.cookies.set("serve_session", encoded, {
