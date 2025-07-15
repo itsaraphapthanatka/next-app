@@ -1,7 +1,14 @@
 import { Bell } from "lucide-react";
 import { useState } from "react";
 
-export function Navbar() {
+type Session = {
+  user?: {
+    name?: string;
+    email?: string;
+  };
+};
+
+export function Navbar(session: {session: Session}) {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const notifications = [
