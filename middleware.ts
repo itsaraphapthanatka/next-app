@@ -35,7 +35,7 @@ export function middleware(req: NextRequest) {
       secure: true,
       path: "/",
       sameSite: "lax",
-      maxAge: 60, // keep 1 minute
+      maxAge: 60, // keep 1 minute ddd
       // maxAge: 60 * 60 * 24, // keep 1 day
     });
 
