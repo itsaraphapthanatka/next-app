@@ -1,15 +1,9 @@
 "use client";
+
 import { Bell } from "lucide-react";
 import { useState } from "react";
 
-type Session = {
-  user?: {
-    name?: string;
-    email?: string;
-  };
-};
-
-export function Navbar({session}: {session: Session}) {
+export function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const notifications = [
@@ -38,15 +32,11 @@ export function Navbar({session}: {session: Session}) {
             <div className="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg z-10">
               <div className="p-3 border-b font-medium text-gray-700">Notifications</div>
               <ul>
-                {notifications.length === 0 ? (
-                  <li className="p-3 text-gray-500 text-sm">No notifications</li>
-                ) : (
-                  notifications.map((n) => (
-                    <li key={n.id} className="p-3 hover:bg-gray-50 text-sm text-gray-700">
-                      {n.message}
-                    </li>
-                  ))
-                )}
+                {notifications.map((n) => (
+                  <li key={n.id} className="p-3 hover:bg-gray-50 text-sm text-gray-700">
+                    {n.message}
+                  </li>
+                ))}
               </ul>
             </div>
           )}

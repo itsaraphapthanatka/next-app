@@ -19,7 +19,7 @@ export default async function PropertyPage() {
 
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
-      <Navbar session={session} />
+      <Navbar />
       <div className="max-w-md mx-auto p-4">
         <h1>Property Management {session?.user?.name}</h1>
       </div>
