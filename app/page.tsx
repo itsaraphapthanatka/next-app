@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo, useEffect } from "react";
 
 const GOOGLE_LOGIN_URL = "https://api.serve.co.th/account/login";
 
@@ -39,8 +39,16 @@ const GoogleIcon = memo(function GoogleIcon() {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  
-  
+  useEffect(() => {
+    const checkSession = async () => {
+      const res = await fetch("/api/auth/session");
+      const data = await res.json();
+      if (data.loggedIn) {
+        window.location.href = "/menu";
+      }
+    };
+    checkSession();
+  }, []);
 
   const handleGoogleSignIn = useCallback(() => {
     setIsLoading(true);

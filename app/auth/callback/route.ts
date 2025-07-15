@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
   if (!userRes.ok) return NextResponse.redirect(new URL("/", req.url));
 
   const user = await userRes.json();
-  console.log("user", user);
   const session = {
     user: {
       id: user.id,

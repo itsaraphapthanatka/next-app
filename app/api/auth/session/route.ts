@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const session = JSON.parse(json);
 
     if (session?.user?.id) {
-      window.location.href = "/menu";
+      console.log("session", session);
       return NextResponse.json({ loggedIn: true }, { status: 200 });
     }
   } catch {
