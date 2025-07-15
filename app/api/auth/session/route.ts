@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
     // Return the session object (should contain at least a user property)
     return NextResponse.json(session, { status: 200 });
-  } catch (e) {
+  } catch (_err) {
     // Invalid cookie format
     return NextResponse.json(null, { status: 200 });
   }
