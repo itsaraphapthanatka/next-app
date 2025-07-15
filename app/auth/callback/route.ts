@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const session = {
     user: {
       id: user.id,
-      name: user.name,
+      firstName: user.firstName,
       email: user.email,
     },
     token,
