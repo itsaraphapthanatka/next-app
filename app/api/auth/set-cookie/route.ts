@@ -7,10 +7,11 @@ interface User {
   // Add other properties if needed
 }
 
-// Simple session utility (for demonstration, not production-ready)
+// In-memory session store (for demonstration only, not for production)
+const sessionStore = new Map<string, { user: User; token: string; createdAt: number }>();
+
 function createSessionData(user: User, token: string) {
-  // You might want to store only necessary user info
-  return JSON.stringify({
+  return {
     user: {
       id: user.id,
       email: user.email,
@@ -18,21 +19,7 @@ function createSessionData(user: User, token: string) {
     },
     token,
     createdAt: Date.now(),
-  });
-}
-
-// Helper to set session data (could be expanded for other storage mechanisms)
-async function setSessionData(response: NextResponse, user: User, token: string) {
-  const sessionData = createSessionData(user, token);
-  response.cookies.set({
-    name: "serve_session",
-    value: Buffer.from(sessionData).toString("base64"),
-    path: "/",
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 day
-  });
+  };
 }
 
 export async function GET(req: NextRequest) {
@@ -50,7 +37,6 @@ export async function GET(req: NextRequest) {
       },
     });
 
-
     if (!googleRes.ok) {
       console.error("❌ Failed to fetch Google user info");
       return NextResponse.json(
@@ -61,11 +47,17 @@ export async function GET(req: NextRequest) {
 
     const user: User = await googleRes.json();
 
-    // Create response and set session data
-    const response = NextResponse.redirect(new URL("/menu", req.url));
-    await setSessionData(response, user, token);
+    // Generate a session ID (for demonstration, use a random string)
+    const sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
 
-    return response;
+    // Store session in memory (not persistent, not for production)
+    sessionStore.set(sessionId, createSessionData(user, token));
+
+    // Redirect with sessionId as a query parameter (or you could use other mechanisms)
+    const redirectUrl = new URL("/menu", req.url);
+    redirectUrl.searchParams.set("sessionId", sessionId);
+
+    return NextResponse.redirect(redirectUrl);
   } catch (err: unknown) {
     const errorMessage =
       err instanceof Error ? err.message : "Unknown error";

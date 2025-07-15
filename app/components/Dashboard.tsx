@@ -1,6 +1,6 @@
 "use client";
 import { Building2, FileText, ClipboardList, FolderOpen, BarChart3, Users, LogOut } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { ProfileHeader } from "./ProfileHeader";
 import { MenuCard } from "./MenuCard";
 import { toast } from "sonner";
@@ -22,21 +22,24 @@ export function Dashboard() {
     );
   };
 
+  // Optimized sign out: clear session data in-memory and redirect, not using cookies
   const handleLogout = async () => {
     toast(
       "ออกจากระบบ\nกำลังออกจากระบบ...",
       { className: "bg-red-50 text-red-700" }
     );
 
-    // Clear session cookie by calling API endpoint to remove cookie
-    await fetch("/api/auth/session", {
-      method: "DELETE",
-      credentials: "include",
-    });
+    // Remove session data from memory (if any)
+    if (typeof window !== "undefined") {
+      // Remove any session data stored in localStorage/sessionStorage
+      localStorage.removeItem("serve_session");
+      sessionStorage.removeItem("serve_session");
+    }
 
-    // Optionally, clear client-side session if needed (for next-auth)
-    signOut({ callbackUrl: "/" });
+    // Redirect to home page after clearing session data
+    window.location.href = "/";
   };
+
   const { data: session } = useSession();
 
   return (
