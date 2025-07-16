@@ -13,6 +13,8 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const [requestCount] = useState(0);
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [modalText, setModalText] = useState('Content of the modal');
 
   const handleSearch = () => {
     console.log("Search clicked", { projectName });
@@ -25,6 +27,19 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
 
   const handleRequestProp = () => {
     console.log("Request Property clicked");
+  };
+
+  const handleOk = () => {
+    setModalText('The modal will be closed after two seconds');
+    setConfirmLoading(true);
+    setTimeout(() => {
+        setIsModalOpen(false);
+        setConfirmLoading(false);
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -73,12 +88,13 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
         </div>
       </div>
       <Modal
-        title="Filter"
+        title="Property Detail"
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
+        confirmLoading={confirmLoading}
+        onOk={handleOk}
+        onCancel={handleCancel}
       >
-        <p>Filter content</p>
+        <p>{modalText}</p>
       </Modal>
     </Card>
   );
