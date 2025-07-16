@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import { DownOutlined } from '@ant-design/icons';
-import type { GetProp, RadioChangeEvent, TableProps } from 'antd';
-import { Form, Radio, Space, Switch, Table } from 'antd';
+import type { TableProps } from 'antd';
+import { Space, Table } from 'antd';
 
-type ColumnsType<T extends object> = GetProp<TableProps<T>, 'columns'>;
+type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
 interface DataType {
