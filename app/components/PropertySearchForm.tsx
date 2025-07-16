@@ -104,14 +104,17 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
         footer={(_, { CancelBtn }) => (
             <>
               <Button color="default"
+              size="small"
               variant="outlined"
               onClick={handleCopyLink}
               >Copy Link</Button>
               <Button color="default"
+              size="small"
               variant="outlined"
               onClick={handleResetFilter}
               >Reset Filter</Button>
               <Button color="danger"
+              size="small"
               variant="outlined"
               onClick={handleFilterSearch}
               >Search</Button>
