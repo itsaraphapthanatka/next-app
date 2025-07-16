@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Select, Input, Button } from "antd";
+import { Card, Input, Button } from "antd";
 
 interface PropertySearchFormProps {
   className?: string;
@@ -25,7 +25,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   };
 
   return (
-    <Card className={`p-6 w-full max-w-md space-y-4 ${className}`}>
+    <Card >
       <div className="space-y-4">
         <div className="flex gap-3">
             <Input
@@ -41,18 +41,6 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
           className="w-1/2"
-        />
-        </div>
-        <div className="flex gap-3">
-        <Select
-          defaultValue="address1"
-          style={{ width: 120 }}
-          options={[
-            { value: 'address1', label: '123 Main Street' },
-            { value: 'address2', label: '456 Oak Avenue' },
-            { value: 'unit1', label: 'Unit A-101' },
-            { value: 'unit2', label: 'Unit B-205' }
-          ]}
         />
         </div>
         <div className="flex gap-3">
