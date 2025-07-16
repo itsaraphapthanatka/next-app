@@ -10,7 +10,7 @@ interface ProfileHeaderProps {
 export function ProfileHeader({ userName = "คุณ, ตัวอย่าง สมมติ", userRole = "ขอให้ทำงานอย่างมีความสุข" }: ProfileHeaderProps) {
   return (
     <header className="bg-white rounded-xl p-4 mb-6 shadow-sm">
-       <div className="flex items-center justify-between"> 
+       <div className="text-right">
           <button className="p-1 hover:bg-secondary rounded-full transition-colors">
             <Clock className="w-5 h-5 text-muted-foreground" />
           </button>
