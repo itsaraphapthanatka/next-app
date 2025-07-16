@@ -37,7 +37,7 @@ export default async function PropertyPage() {
       <div className="max-w-md mx-auto p-4">
         <div className="flex items-center gap-2">
           <Link href="/menu" passHref>  
-            <ArrowLeftCircleIcon className="w-6 h-6 cursor-pointer" />
+            <ArrowLeftCircleIcon className="w-6 h-6 cursor-pointer bg-amber-500" />
           </Link>
           <h1>Property Management</h1>
         </div>
