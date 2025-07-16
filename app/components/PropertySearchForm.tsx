@@ -29,7 +29,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
     console.log("Request Property clicked");
   };
 
-  const handleOk = () => {
+  const handleFilterSearch = () => {
     setModalText('The modal will be closed after two seconds');
     setConfirmLoading(true);
     setTimeout(() => {
@@ -38,7 +38,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
     }, 2000);
   };
 
-  const handleCancel = () => {
+  const handleClose = () => {
     setIsModalOpen(false);
   };
 
@@ -90,9 +90,18 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
       <Modal
         title="Property Detail"
         open={isModalOpen}
+        onCancel={handleClose}
+        onOk={handleFilterSearch}
         confirmLoading={confirmLoading}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        okText="Search"
+        cancelText="Close"
+        footer={(_, { OkBtn, CancelBtn }) => (
+            <>
+              <Button>Reset Filter</Button>
+              <OkBtn />
+              <CancelBtn />
+            </>
+          )}
       >
         <p>{modalText}</p>
       </Modal>
