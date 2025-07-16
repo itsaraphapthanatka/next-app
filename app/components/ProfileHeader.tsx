@@ -12,11 +12,6 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
     <header className="bg-white rounded-xl p-4 mb-6 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-profile-bg rounded-full flex items-center justify-center">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <Image src="/images/profile.png" alt="Profile" width={32} height={32} />
-            </div>
-          </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground font-prompt">สวัสดี {userName}!</h2>
             <p className="text-sm text-text-greeting font-prompt">{userRole}</p>
