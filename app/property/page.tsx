@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Navbar } from "../components/navbar";
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid'
 import Link from "next/link";
+import { PropertySearchForm } from "../components/PropertySearchForm";
 
 interface SessionUser {
   firstName?: string;
@@ -41,6 +42,7 @@ export default async function PropertyPage() {
           </Link>
           <h1>Property Management</h1>
         </div>
+        <PropertySearchForm />
       </div>
     </div>
   );
