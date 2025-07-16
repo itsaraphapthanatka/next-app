@@ -5,6 +5,7 @@ import { Navbar } from "../components/navbar";
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid'
 import Link from "next/link";
 import { PropertySearchForm } from "../components/PropertySearchForm";
+import TableProperty from "../components/TableProperty";
 
 interface SessionUser {
   firstName?: string;
@@ -44,6 +45,7 @@ export default async function PropertyPage() {
         </div>
         <div className="mt-4">
           <PropertySearchForm />
+          <TableProperty />
         </div>
       </div>
     </div>

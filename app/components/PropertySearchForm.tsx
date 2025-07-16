@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Input, Button, Modal } from "antd";
 
 interface PropertySearchFormProps {
@@ -10,11 +10,23 @@ interface PropertySearchFormProps {
 export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) => {
   const [projectName, setProjectName] = useState("");
   const [addressUnit, setAddressUnit] = useState("");
-  const [requestCount] = useState(0);
+  const [requestCount, setRequestCount] = useState(0);
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState('Content of the modal');
+
+  useEffect(() => {
+    const handleSelectionCount = (e: CustomEvent) => {
+      setRequestCount(e.detail);
+    };
+  
+    window.addEventListener('propertySelectionCount', handleSelectionCount as EventListener);
+  
+    return () => {
+      window.removeEventListener('propertySelectionCount', handleSelectionCount as EventListener);
+    };
+  }, []);
 
   const handleSearch = () => {
     console.log("Search clicked", { projectName });
