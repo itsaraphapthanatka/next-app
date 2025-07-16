@@ -30,7 +30,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   };
 
   const handleFilterSearch = () => {
-    setModalText('The modal will be closed after two seconds');
+    setModalText('Searching to your property...');
     setConfirmLoading(true);
     setTimeout(() => {
         setIsModalOpen(false);
