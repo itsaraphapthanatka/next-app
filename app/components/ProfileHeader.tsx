@@ -25,8 +25,8 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
               <Image
                 src="/profile.jpg"
                 alt="Profile"
-                width={64}
-                height={64}
+                width={128}
+                height={128}
                 className="rounded-full"
               />
             </div>
