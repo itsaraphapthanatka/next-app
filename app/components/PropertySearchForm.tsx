@@ -106,17 +106,14 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
               <Button color="default"
               variant="outlined"
               onClick={handleCopyLink}
-              className="w-full"
               >Copy Link</Button>
               <Button color="default"
               variant="outlined"
               onClick={handleResetFilter}
-              className="w-full"
               >Reset Filter</Button>
               <Button color="danger"
               variant="outlined"
               onClick={handleFilterSearch}
-              className="w-full"
               >Search</Button>
               <CancelBtn />
             </>
