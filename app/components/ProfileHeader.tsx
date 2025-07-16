@@ -19,14 +19,14 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
           </button>
         </div>
-       <div className="w-12 h-12 bg-profile-bg rounded-full flex items-center justify-between">
+       <div className="w-24 h-24 bg-profile-bg rounded-full flex items-center justify-between">
        
             <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center overflow-hidden">
               <Image
                 src="/profile.jpg"
                 alt="Profile"
-                width={32}
-                height={32}
+                width={64}
+                height={64}
                 className="rounded-full"
               />
             </div>
