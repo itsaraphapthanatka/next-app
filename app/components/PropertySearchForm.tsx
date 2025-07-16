@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Input, Button } from "antd";
+import { Card, Input, Button, Modal } from "antd";
 
 interface PropertySearchFormProps {
   className?: string;
@@ -12,6 +12,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const [addressUnit, setAddressUnit] = useState("");
   const [requestCount] = useState(0);
   const maxRequests = 20;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSearch = () => {
     console.log("Search clicked", { projectName });
@@ -19,6 +20,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
 
   const handleFilter = () => {
     console.log("Filter clicked");
+    setIsModalOpen(true);
   };
 
   const handleRequestProp = () => {
@@ -61,7 +63,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
           </Button>
         </div>
         <div className="flex gap-3">
-            <Button
+            <Button color="default" size="large"
             variant="solid"
             onClick={handleRequestProp}
             className="w-full"
@@ -70,6 +72,14 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
             </Button>
         </div>
       </div>
+      <Modal
+        title="Filter"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+      >
+        <p>Filter content</p>
+      </Modal>
     </Card>
   );
 };
