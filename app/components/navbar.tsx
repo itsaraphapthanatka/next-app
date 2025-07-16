@@ -2,37 +2,9 @@
 
 import { Bell } from "lucide-react";
 import { useState } from "react";
-import { ArrowBigLeftIcon } from "lucide-react";
-import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-interface SessionUser {
-  firstName?: string;
-  [key: string]: unknown;
-}
-
-interface Session {
-  user?: SessionUser;
-  [key: string]: unknown;
-}
-
-export async function Navbar() {
-  const cookieStore = await cookies();
-  const cookie = cookieStore.get("serve_session");
-  if (!cookie) return redirect("/");
-
-  let session: Session;
-  
-  try {
-    session = JSON.parse(Buffer.from(cookie.value, "base64").toString("utf-8")) as Session;
-  } catch {
-    return redirect("/");
-  }
-
-  const userName = session?.user?.firstName || "User";
+export function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
-  
 
   const notifications = [
     { id: 1, message: "You have a new report request." },
@@ -70,17 +42,6 @@ export async function Navbar() {
           )}
         </div>
       </nav>
-      <div className="max-w-md mx-auto p-4">
-        <div className="flex items-center gap-2">
-          <Link href="/menu" passHref>
-            <ArrowBigLeftIcon
-              className="w-6 h-6 cursor-pointer"
-              aria-label="Back to menu"
-            />
-          </Link>
-          <h1>Property Management by {userName}</h1>
-        </div>
-      </div>
     </div>
   );
 }
