@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { Card, Input, Button } from "antd";
-import type { ConfigProviderProps } from 'antd';
 
 interface PropertySearchFormProps {
   className?: string;
 }
-
-type SizeType = ConfigProviderProps['componentSize'];
 
 export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) => {
   const [projectName, setProjectName] = useState("");
@@ -27,8 +24,6 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const handleRequestProp = () => {
     console.log("Request Property clicked");
   };
-
-  const [size, setSize] = useState<SizeType>('large');
 
   return (
     <Card className={`p-6 w-full max-w-md space-y-4 ${className}`}>
@@ -50,14 +45,14 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
         />
         </div>
         <div className="flex gap-3">
-          <Button color="cyan" size={size}
+          <Button color="cyan" size="large"
             variant="solid"
             onClick={handleSearch}
             className="flex-1"
           >
             Search
           </Button>
-          <Button color="primary" size={size}
+          <Button color="primary" size='large'
             variant="solid"
             onClick={handleFilter}
             className="flex-1"
