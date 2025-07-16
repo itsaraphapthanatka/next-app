@@ -1,5 +1,6 @@
 "use client";
 import { Bell, Clock } from "lucide-react";
+import Image from "next/image";
 
 interface ProfileHeaderProps {
   userName?: string;
@@ -13,7 +14,7 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-profile-bg rounded-full flex items-center justify-center">
             <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <span className="text-black text-lg font-medium">{userName?.charAt(14)}</span>
+              <Image src="/images/profile.png" alt="Profile" width={32} height={32} />
             </div>
           </div>
           <div>
