@@ -27,13 +27,23 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   return (
     <Card className={`p-6 w-full max-w-md space-y-4 ${className}`}>
       <div className="space-y-4">
-        <Input
+        <div className="flex gap-3">
+            <Input
           placeholder="Project Name"
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
-          className="w-full"
+          className="w-1/2"
         />
-
+        </div>
+        <div className="flex gap-3">
+            <Input
+          placeholder="Project Name"
+          value={projectName}
+          onChange={(e) => setProjectName(e.target.value)}
+          className="w-1/2"
+        />
+        </div>
+        <div className="flex gap-3">
         <Select
           defaultValue="address1"
           style={{ width: 120 }}
@@ -44,7 +54,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
             { value: 'unit2', label: 'Unit B-205' }
           ]}
         />
-
+        </div>
         <div className="flex gap-3">
           <Button
             variant="solid"
@@ -61,14 +71,15 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
             Filter
           </Button>
         </div>
-
-        <Button
-          variant="solid"
-          onClick={handleRequestProp}
-          className="w-full"
-        >
-          Request Prop. ({requestCount}/{maxRequests})
-        </Button>
+        <div className="flex gap-3">
+            <Button
+            variant="solid"
+            onClick={handleRequestProp}
+            className="w-full"
+            >
+            Request Prop. ({requestCount}/{maxRequests})
+            </Button>
+        </div>
       </div>
     </Card>
   );

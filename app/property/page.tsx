@@ -42,7 +42,9 @@ export default async function PropertyPage() {
           </Link>
           <h1>Property Management</h1>
         </div>
-        <PropertySearchForm />
+        <div className="mt-4">
+          <PropertySearchForm />
+        </div>
       </div>
     </div>
   );
