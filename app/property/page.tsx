@@ -28,6 +28,8 @@ export default async function PropertyPage() {
     return redirect("/");
   }
 
+  const userName = session?.user?.firstName || "User";
+  console.log(userName);
 
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
