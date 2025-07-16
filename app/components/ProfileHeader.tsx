@@ -1,6 +1,5 @@
 "use client";
 import { Bell, Clock } from "lucide-react";
-import Image from "next/image";
 
 interface ProfileHeaderProps {
   userName?: string;
