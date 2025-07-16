@@ -21,12 +21,12 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
         </div>
        <div className="w-12 h-12 bg-profile-bg rounded-full flex items-center justify-between">
        
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center overflow-hidden">
+            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center overflow-hidden">
               <Image
                 src="/profile.jpg"
                 alt="Profile"
-                width={128}
-                height={128}
+                width={32}
+                height={32}
                 className="rounded-full"
               />
             </div>
