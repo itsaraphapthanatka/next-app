@@ -21,6 +21,10 @@ interface DataType {
   rental: number;
   selling: number;
   status: string;
+  invid: string;
+  tw: string;
+  floor: string;
+  RentalPG: string;
 }
 
 interface PropertyApiItem {
@@ -38,7 +42,10 @@ interface PropertyApiItem {
   recordPerPage?: number;
   recordStart?: number;
   recordEnd?: number;
-
+  invid?: string;
+  tw?: string;
+  floor?: string;
+  RentalPG?: string;
   // Add other fields if needed
 }
 
@@ -59,13 +66,13 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [pageSize, setPageSize] = useState<number>(50); // ตั้ง default เท่ากับ API
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
-  
+  const [loading, setLoading] = useState(false);
   const columns: ColumnsType<DataType> = [
     {
       title: 'No.',
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
-      width: 10,
+      width: 50,
     },
     {
       title: 'Project',
@@ -88,40 +95,95 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       title: 'Size',
       dataIndex: 'size',
       sorter: (a, b) => a.size - b.size,
-      width: 10,
+      width: 50,
+      ellipsis: false,
+      render: (text, record) => (
+        <div className='text-center'>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Bed',
       dataIndex: 'bed',
       sorter: (a, b) => a.bed - b.bed,
-      width: 10,
+      width: 50,
+      ellipsis: false,
+      render: (text, record) => (
+        <div className='text-center'>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Bath',
       dataIndex: 'bath',
       sorter: (a, b) => a.bath - b.bath,
+      width: 50,
+      render: (text, record) => (
+        <div className='text-center'>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Rental',
       dataIndex: 'rental',
       sorter: (a, b) => a.rental - b.rental,
+      width: 50,
+      render: (text, record) => (
+        <div className='text-center'>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Selling',
       dataIndex: 'selling',
       sorter: (a, b) => a.selling - b.selling,
+      width: 70,
+      render: (text, record) => (
+        <div className='text-center'>
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => a.status.localeCompare(b.status),
       width: 150,
+      ellipsis: false,
     },
     Table.EXPAND_COLUMN,
   ];
 
   const defaultExpandable: ExpandableConfig<DataType> = {
-    expandedRowRender: (record) => <p>{record.status}</p>,
+    expandedRowRender: (record) => 
+    <table>
+      <tr className='border-b border-dashed border-gray-200'>
+        <td className='p-2'>INVID</td>
+        <td className='p-2'>{record.invid}</td>
+        <td className='p-2'>Sale PG</td>
+        <td className='p-2'>{record.invid}</td>
+      </tr>
+      <tr className='border-b border-dashed border-gray-200 p-2'>
+        <td className='p-2'>TW.</td>
+        <td className='p-2'>{record.tw}</td>
+        <td className='p-2'>Last Update</td>
+        <td className='p-2'>{record.tw}</td>
+      </tr>
+      <tr className='border-b border-dashed border-gray-200 p-2'>
+        <td className='p-2'>FL.</td>
+        <td className='p-2'>{record.floor}</td>
+        <td className='p-2'>Available On</td>
+        <td className='p-2'>-</td>
+      </tr>
+      <tr className='border-b border-dashed border-gray-200 p-2'>
+        <td className='p-2'>Rent PG</td>
+        <td className='p-2'>{record.RentalPG}</td>
+      </tr>
+    </table>,
     fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>
       expanded ? (
@@ -132,6 +194,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     getProperties(
       { page: { current: page, size: pageSize }, orderBy: 'asc' },
       token
@@ -148,12 +211,17 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         rental: item.rentalPrice ?? 0,
         selling: item.sellingPrice ?? 0,
         status: item.status ?? "-",
+        invid: item.invid ?? "-",
+        tw: item.tw ?? "-",
+        floor: item.floor ?? "-",
+        RentalPG: item.RentalPG ?? "-",
       }));
   
       setProperties(mapped);
       setTotalRecords(data.allRecord ?? 0);
       setPage(data.currentPage ?? 1);
       setPageSize(data.recordPerPage ?? 10);
+      setLoading(false);
     });
   }, [page, pageSize, token]);
 
@@ -162,6 +230,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       console.log("Table reload", e.detail);
       console.log("e.detail.projectName",e.detail.projectName)
       console.log("e.detail.addressUnit",e.detail.addressUnit)
+      setLoading(true);
       getProperties(
         { page: { current: page, size: pageSize }, orderBy: 'asc' },
         token,
@@ -180,11 +249,16 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           rental: item.rentalPrice ?? 0,
           selling: item.sellingPrice ?? 0,
           status: item.status ?? "-",
+          invid: item.invid ?? "-",
+          tw: item.tw ?? "-",
+          floor: item.floor ?? "-",
+          RentalPG: item.RentalPG ?? "-",
         }));
         setProperties(mapped);
         setTotalRecords(data.allRecord ?? 0);
         setPage(data.currentPage ?? 1);
         setPageSize(data.recordPerPage ?? 10);
+        setLoading(false);
       });
 
       
@@ -200,10 +274,11 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       <Table<DataType>
         tableLayout="auto"
         expandable={defaultExpandable}
+        loading={loading}
         // className="custom-table-font"
         size="small"
         columns={columns}
-        scroll={{ x: 800 }}
+        scroll={{ x: 1000, y: 500 }}
         dataSource={properties}
         pagination={{
           position: ['bottomCenter'],
