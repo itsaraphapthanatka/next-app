@@ -2,9 +2,36 @@ import axios, { AxiosResponse } from "axios";
 
 const endpoint = process.env.NEXT_PUBLIC_API as string;
 
-export const getProperties = async (params?: Record<string, any>) => {
-  // Accepts params: { project?: string | null, search?: string | null, page?: { current: number, size: number }, sortBy?: PropertyBackOfficeSortType }
-  // PropertyBackOfficeSortType: "Project" | "Address" | "UnitCode" | "INVID" | "Tower" | "Floor" | "Size" | "BedRoom" | "BathRoom" | "RentalPrice" | "SellingPrice" | "LastedUpdate" | "Status" | "RentalPG" | "SalePG"
+type PropertyBackOfficeSortType =
+  | "Project"
+  | "Address"
+  | "UnitCode"
+  | "INVID"
+  | "Tower"
+  | "Floor"
+  | "Size"
+  | "BedRoom"
+  | "BathRoom"
+  | "RentalPrice"
+  | "SellingPrice"
+  | "LastedUpdate"
+  | "Status"
+  | "RentalPG"
+  | "SalePG";
+
+interface PropertyPageParams {
+  current: number;
+  size: number;
+}
+
+interface GetPropertiesParams {
+  project?: string | null;
+  search?: string | null;
+  page?: PropertyPageParams;
+  sortBy?: PropertyBackOfficeSortType;
+}
+
+export const getProperties = async (params?: GetPropertiesParams) => {
   const token = localStorage.getItem("accessToken");
   const response: AxiosResponse = await axios.post(
     `${endpoint}/property/gets`,
@@ -27,5 +54,4 @@ export const getProperties = async (params?: Record<string, any>) => {
     }
   );
   return response.data;
-
-}
+};
