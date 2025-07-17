@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PropertySearchForm } from "../components/PropertySearchForm";
 import TableProperty from "../components/TableProperty";
 
+
 interface SessionUser {
   firstName?: string;
   [key: string]: unknown;
@@ -45,7 +46,7 @@ export default async function PropertyPage() {
         </div>
         <div className="mt-4">
           <PropertySearchForm />
-          <TableProperty />
+          <TableProperty token={session.token as string} />
         </div>
       </div>
     </div>

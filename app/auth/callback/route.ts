@@ -32,5 +32,12 @@ export async function GET(req: NextRequest) {
     sameSite: "lax",
     maxAge: 60 * 60 * 24, // 1 วัน
   });
+  response.cookies.set("accessToken", token, {
+    httpOnly: true,
+    secure: true,
+    path: "/",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24, // 1 วัน
+  });
   return response;
 }
