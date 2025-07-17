@@ -1,104 +1,134 @@
 "use client";
-import React from 'react';
-import { DownOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
-import { Space, Table } from 'antd';
+import { Table } from 'antd';
+import { getProperties } from '@/app/networks/property';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
 interface DataType {
   key: number;
-  name: string;
-  age: number;
-  address: string;
-  description: string;
+  no: number;
+  project: string;
+  size: number;
+  bed: number;
+  bath: number;
+  rental: number;
+  selling: number;
+  status: string;
 }
 
 const columns: ColumnsType<DataType> = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-
+    title: 'No.',
+    dataIndex: 'no',
+    sorter: (a, b) => a.no - b.no,
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    sorter: (a, b) => a.age - b.age,
+    title: 'Project',
+    dataIndex: 'project',
+    sorter: (a, b) => a.project.localeCompare(b.project),
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.indexOf(value as string) === 0,
+    title: 'Size',
+    dataIndex: 'size',
+    sorter: (a, b) => a.size - b.size,
   },
   {
-    title: 'Action',
-    key: 'action',
-    sorter: true,
-    render: () => (
-      <Space size="middle">
-        <a>Delete</a>
-        <a>
-          <Space>
-            More actions
-            <DownOutlined />
-          </Space>
-        </a>
-      </Space>
-    ),
+    title: 'Bed',
+    dataIndex: 'bed',
+    sorter: (a, b) => a.bed - b.bed,
+  },
+  {
+    title: 'Bath',
+    dataIndex: 'bath',
+    sorter: (a, b) => a.bath - b.bath,
+  },
+  {
+    title: 'Rental',
+    dataIndex: 'rental',
+    sorter: (a, b) => a.rental - b.rental,
+  },
+  {
+    title: 'Selling',
+    dataIndex: 'selling',
+    sorter: (a, b) => a.selling - b.selling,
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    sorter: (a, b) => a.status.localeCompare(b.status),
   },
   Table.EXPAND_COLUMN,
 ];
 
-const data = Array.from({ length: 10 }).map<DataType>((_, i) => ({
+const data = Array.from({ length: 50 }).map<DataType>((_, i) => ({
   key: i,
-  name: 'John Brown',
-  age: Number(`${i}2`),
-  address: `New York No. ${i} Lake Park`,
-  description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
+  no: i,
+  project: `Project ${i}`,
+  size: Number(`${i}2`),
+  bed: Number(`${i}2`),
+  bath: Number(`${i}2`),
+  rental: Number(`${i}2`),
+  selling: Number(`${i}2`),
+  status: `Status ${i}`,
 }));
 
 const defaultExpandable: ExpandableConfig<DataType> = {
-  expandedRowRender: (record: DataType) => <p>{record.description}</p>,
+  expandedRowRender: (record) => <p>{record.status}</p>,
+  expandIcon: ({ expanded, onExpand, record }) =>
+    expanded ? (
+      <UpCircleOutlined onClick={(e) => onExpand(record, e)} />
+    ) : (
+      <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
+    ),
 };
 
+const MAX_SELECTION = 20;
+const selectedCount = new Map<React.Key, number>();
+
 const TableProperty: React.FC = () => {
-  
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [properties, setProperties] = useState<DataType[]>([]);
+
+  useEffect(() => {
+    getProperties().then((data) => {
+      setProperties(data);
+    });
+  }, []);
   return (
     <div className="mt-4">
       <Table<DataType>
-        expandable={ defaultExpandable }
+        tableLayout="auto"
+        expandable={defaultExpandable}
         size="small"
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 1000 }}
+        columns={columns} // ลบ EXPAND_COLUMN
+        dataSource={properties}
+        className="text-sm"
         pagination={{ position: ['bottomCenter'] }}
         rowSelection={{
           type: 'checkbox',
-          onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            console.log(`Number of selected rows: ${selectedRows.length}`);
-          // Update the Request Property button count in PropertySearchForm if possible
-          // This assumes you have a way to communicate between TableProperty and PropertySearchForm,
-          // such as a context or a callback prop. If not, you may need to lift state up.
-          // For now, we'll dispatch a custom event as a simple solution:
+          columnTitle: <span className="hidden-checkbox-header" />,
+          selectedRowKeys,
+          onChange: (newSelectedKeys) => {
+            let limitedKeys = newSelectedKeys;
 
-          // Dispatch a custom event with the count of selected rows
-          const event = new CustomEvent('propertySelectionCount', { detail: selectedRows.length });
-          window.dispatchEvent(event);
+            if (newSelectedKeys.length > MAX_SELECTION) {
+              limitedKeys = newSelectedKeys.slice(0, MAX_SELECTION);
+            }
+
+            setSelectedRowKeys(limitedKeys);
+            const event = new CustomEvent('propertySelectionCount', { detail: limitedKeys.length });
+            window.dispatchEvent(event);
           },
+          getCheckboxProps: (record) => ({
+            disabled: selectedRowKeys.length >= MAX_SELECTION && !selectedRowKeys.includes(record.key),
+          }),
         }}
       />
+
     </div>
   );
 };

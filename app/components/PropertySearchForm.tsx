@@ -18,7 +18,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
 
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
-      setRequestCount(e.detail);
+      setRequestCount(Math.min(e.detail, maxRequests));
     };
   
     window.addEventListener('propertySelectionCount', handleSelectionCount as EventListener);
