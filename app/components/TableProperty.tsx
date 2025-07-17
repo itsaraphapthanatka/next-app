@@ -267,7 +267,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
     return () => {
       window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
     };
-  }, []);
+  }, [page, pageSize, token]);
 
   return (
     <div className="mt-4">
