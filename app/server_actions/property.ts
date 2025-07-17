@@ -39,17 +39,18 @@ export const getProperties = async (params?: GetPropertiesParams,token?:string) 
     // const cookieStore = await cookies();
     // const cookie = cookieStore.get("accessToken");
     // const token = cookie?.value;
-    console.log('token',token)
+    console.log('property token',token)
   const response: AxiosResponse = await axios.post(
-    `https://api.serve.co.th/properties/gets`,
-    {
+      `${process.env.NEXT_PUBLIC_API}/api/proxy/property`,
+      // `https://api.serve.co.th/properties/gets`,
+      {
       project: params?.project ?? "",
       search: params?.search ?? "",
       page: {
         current: params?.page?.current ?? 0,
         size: params?.page?.size ?? 0,
       },
-      sortBy: params?.sortBy ?? "LastedUpdate",
+      sortBy: params?.sortBy ?? "project",
       orderBy: params?.orderBy ?? "asc",
     },
     {
