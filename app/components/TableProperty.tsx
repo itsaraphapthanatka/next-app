@@ -42,8 +42,8 @@ const MAX_SELECTION = 20;
 const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
-  const [page] = useState<number>(1);
-  const [pageSize] = useState<number>(50);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(50);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
   
@@ -147,7 +147,11 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         className="text-sm"
         pagination={{
           position: ['bottomCenter'],
-         
+          pageSize: 50,
+          onChange: (page, pageSize) => {
+            setPage(page);
+            setPageSize(pageSize);
+          },
         }}
         rowSelection={{
           type: 'checkbox',
