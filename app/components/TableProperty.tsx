@@ -99,7 +99,7 @@ const TableProperty: React.FC = () => {
     getProperties({ page: { current: page, size: pageSize } }).then((data) => {
       setProperties(data);
     });
-  }, []);
+  }, [page, pageSize]);
   return (
     <div className="mt-4">
       <Table<DataType>
