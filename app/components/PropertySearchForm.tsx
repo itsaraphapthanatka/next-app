@@ -93,7 +93,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
           >
             Search
           </Button>
-          <Button color="primary" size='large'
+          <Button color="blue" size='large'
             variant="solid"
             onClick={handleFilter}
             className="flex-1"
