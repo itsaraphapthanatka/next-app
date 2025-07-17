@@ -21,6 +21,22 @@ interface DataType {
   status: string;
 }
 
+interface PropertyApiItem {
+  project?: string;
+  size?: number;
+  bedRoom?: number;
+  bathRoom?: number;
+  rentalPrice?: number;
+  sellingPrice?: number;
+  status?: string;
+  // Add other fields if needed
+}
+
+interface GetPropertiesResponse {
+  resultLists?: PropertyApiItem[];
+  // Add other fields if needed
+}
+
 const MAX_SELECTION = 20;
 
 const TableProperty: React.FC<{ token: string }> = ({ token }) => {
@@ -99,10 +115,13 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   console.log("TOKEN property", token);
 
   useEffect(() => {
-    getProperties({ page: { current: page, size: pageSize } },token).then((data) => {
-      const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
+    getProperties(
+      { page: { current: page, size: pageSize }, orderBy: 'asc' },
+      token
+    ).then((data: GetPropertiesResponse) => {
+      const items: PropertyApiItem[] = Array.isArray(data?.resultLists) ? data.resultLists : [];
 
-      const mapped = items.map((item: any, index: number) => ({
+      const mapped: DataType[] = items.map((item: PropertyApiItem, index: number) => ({
         key: index,
         no: index + 1,
         project: item.project ?? "-",
@@ -116,7 +135,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
 
       setProperties(mapped);
     });
-  }, [page, pageSize]);
+  }, [page, pageSize, token]);
 
   return (
     <div className="mt-4">
