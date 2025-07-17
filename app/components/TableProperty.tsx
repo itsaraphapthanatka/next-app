@@ -97,7 +97,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       sorter: (a, b) => a.size - b.size,
       width: 50,
       ellipsis: false,
-      render: (text, record) => (
+      render: (text) => (
         <div className='text-center'>
           {text}
         </div>
@@ -109,7 +109,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       sorter: (a, b) => a.bed - b.bed,
       width: 50,
       ellipsis: false,
-      render: (text, record) => (
+      render: (text) => (
         <div className='text-center'>
           {text}
         </div>
@@ -120,7 +120,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       dataIndex: 'bath',
       sorter: (a, b) => a.bath - b.bath,
       width: 50,
-      render: (text, record) => (
+      render: (text) => (
         <div className='text-center'>
           {text}
         </div>
@@ -131,7 +131,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       dataIndex: 'rental',
       sorter: (a, b) => a.rental - b.rental,
       width: 50,
-      render: (text, record) => (
+      render: (text) => (
         <div className='text-center'>
           {text}
         </div>
@@ -142,7 +142,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       dataIndex: 'selling',
       sorter: (a, b) => a.selling - b.selling,
       width: 70,
-      render: (text, record) => (
+      render: (text) => (
         <div className='text-center'>
           {text}
         </div>
