@@ -64,17 +64,17 @@ const columns: ColumnsType<DataType> = [
   Table.EXPAND_COLUMN,
 ];
 
-const data = Array.from({ length: 50 }).map<DataType>((_, i) => ({
-  key: i,
-  no: i,
-  project: `Project ${i}`,
-  size: Number(`${i}2`),
-  bed: Number(`${i}2`),
-  bath: Number(`${i}2`),
-  rental: Number(`${i}2`),
-  selling: Number(`${i}2`),
-  status: `Status ${i}`,
-}));
+// const data = Array.from({ length: 50 }).map<DataType>((_, i) => ({
+//   key: i,
+//   no: i,
+//   project: `Project ${i}`,
+//   size: Number(`${i}2`),
+//   bed: Number(`${i}2`),
+//   bath: Number(`${i}2`),
+//   rental: Number(`${i}2`),
+//   selling: Number(`${i}2`),
+//   status: `Status ${i}`,
+// }));
 
 const defaultExpandable: ExpandableConfig<DataType> = {
   expandedRowRender: (record) => <p>{record.status}</p>,
@@ -87,7 +87,7 @@ const defaultExpandable: ExpandableConfig<DataType> = {
 };
 
 const MAX_SELECTION = 20;
-const selectedCount = new Map<React.Key, number>();
+// const selectedCount = new Map<React.Key, number>();
 
 const TableProperty: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
