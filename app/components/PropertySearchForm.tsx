@@ -30,6 +30,10 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
 
   const handleSearch = () => {
     console.log("Search clicked", { projectName });
+    const event = new CustomEvent('propertyTableReload', {
+      detail: { projectName, addressUnit }
+    });
+    window.dispatchEvent(event);
   };
 
   const handleFilter = () => {

@@ -9,6 +9,8 @@ import { ModalProperty } from './ModalProperty';
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
+
+
 interface DataType {
   key: number;
   no: number;
@@ -154,7 +156,44 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       setPageSize(data.recordPerPage ?? 10);
     });
   }, [page, pageSize, token]);
-  
+
+  useEffect(() => {
+    const handleTableReload = (e: CustomEvent) => {
+      console.log("Table reload", e.detail);
+      console.log("e.detail.projectName",e.detail.projectName)
+      console.log("e.detail.addressUnit",e.detail.addressUnit)
+      getProperties(
+        { page: { current: page, size: pageSize }, orderBy: 'asc' },
+        token,
+        e.detail.projectName ?? "",
+        e.detail.addressUnit ?? ""
+      ).then((data: GetPropertiesResponse) => {
+        const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
+        console.log("Data", data);
+        const mapped: DataType[] = items.map((item, index) => ({
+          key: item.id ?? index,
+          no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
+          project: item.project ?? "-",
+          size: item.size ?? 0,
+          bed: item.bedRoom ?? 0,
+          bath: item.bathRoom ?? 0,
+          rental: item.rentalPrice ?? 0,
+          selling: item.sellingPrice ?? 0,
+          status: item.status ?? "-",
+        }));
+        setProperties(mapped);
+        setTotalRecords(data.allRecord ?? 0);
+        setPage(data.currentPage ?? 1);
+        setPageSize(data.recordPerPage ?? 10);
+      });
+
+      
+    };
+    window.addEventListener('propertyTableReload', handleTableReload as EventListener);
+    return () => {
+      window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
+    };
+  }, []);
 
   return (
     <div className="mt-4">

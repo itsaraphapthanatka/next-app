@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const cookie = cookieStore.get("accessToken");
   const token = cookie?.value;
-  console.log("froxy token", token);
   const response = await fetch("https://api.serve.co.th/properties/gets", {
     method: "POST",
     headers: {

@@ -35,17 +35,18 @@ interface GetPropertiesParams {
   orderBy?: string;
 }
 
-export const getProperties = async (params?: GetPropertiesParams,token?:string) => {
+export const getProperties = async (params?: GetPropertiesParams,token?:string,projectName?:string,addressUnit?:string) => {
     // const cookieStore = await cookies();
     // const cookie = cookieStore.get("accessToken");
     // const token = cookie?.value;
-    console.log('property token',token)
+    console.log('projectName',projectName)
+    console.log('addressUnit',addressUnit)
   const response: AxiosResponse = await axios.post(
       `/api/proxy/property`,
       // `https://api.serve.co.th/properties/gets`,
       {
-      project: params?.project ?? "",
-      search: params?.search ?? "",
+      project: projectName ?? "",
+      search: addressUnit ?? "",
       page: {
         current: params?.page?.current ?? 0,
         size: params?.page?.size ?? 0,
