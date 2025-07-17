@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const endpoint = process.env.BACKEND_PUBLIC_API;
+
 
 console.log("BACKEND_PUBLIC_API : ", process.env.BACKEND_PUBLIC_API);
 console.log("NEXT_PUBLIC_API : ", process.env.NEXT_PUBLIC_API);
