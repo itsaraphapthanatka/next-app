@@ -43,7 +43,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
   const [page] = useState<number>(1);
-  const [pageSize] = useState<number>(100);
+  const [pageSize] = useState<number>(50);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
   
