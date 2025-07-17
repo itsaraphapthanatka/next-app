@@ -1,10 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 
-
-
-console.log("BACKEND_PUBLIC_API : ", process.env.BACKEND_PUBLIC_API);
-console.log("NEXT_PUBLIC_API : ", process.env.NEXT_PUBLIC_API);
-
 type PropertyBackOfficeSortType =
   | "Project"
   | "Address"
@@ -36,9 +31,6 @@ interface GetPropertiesParams {
 }
 
 export const getProperties = async (params?: GetPropertiesParams,token?:string,projectName?:string,addressUnit?:string) => {
-    // const cookieStore = await cookies();
-    // const cookie = cookieStore.get("accessToken");
-    // const token = cookie?.value;
     console.log('projectName',projectName)
     console.log('addressUnit',addressUnit)
   const response: AxiosResponse = await axios.post(
