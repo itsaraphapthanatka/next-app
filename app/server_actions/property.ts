@@ -41,7 +41,7 @@ export const getProperties = async (params?: GetPropertiesParams,token?:string) 
     // const token = cookie?.value;
     console.log('property token',token)
   const response: AxiosResponse = await axios.post(
-      `${process.env.NEXT_PUBLIC_API}/api/proxy/property`,
+      `/api/proxy/property`,
       // `https://api.serve.co.th/properties/gets`,
       {
       project: params?.project ?? "",
