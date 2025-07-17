@@ -73,10 +73,12 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
       width: 50,
+      fixed: 'left',
     },
     {
       title: 'Project',
       dataIndex: 'project',
+      fixed: 'left',
       sorter: (a, b) => a.project.localeCompare(b.project),
       render: (text, record) => (
         <div
