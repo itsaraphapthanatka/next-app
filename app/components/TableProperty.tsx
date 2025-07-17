@@ -92,9 +92,11 @@ const MAX_SELECTION = 20;
 const TableProperty: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   useEffect(() => {
-    getProperties().then((data) => {
+    getProperties({ page: { current: page, size: pageSize } }).then((data) => {
       setProperties(data);
     });
   }, []);
@@ -107,7 +109,10 @@ const TableProperty: React.FC = () => {
         columns={columns} // ลบ EXPAND_COLUMN
         dataSource={properties}
         className="text-sm"
-        pagination={{ position: ['bottomCenter'] }}
+        pagination={{ position: ['bottomCenter'], current: page, pageSize: pageSize, onChange: (page, pageSize) => {
+          setPage(page);
+          setPageSize(pageSize);
+        } }}
         rowSelection={{
           type: 'checkbox',
           columnTitle: <span className="hidden-checkbox-header" />,
