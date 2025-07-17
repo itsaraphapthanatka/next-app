@@ -42,11 +42,12 @@ const MAX_SELECTION = 20;
 const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(100);
+  const [page, setPage] = useState<number>();
+  const [pageSize, setPageSize] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
-
+  setPage(1)
+  setPageSize(100)
   const columns: ColumnsType<DataType> = [
     {
       title: 'No.',
