@@ -54,7 +54,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [properties, setProperties] = useState<DataType[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10); // ตั้ง default เท่ากับ API
+  const [pageSize, setPageSize] = useState<number>(50); // ตั้ง default เท่ากับ API
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
   
@@ -63,6 +63,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       title: 'No.',
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
+      width: 10,
     },
     {
       title: 'Project',
@@ -79,16 +80,19 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           {text}
         </div>
       ),
+      width: 150,
     },
     {
       title: 'Size',
       dataIndex: 'size',
       sorter: (a, b) => a.size - b.size,
+      width: 10,
     },
     {
       title: 'Bed',
       dataIndex: 'bed',
       sorter: (a, b) => a.bed - b.bed,
+      width: 10,
     },
     {
       title: 'Bath',
@@ -109,12 +113,14 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => a.status.localeCompare(b.status),
+      width: 150,
     },
     Table.EXPAND_COLUMN,
   ];
 
   const defaultExpandable: ExpandableConfig<DataType> = {
     expandedRowRender: (record) => <p>{record.status}</p>,
+    fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>
       expanded ? (
         <UpCircleOutlined onClick={(e) => onExpand(record, e)} />
@@ -122,35 +128,6 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
       ),
   };
-
-  // useEffect(() => {
-  //   getProperties(
-  //     { page: { current: page, size: pageSize }, orderBy: 'asc' },
-  //     token
-  //   ).then((data: GetPropertiesResponse) => {
-  //     const items: PropertyApiItem[] = Array.isArray(data?.resultLists) ? data.resultLists : [];
-
-  //     const mapped: DataType[] = items.map((item: PropertyApiItem, index: number) => ({
-  //       key: item.id,
-  //       no: index + 1,
-  //       project: item.project ?? "-",
-  //       size: item.size ?? 0,
-  //       bed: item.bedRoom ?? 0,
-  //       bath: item.bathRoom ?? 0,
-  //       rental: item.rentalPrice ?? 0,
-  //       selling: item.sellingPrice ?? 0,
-  //       status: item.status ?? "-",
-  //       currentPage: item.currentPage ?? 1,
-  //       allRecord: item.allRecord ?? 0,
-  //       totalPage: item.totalPage ?? 1,
-  //       recordPerPage: item.recordPerPage ?? 50,
-  //       recordStart: item.recordStart ?? 1,
-  //       recordEnd: item.recordEnd ?? 50,
-  //     }));
-
-  //     setProperties(mapped);
-  //   });
-  // }, [page, pageSize, token]);
 
   useEffect(() => {
     getProperties(
@@ -184,13 +161,15 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       <Table<DataType>
         tableLayout="auto"
         expandable={defaultExpandable}
+        // className="custom-table-font"
         size="small"
         columns={columns}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 800 }}
         dataSource={properties}
-        className="text-sm"
         pagination={{
           position: ['bottomCenter'],
+          showTotal: (total) => `Total ${total} items`,
+          size: "small",
           showSizeChanger: true,
           pageSize: pageSize,
           total: totalRecords,

@@ -37,7 +37,7 @@ export default async function PropertyPage() {
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
       <Navbar />
-      <div className="max-w-md mx-auto p-4">
+      <div className="mx-auto p-4">
         <div className="flex items-center gap-2">
           <Link href="/menu" passHref>  
             <ArrowLeftCircleIcon className="w-10 h-10 cursor-pointer text-amber-500" />

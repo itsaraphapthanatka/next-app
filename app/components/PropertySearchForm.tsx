@@ -63,7 +63,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   };
 
   return (
-    <Card className={`p-6 w-full max-w-md space-y-4 ${className}`}>
+    <Card className={`p-6 w-full space-y-4 ${className}`}>
       <div className="space-y-4">
         <div className="flex gap-3">
         <Input size="large"
