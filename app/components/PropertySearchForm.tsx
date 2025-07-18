@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal } from "antd";
+import { Card, Input, Button, Modal, Form, Select, Row, Col, Flex } from "antd";
+// import { PropertyFilterForm } from "./PropertyFilterForm";
 
 interface PropertySearchFormProps {
   className?: string;
@@ -13,9 +14,11 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const [requestCount, setRequestCount] = useState(0);
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
-
+  const [form] = Form.useForm();
+  const [bathRoom, setBathRoom] = useState(0);
+  const [bedRoom, setBedRoom] = useState(0);
+  const [havePicture, setHavePicture] = useState(0);
+  const [showOnWeb, setShowOnWeb] = useState(0);
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -45,26 +48,25 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
     console.log("Request Property clicked");
   };
 
-  const handleFilterSearch = () => {
-    setModalText('Searching to your property...');
-    setConfirmLoading(true);
-    setTimeout(() => {
-        setIsModalOpen(false);
-        setConfirmLoading(false);
-    }, 2000);
-  };
-
   const handleClose = () => {
     setIsModalOpen(false);
   };
 
-  const handleCopyLink = () => {
-    console.log("Copy Link clicked");
+  const handleFilterSearch = () => {
+    const values = form.getFieldsValue();
+    console.log("Filter Search clicked", values);
+    const event = new CustomEvent('propertyTableReload', {
+      detail: { projectName: values.projectNameFilter ?? "", addressUnit: values.addressUnitFilter ?? ""  , page: 1, pageSize: 10 }
+    });
+    window.dispatchEvent(event);
+    handleClose();
   };
 
   const handleResetFilter = () => {
+    form.resetFields();
     console.log("Reset Filter clicked");
   };
+
 
   return (
     <Card className={`p-6 w-full space-y-4 ${className}`}>
@@ -102,43 +104,332 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
           </Button>
         </div>
         <div className="flex gap-3">
-            <Button color="default" size="large"
-            variant="solid"
-            onClick={handleRequestProp}
-            className="w-full"
-            >
-            Request Prop. ({requestCount}/{maxRequests})
-            </Button>
+        <Button color="default" size="large"
+          variant="solid"
+          onClick={handleRequestProp}
+          className="w-full"
+        >
+          Request Prop. ({requestCount}/{maxRequests})
+        </Button>
         </div>
       </div>
       <Modal
         title="Property Detail"
         open={isModalOpen}
+        style={{ top: 20 }}
         onCancel={handleClose}
-        confirmLoading={confirmLoading}
         cancelText="Close"
-        footer={(_, { CancelBtn }) => (
-            <>
-              <Button color="default"
-              size="small"
-              variant="outlined"
-              onClick={handleCopyLink}
-              >Copy Link</Button>
-              <Button color="default"
-              size="small"
-              variant="outlined"
-              onClick={handleResetFilter}
-              >Reset Filter</Button>
-              <Button color="danger"
-              size="small"
-              variant="outlined"
-              onClick={handleFilterSearch}
-              >Search</Button>
-              <CancelBtn />
-            </>
-          )}
+        footer={
+          <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+            <Button color="default" size="middle" variant="outlined" onClick={handleResetFilter}>
+              Copy Link
+            </Button>
+            <Button color="default" size="middle" variant="outlined" onClick={handleResetFilter}>
+              Reset Filter
+            </Button>
+            <Button color="danger" size="middle" variant="outlined" onClick={handleFilterSearch}>
+              Search
+            </Button>
+            <Button color="default" size="middle" variant="outlined" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
+        }
+        styles={{
+          header: {
+            padding: '10px',
+            borderBottom: '1px solid #f0f0f0', // ✅ เส้นใต้ title
+          },
+          body: {
+            padding: '10px',
+            // maxHeight: '60vh',
+            // overflowY: 'auto',
+          },
+        }}
       >
-        <p>{modalText}</p>
+        <div>
+          <Form
+            form={form}
+            layout="vertical"
+            name="propertyFilter"
+          
+          >
+          <div className="gap-3 w-full">
+            <Form.Item
+              label="Project"
+              name="projectNameFilter"
+              style={{ marginBottom: "10px" }}
+            >
+              <Input placeholder="Project Name" size="large" />
+            </Form.Item>
+          </div>
+          <div className="gap-3 w-full">
+            <Form.Item
+              label="Unit Type"
+              name="addressUnitFilter"
+              style={{ marginBottom: "10px" }}
+            >
+              <Input placeholder="Unit Type" size="large" />
+            </Form.Item>
+          </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Min. Size"
+                name="minSize"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Min. Size" size="large" />
+              </Form.Item>
+              <Form.Item
+                label="Max. Size"
+                name="maxSize"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Max. Size" size="large" />
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Bed Room"
+                name="bedRoom"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Bed Room" size="large" value={bedRoom} />
+              </Form.Item>
+              <Form.Item
+                label="Bath Room"
+                name="bathRoom"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Bath Room" size="large" value={bathRoom} />
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Min. Rental Rate On  Web"
+                name="minRentalRateOnWeb"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Min. Rental Rate On Web" size="large" value={0}/>
+              </Form.Item>
+              <Form.Item
+                label="Max. Rental Rate On Web"
+                name="maxRentalRateOnWeb"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Max. Rental Rate On Web" size="large" value={0}/>
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Min. Rental Rate Per SQM"
+                name="minRentalRatePerSQM"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Min. Rental Rate Per SQM" size="large" value={0}/>
+              </Form.Item>
+              <Form.Item
+                label="Max. Rental Rate Per SQM"
+                name="maxRentalRatePerSQM"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Max. Rental Rate Per SQM" size="large" value={0}/>
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Min. Floor"
+                name="minFloor"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Min. Floor" size="large" value={0}/>
+              </Form.Item>
+              <Form.Item
+                label="Max. Floor"
+                name="maxFloor"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Max. Floor" size="large" />
+              </Form.Item>
+            </div>
+            <div className="gap-3 w-full">
+              <Form.Item
+                label="Property Status"
+                name="propertyStatus"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Property Status" size="large" />
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">
+              <Form.Item
+                label="Have Picture"
+                name="havePicture"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Show on Web"
+                name="showOnWeb"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">
+              <Form.Item
+                label="Hot Deal"
+                name="hotDeal"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="For Rent/Sale Status"
+                name="forRentSaleStatus"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="gap-3 w-full">
+              <Form.Item
+                label="Foreigner Owner"
+                name="foreignerOwner"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="gap-3 w-full">
+              <Form.Item
+                label="Mass Transit"
+                name="massTransit"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Mass Transit" size="large" disabled />
+              </Form.Item>
+            </div>
+            <div className="gap-3 flex w-full">
+              <Form.Item
+                label="Start Distance (Meter)"
+                name="startDistance"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Start Distance (Meter)" size="large" />
+              </Form.Item>
+              <Form.Item
+                label="To Distance (Meter)"
+                name="toDistance"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="To Distance (Meter)" size="large" />
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">
+              <Form.Item
+                label="Fix Parking"
+                name="fixParking"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Duplex Loft"
+                name="duplexLoft"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">
+              <Form.Item
+                label="Pet Friendly"
+                name="petFriendly"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Private Lift"
+                name="privateLift"
+                className="w-full"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="gap-3 w-full">
+              <Form.Item
+                label="Penthouse"
+                name="penthouse"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={1}>Yes</Select.Option>
+                  <Select.Option value={0}>No</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="gap-3 w-full">
+              <Form.Item
+                label="Property Type"
+                name="propertyType"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="Property Type" size="large" disabled />
+              </Form.Item>
+            </div>
+            <div className="gap-3 w-full">
+              <Form.Item
+                label="VIP Status"
+                name="vipStatus"
+                style={{ marginBottom: "10px" }}
+              >
+                <Input placeholder="VIP Status" size="large" disabled />
+              </Form.Item>
+            </div>
+          </Form>
+          </div>
       </Modal>
     </Card>
   );
