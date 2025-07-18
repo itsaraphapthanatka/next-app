@@ -25,6 +25,7 @@ interface DataType {
   tw: string;
   floor: string;
   RentalPG: string;
+  vipStatusColor: string;
 }
 
 interface PropertyApiItem {
@@ -46,6 +47,7 @@ interface PropertyApiItem {
   tw?: string;
   floor?: string;
   RentalPG?: string;
+  vipStatusColor?: string;
   // Add other fields if needed
 }
 
@@ -166,7 +168,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         <td className='p-2'>INVID</td>
         <td className='p-2'>{record.invid}</td>
         <td className='p-2'>Sale PG</td>
-        <td className='p-2'>{record.invid}</td>
+        <td className='p-2' style={{color: record.vipStatusColor}}>{record.invid}</td>
       </tr>
       <tr className='border-b border-dashed border-gray-200 p-2'>
         <td className='p-2'>TW.</td>
@@ -216,6 +218,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         tw: item.tw ?? "-",
         floor: item.floor ?? "-",
         RentalPG: item.RentalPG ?? "-",
+        vipStatusColor: item.vipStatusColor ?? "-",
       }));
   
       setProperties(mapped);
@@ -254,6 +257,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           tw: item.tw ?? "-",
           floor: item.floor ?? "-",
           RentalPG: item.RentalPG ?? "-",
+          vipStatusColor: item.vipStatusColor ?? "-",
         }));
         setProperties(mapped);
         setTotalRecords(data.allRecord ?? 0);
@@ -296,7 +300,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         }}
         rowSelection={{
           type: 'checkbox',
-          // fixed: 'left',
+          fixed: 'left',
           columnTitle: <span className="hidden-checkbox-header" />,
           selectedRowKeys,
           onChange: (newSelectedKeys) => {
