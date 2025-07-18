@@ -72,7 +72,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       title: 'No.',
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
-      width: 50,
+      width: 35,
     },
     {
       title: 'Project',
@@ -90,7 +90,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           {text}
         </div>
       ),
-      width: 150,
+      width: 70,
     },
     {
       title: 'Size',
@@ -296,7 +296,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         }}
         rowSelection={{
           type: 'checkbox',
-          fixed: 'left',
+          // fixed: 'left',
           columnTitle: <span className="hidden-checkbox-header" />,
           selectedRowKeys,
           onChange: (newSelectedKeys) => {

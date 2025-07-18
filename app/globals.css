@@ -34,7 +34,7 @@ body {
   font-weight: 600;
 }
 .custom-table-font .ant-table-tbody > tr > td {
-  font-size: 7px;
+  font-size: 10px;
 }
 
 @media only screen and (max-width: 576px) {
