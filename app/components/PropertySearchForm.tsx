@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, Select, Row, Col, Flex } from "antd";
+import { Card, Input, Button, Modal, Form, Select} from "antd";
 // import { PropertyFilterForm } from "./PropertyFilterForm";
 
 interface PropertySearchFormProps {
@@ -17,8 +17,6 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const [form] = Form.useForm();
   const [bathRoom, setBathRoom] = useState(0);
   const [bedRoom, setBedRoom] = useState(0);
-  const [havePicture, setHavePicture] = useState(0);
-  const [showOnWeb, setShowOnWeb] = useState(0);
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -194,14 +192,14 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
                 name="bedRoom"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Bed Room" size="large" value={bedRoom} />
+                <Input placeholder="Bed Room" size="large" />
               </Form.Item>
               <Form.Item
                 label="Bath Room"
                 name="bathRoom"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Bath Room" size="large" value={bathRoom} />
+                <Input placeholder="Bath Room" size="large"/>
               </Form.Item>
             </div>
             <div className="flex gap-3 w-full">  
@@ -210,14 +208,14 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
                 name="minRentalRateOnWeb"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Min. Rental Rate On Web" size="large" value={0}/>
+                <Input placeholder="Min. Rental Rate On Web" size="large"/>
               </Form.Item>
               <Form.Item
                 label="Max. Rental Rate On Web"
                 name="maxRentalRateOnWeb"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Max. Rental Rate On Web" size="large" value={0}/>
+                <Input placeholder="Max. Rental Rate On Web" size="large"/>
               </Form.Item>
             </div>
             <div className="flex gap-3 w-full">  

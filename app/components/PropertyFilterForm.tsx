@@ -1,7 +1,9 @@
 import { Button, Form, Input } from "antd";
 
+import { FormInstance } from "antd/es/form";
+
 interface PropertyFilterFormProps {
-  form: any;
+  form: FormInstance;
 }
 
 export const PropertyFilterForm = ({ form }: PropertyFilterFormProps) => {
