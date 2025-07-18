@@ -15,8 +15,6 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const [bathRoom, setBathRoom] = useState(0);
-  const [bedRoom, setBedRoom] = useState(0);
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
