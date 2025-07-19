@@ -27,15 +27,21 @@ interface DataType {
   RentalPG: string;
   vipStatusColor: string;
   salePG: number;
+  rentPGColor: string;
+  salePGColor: string;
+  rentPGText: string;
+  salePGText: string;
+  availableOn: string;
+  lastUpdate: string;
 }
 
 interface PropertyApiItem {
   id?: number;
   project?: string;
   size?: number;
-  bedRoom?: number;
-  bathRoom?: number;
-  rentalPrice?: number;
+  bed?: number;
+  bath?: number;
+  rental?: number;
   sellingPrice?: number;
   status?: string;
   allRecord?: number;
@@ -50,6 +56,13 @@ interface PropertyApiItem {
   RentalPG?: string;
   vipStatusColor?: string;
   salePG?: number;
+  selling?: number;
+  rentPGColor?: string;
+  salePGColor?: string;
+  rentPGText?: string;
+  salePGText?: string;
+  availableOn?: string;
+  lastUpdate?: string;
   // Add other fields if needed
 }
 
@@ -138,7 +151,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
       render: (text) => (
         <div className='text-center'>
-          {text}
+          {text.toLocaleString()}
         </div>
       ),
     },
@@ -149,7 +162,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
       render: (text) => (
         <div className='text-center'>
-          {text}
+          {text.toLocaleString()}
         </div>
       ),
     },
@@ -170,25 +183,25 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         <td className='p-2'>INVID</td>
         <td className='p-2' style={{color: record.vipStatusColor}}>{record.invid}</td>
         <td className='p-2'>Sale PG</td>
-        <td className='p-2'>
-          {typeof record.salePG === 'number' ? record.salePG.toFixed(2) : record.salePG}
+        <td className='p-2' style={{color: record.salePGColor}}>
+          {record.salePG.toString().slice(0, 5)}
         </td>
       </tr>
       <tr className='border-b border-dashed border-gray-200 p-2'>
         <td className='p-2'>TW.</td>
         <td className='p-2'>{record.tw}</td>
         <td className='p-2'>Last Update</td>
-        <td className='p-2'>{record.tw}</td>
+        <td className='p-2'>{record.lastUpdate}</td>
       </tr>
       <tr className='border-b border-dashed border-gray-200 p-2'>
         <td className='p-2'>FL.</td>
         <td className='p-2'>{record.floor}</td>
         <td className='p-2'>Available On</td>
-        <td className='p-2'>-</td>
+        <td className='p-2'>{record.availableOn}</td>
       </tr>
       <tr className='border-b border-dashed border-gray-200 p-2'>
         <td className='p-2'>Rent PG</td>
-        <td className='p-2'>{record.RentalPG}</td>
+        <td className='p-2' style={{color: record.rentPGColor}}>{record.rentPGText}</td>
       </tr>
     </table>,
     fixed: 'right',
@@ -213,10 +226,10 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
         project: item.project ?? "-",
         size: item.size ?? 0,
-        bed: item.bedRoom ?? 0,
-        bath: item.bathRoom ?? 0,
-        rental: item.rentalPrice ?? 0,
-        selling: item.sellingPrice ?? 0,
+        bed: item.bed ?? 0,
+        bath: item.bath ?? 0,
+        rental: item.rental ?? 0,
+        selling: item.selling ?? 0,
         status: item.status ?? "-",
         invid: item.invid ?? "-",
         tw: item.tw ?? "-",
@@ -224,6 +237,12 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         RentalPG: item.RentalPG ?? "-",
         vipStatusColor: item.vipStatusColor ?? "-",
         salePG: item.salePG ?? 0,
+        rentPGColor: item.rentPGColor ?? "-",
+        salePGColor: item.salePGColor ?? "-",
+        rentPGText: item.rentPGText ?? "-",
+        salePGText: item.salePGText ?? "-",
+        availableOn: item.availableOn ?? "-",
+        lastUpdate: item.lastUpdate ?? "-",
       }));
   
       setProperties(mapped);
@@ -253,10 +272,10 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
           project: item.project ?? "-",
           size: item.size ?? 0,
-          bed: item.bedRoom ?? 0,
-          bath: item.bathRoom ?? 0,
-          rental: item.rentalPrice ?? 0,
-          selling: item.sellingPrice ?? 0,
+          bed: item.bed ?? 0,
+          bath: item.bath ?? 0,
+          rental: item.rental ?? 0,
+          selling: item.selling ?? 0,
           status: item.status ?? "-",
           invid: item.invid ?? "-",
           tw: item.tw ?? "-",
@@ -264,6 +283,12 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           RentalPG: item.RentalPG ?? "-",
           vipStatusColor: item.vipStatusColor ?? "-",
           salePG: item.salePG ?? 0,
+          rentPGColor: item.rentPGColor ?? "-",
+          salePGColor: item.salePGColor ?? "-",
+          rentPGText: item.rentPGText ?? "-",
+          salePGText: item.salePGText ?? "-",
+          availableOn: item.availableOn ?? "-",
+          lastUpdate: item.lastUpdate ?? "-",
         }));
         setProperties(mapped);
         setTotalRecords(data.allRecord ?? 0);
