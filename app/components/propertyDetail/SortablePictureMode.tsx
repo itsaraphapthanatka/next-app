@@ -21,10 +21,10 @@ import { Image } from "antd";
 type PictureItem = {
     id: string;
     filename: string;
-    preview: string;
+    preview?: string; // Make preview optional
 }
 
-const SortableItem = ({ id, filename }: PictureItem) => {
+const SortableItem = ({ id, filename, preview }: PictureItem) => {
   const {
     attributes,
     listeners,
@@ -37,6 +37,9 @@ const SortableItem = ({ id, filename }: PictureItem) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  // Use preview if available, otherwise fallback to filename
+  const imageSrc = preview ?? filename;
 
   return (
     <div
@@ -55,7 +58,7 @@ const SortableItem = ({ id, filename }: PictureItem) => {
       {...attributes}
       {...listeners}
     >
-      <Image src={filename} alt={filename} width={60} height={60} style={{ marginRight: "12px", objectFit: "cover" }} />
+      <Image src={imageSrc} alt={filename} width={60} height={60} style={{ marginRight: "12px", objectFit: "cover" }} />
       <span style={{ color: "#1677ff", cursor: "pointer" }}>{filename}</span>
     </div>
   );
