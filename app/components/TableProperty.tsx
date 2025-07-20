@@ -33,6 +33,8 @@ interface DataType {
   salePGText: string;
   availableOn: string;
   lastUpdate: string;
+  selePG?: string;
+  vipStatus?: string;
 }
 
 interface PropertyApiItem {
@@ -63,6 +65,8 @@ interface PropertyApiItem {
   salePGText?: string;
   availableOn?: string;
   lastUpdate?: string;
+  selePG?: string;
+  vipStatus?: string;
   // Add other fields if needed
 }
 
@@ -184,7 +188,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         <td className='p-2' style={{color: record.vipStatusColor}}>{record.invid}</td>
         <td className='p-2'>Sale PG</td>
         <td className='p-2' style={{color: record.salePGColor}}>
-          {record.salePG.toString().slice(0, 5)}
+          {record.salePGText ? record.salePGText + " %" : "%"}
         </td>
       </tr>
       <tr className='border-b border-dashed border-gray-200 p-2'>
@@ -201,7 +205,9 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       </tr>
       <tr className='border-b border-dashed border-gray-200 p-2'>
         <td className='p-2'>Rent PG</td>
-        <td className='p-2' style={{color: record.rentPGColor}}>{record.rentPGText}</td>
+        <td className='p-2' style={{color: record.rentPGColor}}>
+          {record.rentPGText ? record.rentPGText + " %" : "%"}
+        </td>
       </tr>
     </table>,
     fixed: 'right',
@@ -241,8 +247,9 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         salePGColor: item.salePGColor ?? "-",
         rentPGText: item.rentPGText ?? "-",
         salePGText: item.salePGText ?? "-",
-        availableOn: item.availableOn ?? "-",
-        lastUpdate: item.lastUpdate ?? "-",
+        availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+        lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+        vipStatus: item.vipStatus ?? "-",
       }));
   
       setProperties(mapped);
@@ -287,8 +294,9 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           salePGColor: item.salePGColor ?? "-",
           rentPGText: item.rentPGText ?? "-",
           salePGText: item.salePGText ?? "-",
-          availableOn: item.availableOn ?? "-",
-          lastUpdate: item.lastUpdate ?? "-",
+          availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+          lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+          vipStatus: item.vipStatus ?? "-",
         }));
         setProperties(mapped);
         setTotalRecords(data.allRecord ?? 0);
@@ -352,9 +360,11 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       />
 
       <ModalProperty
+        selectedProperty={selectedProperty}
         text={selectedProperty?.project ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        
       />
     </div>
   );

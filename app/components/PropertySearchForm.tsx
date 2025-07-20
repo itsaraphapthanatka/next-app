@@ -110,7 +110,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
         </div>
       </div>
       <Modal
-        title="Property Detail"
+        title="Property Filter"
         open={isModalOpen}
         style={{ top: 20 }}
         onCancel={handleClose}
@@ -425,7 +425,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
               </Form.Item>
             </div>
           </Form>
-          </div>
+        </div>
       </Modal>
     </Card>
   );
