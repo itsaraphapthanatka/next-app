@@ -21,7 +21,7 @@ export const FormProperty = ({ selectedProperty }: { selectedProperty: SelectedP
     <Form
         form={form}
         layout="vertical"
-        name="propertyDetail">
+        name="tabsPropertyDetail">
         <Form.Item name="rentPG" label="Rent Profit gap" className="text-[12px]"  style={{ marginBottom: "10px" }}>
             <Input 
                 size="large"

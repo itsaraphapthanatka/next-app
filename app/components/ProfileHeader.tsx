@@ -36,7 +36,7 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
          
           <div>
             <h2 className="text-lg font-semibold text-foreground font-prompt">สวัสดี {userName}!</h2>
-            <p className="text-sm text-text-greeting font-prompt">{userRole} ff</p>
+            <p className="text-sm text-text-greeting font-prompt">{userRole}</p>
           </div>
         </div>
         

@@ -1,4 +1,9 @@
-import { FormProperty } from "./FormProperty";
+import { FormProperty } from "./propertyDetail/FormProperty";
+import { RentalTabs } from "./propertyDetail/RentalTabs";
+import { SallingTabs } from "./propertyDetail/SallingTabs";
+import { OtherTabs } from "./propertyDetail/OtherTabs";
+import { KeyHolderTabs } from "./propertyDetail/KeyHolderTabs";
+import { PictureTabs } from "./propertyDetail/PictureTabs";
 import { Button, Modal, Tabs } from "antd";
 
 type SelectedProperty = {
@@ -35,27 +40,27 @@ export const ModalProperty = ({
     {
       key: '2',
       label: 'Rental',
-      children: <p>Content of Tab Pane 2</p>,
+      children: <RentalTabs selectedProperty={selectedProperty} />,
     },
     {
       key: '3',
       label: 'Selling',
-      children: <p>Content of Tab Pane 3</p>,
+      children: <SallingTabs selectedProperty={selectedProperty}/>,
     },
     {
       key: '4',
       label: 'Other',
-      children: <p>Content of Tab Pane 4</p>,
+      children: <OtherTabs selectedProperty={selectedProperty}/>,
     },
     {
       key: '5',
       label: 'Key Holder',
-      children: <p>Content of Tab Pane 5</p>,
+      children: <KeyHolderTabs selectedProperty={selectedProperty}/>,
     },
     {
       key: '6',
       label: 'Picture',
-      children: <p>Content of Tab Pane 6</p>,
+      children: <PictureTabs selectedProperty={selectedProperty}/>,
     },
     {
       key: '7',

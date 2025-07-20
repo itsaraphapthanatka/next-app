@@ -43,8 +43,8 @@ export const getProperties = async (params?: GetPropertiesParams,token?:string,p
         current: params?.page?.current ?? 0,
         size: params?.page?.size ?? 0,
       },
-      sortBy: params?.sortBy ?? "project",
-      orderBy: params?.orderBy ?? "asc",
+      sortBy: params?.sortBy ?? "LastedUpdate",
+      orderBy: params?.orderBy ?? "DESC",
     },
     {
       headers: {
