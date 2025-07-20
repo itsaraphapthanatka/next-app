@@ -1,4 +1,4 @@
-import { Form, Input, Select, Checkbox, Col, Row, Radio  } from "antd";
+import { Form, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
 type SelectedProperty = {

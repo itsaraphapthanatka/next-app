@@ -15,6 +15,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Image } from "antd";
 
 type ImageItem = {
   id: string;
@@ -22,7 +23,13 @@ type ImageItem = {
   name: string;
 };
 
-const SortableItem = ({ id, src, name }: ImageItem) => {
+type PictureItem = {
+    id: string;
+    filename: string;
+    preview: string;
+}
+
+const SortableItem = ({ id, filename, preview }: PictureItem) => {
   const {
     attributes,
     listeners,
@@ -53,28 +60,28 @@ const SortableItem = ({ id, src, name }: ImageItem) => {
       {...attributes}
       {...listeners}
     >
-      <img src={src} alt={name} width={60} height={60} style={{ marginRight: "12px", objectFit: "cover" }} />
-      <span style={{ color: "#1677ff", cursor: "pointer" }}>{name}</span>
+      <Image src={filename} alt={filename} width={60} height={60} style={{ marginRight: "12px", objectFit: "cover" }} />
+      <span style={{ color: "#1677ff", cursor: "pointer" }}>{filename}</span>
     </div>
   );
 };
 
 export const SortablePictureMode = () => {
-  const [items, setItems] = useState<ImageItem[]>([
+  const [items, setItems] = useState<PictureItem[]>([
     {
       id: "1",
-      src: "picture1.jpg",
-      name: "picture1.jpg",
+      filename: "picture1.jpg",
+      preview: "picture1.jpg",
     },
     {
       id: "2",
-        src: "picture2.jpg",
-        name: "picture2.jpg",
+      filename: "picture2.jpg",
+      preview: "picture2.jpg",
     },
     {
       id: "3",
-      src: "picture3.jpg",
-      name: "picture3.jpg",
+      filename: "picture3.jpg",
+      preview: "picture3.jpg",
     },
   ]);
 
@@ -105,7 +112,7 @@ export const SortablePictureMode = () => {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
         {items.map((item) => (
-          <SortableItem key={item.id} id={item.id} src={item.src} name={item.name} />
+          <SortableItem key={item.id} id={item.id} filename={item.filename} preview={item.preview} />
         ))}
       </SortableContext>
     </DndContext>

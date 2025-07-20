@@ -1,4 +1,4 @@
-import { Form, Input, Select, Checkbox, Col, Row, Radio  } from "antd";
+import { Form, Input, Select  } from "antd";
 
 type SelectedProperty = {
     otherPGColor?: string;

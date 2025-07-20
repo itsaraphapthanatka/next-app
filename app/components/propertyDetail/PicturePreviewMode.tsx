@@ -26,7 +26,7 @@ export const PicturePreviewMode = () => {
             dataIndex: 'preview',
             key: 'preview',
             render: ( record: PicturePreviewModeProps) => (
-                <Image src={record.filename} width={100} height={100}/>
+                <Image src={record.filename} width={100} height={100} alt=""/>
             ),
         },  
         {
