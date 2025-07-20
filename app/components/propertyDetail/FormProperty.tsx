@@ -22,7 +22,7 @@ export const FormProperty = ({ selectedProperty }: { selectedProperty: SelectedP
         form={form}
         layout="vertical"
         name="tabsPropertyDetail">
-        <Form.Item name="rentPG" label="Rent Profit gap" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+        <Form.Item name="rentPG" label="Rent Profit gap" initialValue={selectedProperty.rentPGText ? selectedProperty.rentPGText + " %" : "%"} className="text-[12px]"  style={{ marginBottom: "10px" }}>
             <Input 
                 size="large"
                 readOnly
