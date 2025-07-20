@@ -1,7 +1,24 @@
 import { FormProperty } from "./FormProperty";
 import { Button, Modal, Tabs } from "antd";
 
-export const ModalProperty = ({ text, isModalOpen, setIsModalOpen, selectedProperty }: { text: string, isModalOpen: boolean, setIsModalOpen: (open: boolean) => void, selectedProperty: any }) => {
+export interface Property {
+  id: string;
+  [key: string]: unknown;
+}
+
+interface ModalPropertyProps {
+  text: string;
+  isModalOpen: boolean;
+  setIsModalOpen: (open: boolean) => void;
+  selectedProperty: Property;
+}
+
+export const ModalProperty = ({
+  text,
+  isModalOpen,
+  setIsModalOpen,
+  selectedProperty,
+}: ModalPropertyProps) => {
   console.log("selectedProperty in modal", selectedProperty);
   const items = [
     {
@@ -52,33 +69,33 @@ export const ModalProperty = ({ text, isModalOpen, setIsModalOpen, selectedPrope
   ];
   return (
     <Modal 
-    title="Property Detail" 
-    open={isModalOpen} 
-    onCancel={() => setIsModalOpen(false)}
-    width={1000}
-    style={{ top: 20 }}
-    styles={{
-      header: {
-        padding: '10px',
-        borderBottom: '1px solid #f0f0f0', // ✅ เส้นใต้ title
-      },
-      body: {
-        padding: '10px',
-      },
-    }}
-    footer={
-      <div className="flex justify-end gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
-        <Button color="green" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Not have Original File</Button>
-        <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
-        <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Get Link</Button>
-        <Button color="default" variant="outlined" size="small" onClick={() => setIsModalOpen(false)}>Close</Button>
-      </div>
-    }
+      title="Property Detail" 
+      open={isModalOpen} 
+      onCancel={() => setIsModalOpen(false)}
+      width={1000}
+      style={{ top: 20 }}
+      styles={{
+        header: {
+          padding: '10px',
+          borderBottom: '1px solid #f0f0f0', // ✅ เส้นใต้ title
+        },
+        body: {
+          padding: '10px',
+        },
+      }}
+      footer={
+        <div className="flex justify-end gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+          <Button color="green" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Not have Original File</Button>
+          <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
+          <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Get Link</Button>
+          <Button color="default" variant="outlined" size="small" onClick={() => setIsModalOpen(false)}>Close</Button>
+        </div>
+      }
     >
       <p>{text}</p>
       <Tabs 
-      items={items} 
-      defaultActiveKey="1"
+        items={items} 
+        defaultActiveKey="1"
       />
     </Modal>
   );
