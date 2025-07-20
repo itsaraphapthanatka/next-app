@@ -31,7 +31,7 @@ export const FormProperty = ({ selectedProperty, token }: { selectedProperty: Se
             setUnitType(unitType);
         };
         fetchUnitType();
-    }, []);
+    }, [token]);
   return (
     <Form
         form={form}

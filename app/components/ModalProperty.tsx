@@ -5,7 +5,6 @@ import { OtherTabs } from "./propertyDetail/OtherTabs";
 import { KeyHolderTabs } from "./propertyDetail/KeyHolderTabs";
 import { PictureTabs } from "./propertyDetail/PictureTabs";
 import { Button, Modal, Tabs } from "antd";
-import { cookies } from "next/headers";
 
 type SelectedProperty = {
   rentPGColor?: string;
