@@ -360,7 +360,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       />
 
       <ModalProperty
-        selectedProperty={selectedProperty}
+        selectedProperty={selectedProperty ?? {} as any}
         text={selectedProperty?.project ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
