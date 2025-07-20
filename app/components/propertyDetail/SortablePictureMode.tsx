@@ -7,6 +7,7 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -17,19 +18,13 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Image } from "antd";
 
-type ImageItem = {
-  id: string;
-  src: string;
-  name: string;
-};
-
 type PictureItem = {
     id: string;
     filename: string;
     preview: string;
 }
 
-const SortableItem = ({ id, filename, preview }: PictureItem) => {
+const SortableItem = ({ id, filename }: PictureItem) => {
   const {
     attributes,
     listeners,
@@ -99,9 +94,9 @@ export const SortablePictureMode = () => {
     })
   );
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over.id) {
+    if (over && active.id !== over.id) {
       const oldIndex = items.findIndex((item) => item.id === active.id);
       const newIndex = items.findIndex((item) => item.id === over.id);
       setItems((items) => arrayMove(items, oldIndex, newIndex));
