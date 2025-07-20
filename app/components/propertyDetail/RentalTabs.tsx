@@ -107,7 +107,7 @@ export const RentalTabs = ({ selectedProperty }: { selectedProperty: SelectedPro
                     </Select>
                     </Form.Item>
                 </div>
-                <Form.Item label="Company Contact" name="companyContact" style={{ marginBottom: "10px" }}>
+                <Form.Item name="companyContact" style={{ marginBottom: "10px" }}>
                     <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
                             <Col span={12}>
