@@ -1,6 +1,8 @@
 "use client"
+import { getUnitType } from "@/app/server_actions/unittype";
 import { Form, Input, Select, Checkbox, Col, Row  } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useEffect, useState } from "react";
 
 
 type SelectedProperty = {
@@ -14,9 +16,22 @@ type SelectedProperty = {
     vipStatus?: string;
   };
 
-export const FormProperty = ({ selectedProperty }: { selectedProperty: SelectedProperty }) => {
+type UnitType = {
+    id: string;
+    name: string;
+}
+
+export const FormProperty = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     console.log("selectedProperty in form", selectedProperty);
     const [form] = Form.useForm();
+    const [unitType, setUnitType] = useState<UnitType[]>([]);
+    useEffect(() => {
+        const fetchUnitType = async () => {
+            const unitType = await getUnitType(token);
+            setUnitType(unitType);
+        };
+        fetchUnitType();
+    }, []);
   return (
     <Form
         form={form}
@@ -147,7 +162,11 @@ export const FormProperty = ({ selectedProperty }: { selectedProperty: SelectedP
             name="unitType"
             style={{ marginBottom: "10px" }}
             >
-            <Input placeholder="Unit Type" size="large"/>
+            <Select placeholder="Unit Type" size="large">
+                {unitType.map((unit: UnitType) => (
+                    <Select.Option key={unit.id} value={unit.id}>{unit.name}</Select.Option>
+                ))}
+            </Select>
             </Form.Item>
             <Form.Item
             label="Parking Slot"

@@ -5,6 +5,7 @@ import { OtherTabs } from "./propertyDetail/OtherTabs";
 import { KeyHolderTabs } from "./propertyDetail/KeyHolderTabs";
 import { PictureTabs } from "./propertyDetail/PictureTabs";
 import { Button, Modal, Tabs } from "antd";
+import { cookies } from "next/headers";
 
 type SelectedProperty = {
   rentPGColor?: string;
@@ -22,6 +23,7 @@ interface ModalPropertyProps {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
   selectedProperty: SelectedProperty;
+  token: string;
 }
 
 export const ModalProperty = ({
@@ -29,13 +31,14 @@ export const ModalProperty = ({
   isModalOpen,
   setIsModalOpen,
   selectedProperty,
+  token,
 }: ModalPropertyProps) => {
   console.log("selectedProperty in modal", selectedProperty);
   const items = [
     {
       key: '1',
       label: 'Property',
-      children: <FormProperty selectedProperty={selectedProperty} />,
+      children: <FormProperty selectedProperty={selectedProperty} token={token} />,
     },
     {
       key: '2',
