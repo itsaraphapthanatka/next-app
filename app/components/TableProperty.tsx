@@ -393,7 +393,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         text={selectedProperty?.project ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        
+        token={token}
       />
     </div>
   );
