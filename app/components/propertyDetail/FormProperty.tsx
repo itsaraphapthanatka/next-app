@@ -160,6 +160,7 @@ export const FormProperty = ({ selectedProperty, token }: { selectedProperty: Se
             <Form.Item
             label="Unit Type"
             name="unitType"
+            className="w-full"
             style={{ marginBottom: "10px" }}
             >
             <Select placeholder="Unit Type" size="large">
@@ -171,6 +172,7 @@ export const FormProperty = ({ selectedProperty, token }: { selectedProperty: Se
             <Form.Item
             label="Parking Slot"
             name="parkingSlot"
+            className="w-full"
             style={{ marginBottom: "10px" }}
             >
             <Input placeholder="Parking Slot" size="large"/>
