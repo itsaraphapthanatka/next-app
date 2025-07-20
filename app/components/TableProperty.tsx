@@ -9,9 +9,8 @@ import { ModalProperty } from './ModalProperty';
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
-
-
 interface DataType {
+  id: number;
   key: number;
   no: number;
   project: string;
@@ -228,6 +227,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
   
       const mapped: DataType[] = items.map((item, index) => ({
+        id: item.id ?? 0,
         key: item.id ?? index,
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
         project: item.project ?? "-",
@@ -275,6 +275,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
         console.log("Data", data);
         const mapped: DataType[] = items.map((item, index) => ({
+          id: item.id ?? 0,
           key: item.id ?? index,
           no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
           project: item.project ?? "-",
@@ -312,6 +313,34 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
     };
   }, [page, pageSize, token]);
+
+  // Instead of using `as any`, provide a default DataType object
+  const emptyDataType: DataType = {
+    id: 0,
+    key: 0,
+    no: 0,
+    project: "",
+    size: 0,
+    bed: 0,
+    bath: 0,
+    rental: 0,
+    selling: 0,
+    status: "",
+    invid: "",
+    tw: "",
+    floor: "",
+    RentalPG: "",
+    vipStatusColor: "",
+    salePG: 0,
+    rentPGColor: "",
+    salePGColor: "",
+    rentPGText: "",
+    salePGText: "",
+    availableOn: "",
+    lastUpdate: "",
+    selePG: "",
+    vipStatus: "",
+  };
 
   return (
     <div className="mt-4">
@@ -360,7 +389,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       />
 
       <ModalProperty
-        selectedProperty={selectedProperty ?? {} as any}
+        selectedProperty={selectedProperty ?? emptyDataType}
         text={selectedProperty?.project ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}

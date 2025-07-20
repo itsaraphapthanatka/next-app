@@ -2,7 +2,7 @@
 import { Form, Input, Select, Checkbox, Col, Row  } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
-interface SelectedProperty {
+type SelectedProperty = {
     rentPGColor?: string;
     rentPGText?: string;
     salePGColor?: string;
@@ -11,8 +11,8 @@ interface SelectedProperty {
     invid?: string;
     project?: string;
     vipStatus?: string;
-    [key: string]: any; // For any additional dynamic properties
-}
+    // Add more known fields as needed
+} & Record<string, unknown>; // For any additional dynamic properties
 
 export const FormProperty = ({ selectedProperty }: { selectedProperty: SelectedProperty }) => {
     console.log("selectedProperty in form", selectedProperty);
