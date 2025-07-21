@@ -52,7 +52,7 @@ export const ModalProperty = ({
     {
       key: '4',
       label: 'Other',
-      children: <OtherTabs selectedProperty={selectedProperty}/>,
+      children: <OtherTabs selectedProperty={selectedProperty} token={token}/>,
     },
     {
       key: '5',
