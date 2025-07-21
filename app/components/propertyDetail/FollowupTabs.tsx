@@ -79,7 +79,7 @@ export const FollowupTabs = ({ token }: { token: string }) => {
       title: "Remark",
       dataIndex: "remark",
       key: "remark",
-      render: (text: any) => (
+      render: (text: string) => (
         <div style={{ whiteSpace: "pre-line" }}>{text}</div>
       ),
     },
@@ -102,12 +102,12 @@ export const FollowupTabs = ({ token }: { token: string }) => {
         okText="OK"
         cancelText="Cancel"
       >
-        <p>{selectedRemark}</p>
-        {/* <TextArea
+        {/* <p>{selectedRemark}</p> */}
+        <TextArea disabled
           rows={6}
           value={selectedRemark}
           onChange={(e) => setSelectedRemark(e.target.value)}
-        /> */}
+        />
       </Modal>
     </div>
   );
