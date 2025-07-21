@@ -11,6 +11,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="/icofont/icofont.min.css"
+        />
+      </head>
       <body  className="antialiased">
         <ConfigProvider
           theme={{
