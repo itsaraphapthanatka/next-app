@@ -5,6 +5,9 @@ import { OtherTabs } from "./propertyDetail/OtherTabs";
 import { KeyHolderTabs } from "./propertyDetail/KeyHolderTabs";
 import { PictureTabs } from "./propertyDetail/PictureTabs";
 import { Button, Modal, Tabs } from "antd";
+import { FacilityTabs } from "./propertyDetail/FacilityTabs";
+import { FollowupTabs } from "./propertyDetail/FollowupTabs";
+import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 
 type SelectedProperty = {
   rentPGColor?: string;
@@ -67,17 +70,17 @@ export const ModalProperty = ({
     {
       key: '7',
       label: 'Facility',
-      children: <p>Content of Tab Pane 7</p>,
+      children: <FacilityTabs token={token}/>,
     },
     {
       key: '8',
       label: 'Follow up',
-      children: <p>Content of Tab Pane 8</p>,
+      children: <FollowupTabs token={token}/>,
     },
     {
       key: '9',
       label: 'Data Edit',
-      children: <p>Content of Tab Pane 9</p>,
+      children: <DataEditProperty token={token}/>,
     },
   ];
   return (

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* @import url('/icofont/icofont.min.css'); */
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
