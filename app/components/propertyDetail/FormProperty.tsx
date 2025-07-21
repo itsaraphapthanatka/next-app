@@ -1,4 +1,5 @@
 "use client"
+import { getDecorations } from "@/app/server_actions/decorations";
 import { getUnitType } from "@/app/server_actions/unittype";
 import { Form, Input, Select, Checkbox, Col, Row  } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -21,16 +22,29 @@ type UnitType = {
     name: string;
 }
 
+type Decoration = {
+    id: string;
+    name: string;
+}
+
 export const FormProperty = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     console.log("selectedProperty in form", selectedProperty);
     const [form] = Form.useForm();
     const [unitType, setUnitType] = useState<UnitType[]>([]);
+    const [decorations, setDecorations] = useState<Decoration[]>([]);
     useEffect(() => {
         const fetchUnitType = async () => {
             const unitType = await getUnitType(token);
             setUnitType(unitType);
         };
         fetchUnitType();
+    }, [token]);
+    useEffect(() => {
+        const fetchDecorations = async () => {
+            const decorations = await getDecorations(token);
+            setDecorations(decorations);
+        };
+        fetchDecorations();
     }, [token]);
   return (
     <Form

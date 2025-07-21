@@ -16,7 +16,6 @@ type SelectedProperty = {
     vipStatus?: string;
   };
 export const PictureTabs = ({ selectedProperty }: { selectedProperty: SelectedProperty }) => {
-    console.log("selectedProperty in PictureTabs", selectedProperty)
     const [form] = Form.useForm();
 
     const props: UploadProps = {

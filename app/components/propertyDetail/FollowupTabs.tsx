@@ -14,6 +14,7 @@ export const FollowupTabs = ({ token }: { token: string }) => {
     setSelectedKey(key);
     setSelectedRemark(remarkText);
     setIsModalOpen(true);
+    console.log("selectedKey", selectedKey);
   };
 
   const handleModalClose = () => {
