@@ -3,7 +3,8 @@
 import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 import "./globals.css";
-import "../styles/icofont.min.css";
+import "../icons/icofont.min.css";
+// import "../public/icofont/icofont.min.css";
 import { ConfigProvider } from "antd";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
