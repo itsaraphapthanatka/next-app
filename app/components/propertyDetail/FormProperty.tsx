@@ -32,6 +32,7 @@ export const FormProperty = ({ selectedProperty, token }: { selectedProperty: Se
     const [form] = Form.useForm();
     const [unitType, setUnitType] = useState<UnitType[]>([]);
     const [decorations, setDecorations] = useState<Decoration[]>([]);
+    console.log(decorations);
     useEffect(() => {
         const fetchUnitType = async () => {
             const unitType = await getUnitType(token);
