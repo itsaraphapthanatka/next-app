@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, Select} from "antd";
+import { Card, Input, Button, Modal, Form, Select, message} from "antd";
 import { RequestProp } from "@/app/property/RequestProp";
 // import { PropertyFilterForm } from "./PropertyFilterForm";
 import Swal from "sweetalert2";
@@ -18,7 +18,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [isRequestPropOpen, setIsRequestPropOpen] = useState(false);
-
+  const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -46,15 +46,10 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
 
   const handleRequestProp = () => {
    if(requestCount < 1){
-    Swal.fire({
-      title: 'Please select item less than 1 item for assign to Sale',
-      icon: 'warning',
-      showConfirmButton: false,
-      customClass: {
-        title: 'swal2-title',
-        popup: 'swal2-popup',
-      },
-      timer: 1500
+    messageApi.open({
+      type: 'warning',
+      content: 'Please select item less than 1 item for assign to Sale',
+      duration: 10,
     });
    }else{setIsRequestPropOpen(true);}
   };
@@ -95,6 +90,8 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
 
 
   return (
+    <>
+    {contextHolder}
     <Card className={`p-6 w-full space-y-4 ${className}`}>
       <div className="space-y-4">
         <div className="flex gap-3">
@@ -475,5 +472,6 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
         <RequestProp />
       </Modal>
     </Card>
+    </>
   );
 };
