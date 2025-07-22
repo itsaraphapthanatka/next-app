@@ -47,8 +47,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const handleRequestProp = () => {
    if(requestCount < 1){
     Swal.fire({
-      title: 'Please select item for assign',
-      text: 'Please select item less than 1 item for assign to Sale',
+      title: 'Please select item less than 1 item for assign to Sale',
       icon: 'warning',
       showConfirmButton: false,
       timer: 1500
