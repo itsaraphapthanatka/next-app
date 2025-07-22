@@ -50,6 +50,10 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
       title: 'Please select item less than 1 item for assign to Sale',
       icon: 'warning',
       showConfirmButton: false,
+      customClass: {
+        title: 'swal2-title',
+        popup: 'swal2-popup',
+      },
       timer: 1500
     });
    }else{setIsRequestPropOpen(true);}

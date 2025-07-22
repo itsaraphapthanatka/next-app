@@ -53,3 +53,9 @@ body {
     font-size: 10px;
   }
 }
+
+
+.swal2-popup {
+  font-size: 10px;
+  font-family: 'Prompt', sans-serif;
+}
