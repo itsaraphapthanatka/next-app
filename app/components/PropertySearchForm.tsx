@@ -92,6 +92,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   return (
     <>
     {contextHolder}
+    
     <Card className={`p-6 w-full space-y-4 ${className}`}>
       <div className="space-y-4">
         <div className="flex gap-3">

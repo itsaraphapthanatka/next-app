@@ -95,7 +95,6 @@ export default function LoginPage() {
             <p className="text-gray-500 text-sm">
               ยินดีต้อนรับเข้าสู่ Serve Property Management
             </p>
-            <i className="icofont-home">dee</i>
           </div>
 
           <button
