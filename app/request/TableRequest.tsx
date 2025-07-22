@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, TableProps } from 'antd';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 
@@ -34,6 +34,10 @@ export const TableRequest = () => {
     const [total] = useState(0);
     // const [searchParams, setSearchParams] = useState({});
     // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+    useEffect(() => {
+        console.log("TableRequest");
+    }, []);
 
     const columns: ColumnsType<RequestApiItem> = [
         {
@@ -194,6 +198,7 @@ export const TableRequest = () => {
     };
 
     return (
+        <div className="mt-4">
         <Table<RequestApiItem>
             tableLayout="auto"
             expandable={defaultExpandable}
@@ -212,5 +217,6 @@ export const TableRequest = () => {
                 total: total,
             }}
         />
+        </div>
     );
 };
