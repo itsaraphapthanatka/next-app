@@ -6,8 +6,13 @@
         console.log("token in DataEditProperty", token);
         const session = useSession();
         console.log("session in DataEditProperty", session);
+        const [form] = Form.useForm();
         return (
-            <Form>
+            <Form
+                layout="vertical"
+                name="dataEditForm"
+                form={form}
+            >
                 <Form.Item name="followUp" label="New Follow Up">
                     <TextArea rows={4} />
                 </Form.Item>
