@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableProps } from 'antd';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
+import { ModalProperty } from "../components/ModalProperty";
 
 interface RequestApiItem {
     key?: string;
@@ -34,7 +35,9 @@ export const TableRequest = () => {
     const [total] = useState(0);
     // const [searchParams, setSearchParams] = useState({});
     // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
+    const [selectedRequest, setSelectedRequest] = useState<RequestApiItem | null>(null);
+    const [modalType, setModalType] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         console.log("TableRequest");
     }, []);
@@ -52,6 +55,18 @@ export const TableRequest = () => {
             title: 'Project',
             dataIndex: 'project',
             sorter: (a, b) => a.project.localeCompare(b.project),
+            render: (text, record) => (
+                <div
+                    style={{ cursor: 'pointer', color: '#1677ff' }}
+                    onClick={() => {
+                        setSelectedRequest(record);
+                        setModalType("request");
+                        setIsModalOpen(true);
+                    }}
+                    >
+                    {text}
+                </div>
+            ),
             width: 70,
         },
         {
@@ -216,6 +231,10 @@ export const TableRequest = () => {
                 current: page,
                 total: total,
             }}
+        />
+
+        <ModalProperty
+            modalType={modalType}
         />
         </div>
     );

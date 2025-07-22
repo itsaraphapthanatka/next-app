@@ -8,6 +8,7 @@ import { Button, Modal, Tabs } from "antd";
 import { FacilityTabs } from "./propertyDetail/FacilityTabs";
 import { FollowupTabs } from "./propertyDetail/FollowupTabs";
 import { DataEditProperty } from "./propertyDetail/DataEditProperty";
+import { ContactTabs } from "./propertyDetail/ContactTabs";
 
 type SelectedProperty = {
   rentPGColor?: string;
@@ -21,6 +22,7 @@ type SelectedProperty = {
 };
 
 interface ModalPropertyProps {
+  modalType: string;
   text: string;
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
@@ -29,6 +31,7 @@ interface ModalPropertyProps {
 }
 
 export const ModalProperty = ({
+  modalType,
   text,
   isModalOpen,
   setIsModalOpen,
@@ -57,32 +60,39 @@ export const ModalProperty = ({
       label: 'Other',
       children: <OtherTabs selectedProperty={selectedProperty} token={token}/>,
     },
+    modalType === "request"
+      ? {
+          key: '5',
+          label: 'Contract',
+          children: <ContactTabs />,
+        }
+      : undefined,
     {
-      key: '5',
+      key: '6',
       label: 'Key Holder',
       children: <KeyHolderTabs selectedProperty={selectedProperty}/>,
     },
     {
-      key: '6',
+      key: '7',
       label: 'Picture',
       children: <PictureTabs selectedProperty={selectedProperty}/>,
     },
     {
-      key: '7',
+      key: '8',
       label: 'Facility',
       children: <FacilityTabs token={token}/>,
     },
     {
-      key: '8',
+      key: '9',
       label: 'Follow up',
       children: <FollowupTabs token={token}/>,
     },
     {
-      key: '9',
+      key: '10',
       label: 'Data Edit',
       children: <DataEditProperty token={token}/>,
     },
-  ];
+  ].filter(Boolean) as { key: string; label: string; children: React.ReactNode }[];
   return (
     <Modal 
       title="Property Detail" 

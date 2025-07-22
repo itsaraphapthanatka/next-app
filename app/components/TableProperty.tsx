@@ -87,6 +87,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
   const [loading, setLoading] = useState(false);
+  const [modalType, setModalType] = useState<string>("");
   const columns: ColumnsType<DataType> = [
     {
       title: 'No.',
@@ -104,6 +105,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           style={{ cursor: 'pointer', color: '#1677ff' }}
           onClick={() => {
             setSelectedProperty(record);
+            setModalType("property");
             setIsModalOpen(true);
           }}
         >
@@ -390,6 +392,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
 
       <ModalProperty
         selectedProperty={selectedProperty ?? emptyDataType}
+        modalType={modalType}
         text={selectedProperty?.project ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
