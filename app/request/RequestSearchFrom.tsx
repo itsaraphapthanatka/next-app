@@ -9,6 +9,10 @@ export const RequestSearchFrom = () => {
     const handleSearch = () => {
         console.log(status);
     };
+    
+    useEffect(() => {
+        console.log("RequestSearchFrom");
+    }, []);
 
   return (
     <>
