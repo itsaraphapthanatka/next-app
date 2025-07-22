@@ -61,8 +61,8 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
     Swal.fire({
       title: 'บันทึกสำเร็จ',
       icon: 'success',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#52c41a',
+      showConfirmButton: false,
+      timer: 1500
     }).then(() => {
       setIsRequestPropOpen(false);
     });
