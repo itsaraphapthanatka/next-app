@@ -45,8 +45,14 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   };
 
   const handleRequestProp = () => {
-   
-    setIsRequestPropOpen(true);
+   if(requestCount < 1){
+    Swal.fire({
+      title: 'กรุณาเลือกครั้งละ 1 รายการ',
+      icon: 'warning',
+      showConfirmButton: false,
+      timer: 1500
+    });
+   }else{setIsRequestPropOpen(true);}
   };
 
   const handleCloseRequestProp = () => {
