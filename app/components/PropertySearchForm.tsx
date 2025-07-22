@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Card, Input, Button, Modal, Form, Select} from "antd";
+import { RequestProp } from "@/app/property/RequestProp";
 // import { PropertyFilterForm } from "./PropertyFilterForm";
+import Swal from "sweetalert2";
 
 interface PropertySearchFormProps {
   className?: string;
@@ -15,6 +17,8 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [isRequestPropOpen, setIsRequestPropOpen] = useState(false);
+
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -41,11 +45,26 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
   };
 
   const handleRequestProp = () => {
-    console.log("Request Property clicked");
+   
+    setIsRequestPropOpen(true);
+  };
+
+  const handleCloseRequestProp = () => {
+    setIsRequestPropOpen(false);
   };
 
   const handleClose = () => {
     setIsModalOpen(false);
+  };
+
+  const handleAssignProp = () => {
+    Swal.fire({
+      title: 'บันทึกสำเร็จ',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      setIsRequestPropOpen(false);
+    });
   };
 
   const handleFilterSearch = () => {
@@ -426,6 +445,23 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
             </div>
           </Form>
         </div>
+      </Modal>
+      <Modal
+        title="Request Property"
+        open={isRequestPropOpen}
+        onCancel={handleCloseRequestProp}
+        footer={
+          <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+            <Button color="blue" size="middle" variant="solid" onClick={handleAssignProp}>
+              Request
+            </Button>
+            <Button color="default" size="middle" variant="outlined" onClick={handleCloseRequestProp}>
+              Cancel
+            </Button>
+          </div>
+        }
+      >
+        <RequestProp />
       </Modal>
     </Card>
   );
