@@ -3,9 +3,6 @@ import Image from "next/image";
 import { useState, useCallback, memo, useEffect } from "react";
 
 const GOOGLE_LOGIN_URL = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_URL;
-// const GOOGLE_LOGIN_URL = "https://api.serve.co.th/account/login";
-// const GOOGLE_LOGIN_URL = "http://localhost:8000/callback";
-console.log("GOOGLE_LOGIN_URL", GOOGLE_LOGIN_URL);
 
 // Helper to get the correct base URL for callback and redirect
 const getBaseUrl = () => {

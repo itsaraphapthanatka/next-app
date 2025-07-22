@@ -85,7 +85,7 @@ export const ModalProperty = ({
     {
       key: '9',
       label: 'Follow up',
-      children: <FollowupTabs token={token}/>,
+      children: <FollowupTabs token={token} modalType={modalType}/>,
     },
     {
       key: '10',

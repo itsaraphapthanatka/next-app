@@ -1,10 +1,10 @@
-import { Table, Modal, Form } from "antd";
+import { Table, Modal, Form, Col, Row, Checkbox } from "antd";
 import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 
-export const FollowupTabs = ({ token }: { token: string }) => {
+export const FollowupTabs = ({ token, modalType }: { token: string, modalType: string }) => {
   console.log("token in FollowupTabs", token);
-
+  const [form] = Form.useForm();  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [selectedRemark, setSelectedRemark] = useState<string>("");
@@ -88,13 +88,24 @@ export const FollowupTabs = ({ token }: { token: string }) => {
 
   return (
     <div>
-      <Table scroll={{ x: 1000}} dataSource={dataSource} columns={columns} pagination={false} />
-      <Form>
-        <Form.Item name="followUp" label="New Follow Up">
+      <Table scroll={{ x: 1000}} dataSource={dataSource} columns={columns} pagination={false} style={{ marginBottom: "10px" }}/>
+      <Form layout="vertical" name="followupForm" form={form}>
+        <Form.Item name="followUp" label="New Follow Up" style={{ marginBottom: "10px" }}>
           <TextArea rows={6} />
         </Form.Item>
-      </Form>
 
+      {modalType === "request" && (
+      <Form.Item name="closeJob" style={{ marginBottom: "10px" }}>
+          <Checkbox.Group style={{ width: '100%' }}>
+              <Row>
+                  <Col span={12}>
+                      <Checkbox value="close">Close Job</Checkbox>
+                  </Col>
+              </Row>
+          </Checkbox.Group>
+      </Form.Item>
+      )}
+      </Form>
       <Modal
         title="Follow-up Detail"
         open={isModalOpen}
