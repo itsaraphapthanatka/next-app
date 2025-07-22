@@ -62,6 +62,7 @@ export const PropertySearchForm = ({ className = "" }: PropertySearchFormProps) 
       title: 'บันทึกสำเร็จ',
       icon: 'success',
       confirmButtonText: 'OK',
+      confirmButtonColor: '#52c41a',
     }).then(() => {
       setIsRequestPropOpen(false);
     });
