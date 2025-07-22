@@ -90,7 +90,7 @@ export const ModalProperty = ({
     {
       key: '10',
       label: 'Data Edit',
-      children: <DataEditProperty token={token}/>,
+      children: <DataEditProperty token={token} modalType={modalType}/>,
     },
   ].filter(Boolean) as { key: string; label: string; children: React.ReactNode }[];
   return (
@@ -111,8 +111,12 @@ export const ModalProperty = ({
       }}
       footer={
         <div className="flex justify-end gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
-          <Button color="green" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Not have Original File</Button>
-          <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
+          {modalType === "property" && (
+            <>
+              <Button color="green" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Not have Original File</Button>
+              <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
+            </>
+          )}
           <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Get Link</Button>
           <Button color="default" variant="outlined" size="small" onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>

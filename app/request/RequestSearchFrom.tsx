@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { Card, Button, Select} from "antd";
 
 export const RequestSearchFrom = () => {
-    const [status, setStatus] = useState<string>("");
+    const [status, setStatus] = useState("");
 
     const handleSearch = () => {
         console.log(status);
+        const event = new CustomEvent('requestTableReload', {
+            detail: { status }
+        });
+        window.dispatchEvent(event);
     };
     
     useEffect(() => {

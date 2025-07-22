@@ -10,6 +10,7 @@ import { TableRequest } from "./TableRequest";
 
 interface SessionUser {
   firstName?: string;
+  token?: string;
   [key: string]: unknown;
 }
 
@@ -33,7 +34,8 @@ export default async function RequestContent() {
 
   const userName = session?.user?.firstName || "User";
   console.log(userName);
-
+  const token = session?.token || "";
+  console.log("RequestPage token",token);
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
       <Navbar />
@@ -42,11 +44,11 @@ export default async function RequestContent() {
           <Link href="/menu" passHref>  
             <ArrowLeftCircleIcon className="w-10 h-10 cursor-pointer text-amber-500" />
           </Link>
-          <h1>Property Management</h1>
+          <h1>Request Report</h1>
         </div>
         <div className="mt-4">
           <RequestSearchFrom />
-          <TableRequest />
+          <TableRequest token={token as string} />
         </div>
       </div>
     </div>
