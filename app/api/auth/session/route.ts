@@ -14,7 +14,15 @@ export async function GET(req: NextRequest) {
     const session = JSON.parse(json);
 
     if (session?.user?.id) {
-      return NextResponse.json({ loggedIn: true, user: { email: session?.user?.email, firstName: session?.user?.firstName } }, { status: 200 });
+      return NextResponse.json({ 
+        loggedIn: true,
+        user: { 
+          email: session?.user?.email, 
+          firstName: session?.user?.firstName, 
+          token: session?.token,
+          id: session?.user?.id
+        } 
+      }, { status: 200 });
     }
   } catch {
     // ignore error
