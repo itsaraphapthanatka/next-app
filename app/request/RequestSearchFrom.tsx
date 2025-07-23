@@ -2,12 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { Card, Button, Select} from "antd";
+import { getSaleRequestStatuses } from "../server_actions/salerequest-statuses";
 
-export const RequestSearchFrom = () => {
+type SaleRequestStatus = {
+    id: number;
+    name: string;
+}
+
+export const RequestSearchFrom = ({token}: {token: string}) => {
     const [status, setStatus] = useState("");
-
+    const [statusOptions, setStatusOptions] = useState<SaleRequestStatus[]>([]);
+    console.log("RequestSearchFrom token",token);
     const handleSearch = () => {
-        console.log(status);
+        // console.log(status);
         const event = new CustomEvent('requestTableReload', {
             detail: { status }
         });
@@ -15,8 +22,13 @@ export const RequestSearchFrom = () => {
     };
     
     useEffect(() => {
-        console.log("RequestSearchFrom");
-    }, []);
+        const fetchStatuses = async () => {
+        const statuses = await getSaleRequestStatuses(token);
+        // console.log("RequestSearchFrom statuses",statuses);
+        setStatusOptions(statuses);
+        };
+        fetchStatuses();
+        }, [token]);
 
   return (
     <>
@@ -25,28 +37,14 @@ export const RequestSearchFrom = () => {
         <div className="flex gap-3">
             <Select 
                 size="large"
-                options={[
-                    {
-                        label: "Show All Action",
-                        value: "-1",
-                    },{
-                        label: "Wait for Approve",
-                        value: "0",
-                    },{
-                        label: "Approve",
-                        value: "1"
-                    },{
-                        label: "Reject",
-                        value: "2",
-                    },{
-                        label: "Close",
-                        value: "4"
-                    }
-                ]}
-                 defaultValue="-1"
                 className="w-full"
-                onChange={(e) => setStatus(e)}
-            />
+                onChange={(e) => setStatus(e.toString())}
+                defaultValue={1}
+            >
+                {statusOptions.map((status) => (
+                    <Select.Option key={status.id} value={status.id}>{status.name}</Select.Option>
+                ))}
+            </Select>
         </div>
         <div className="flex gap-3">
            <Button 

@@ -19,6 +19,10 @@ type SelectedProperty = {
   invid?: string;
   project?: string;
   vipStatus?: string;
+  selling?: number;
+  rental?: number;
+  rentalPrice?: number;
+  salePrice?: number;
 };
 
 interface ModalPropertyProps {
@@ -45,12 +49,22 @@ export const ModalProperty = ({
       label: 'Property',
       children: <FormProperty selectedProperty={selectedProperty} token={token} />,
     },
-    {
+    selectedProperty.rental === 0 || selectedProperty.rental === null || selectedProperty.rentalPrice === 0 || selectedProperty.rentalPrice === null ? {
+      key: '2',
+      label: 'Rental',
+      children: <RentalTabs selectedProperty={selectedProperty} />,
+      disabled: true,
+    } : {
       key: '2',
       label: 'Rental',
       children: <RentalTabs selectedProperty={selectedProperty} />,
     },
-    {
+    selectedProperty.selling === 0 || selectedProperty.selling === null || selectedProperty.salePrice === 0 || selectedProperty.salePrice === null ? {
+      key: '3',
+      label: 'Selling',
+      children: <SallingTabs selectedProperty={selectedProperty}/>,
+      disabled: true,
+    } : {
       key: '3',
       label: 'Selling',
       children: <SallingTabs selectedProperty={selectedProperty}/>,

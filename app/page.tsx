@@ -55,6 +55,7 @@ export default function LoginPage() {
     setIsLoading(true);
     const callbackUrl = encodeURIComponent(`${getBaseUrl()}/auth/callback`);
     window.location.href = `${GOOGLE_LOGIN_URL}?callback_url=${callbackUrl}`;
+   
   }, []);
 
   return (

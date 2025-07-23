@@ -184,6 +184,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const defaultExpandable: ExpandableConfig<DataType> = {
     expandedRowRender: (record) => 
     <table>
+      <tbody>
       <tr className='border-b border-dashed border-gray-200'>
         <td className='p-2'>INVID</td>
         <td className='p-2' style={{color: record.vipStatusColor}}>{record.invid}</td>
@@ -210,6 +211,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           {record.rentPGText ? record.rentPGText + " %" : "%"}
         </td>
       </tr>
+      </tbody>
     </table>,
     fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>

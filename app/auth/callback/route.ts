@@ -4,7 +4,7 @@ export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
   if (!token) return NextResponse.redirect(new URL("/", req.url));
 
-  const userRes = await fetch("https://api.serve.co.th/users/me", {
+  const userRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -39,5 +39,26 @@ export async function GET(req: NextRequest) {
     sameSite: "lax",
     maxAge: 60 * 60 * 24, // 1 วัน
   });
+
+// ✅ log login
+const baseUrl = `${process.env.NODE_ENV === "production" ? "https" : "http"}://${req.headers.get("host")}`;
+const ip =
+  req.headers.get("x-forwarded-for") ||
+  req.headers.get("x-real-ip") ||
+  req.headers.get("x-client-ip") ||
+  "unknown";
+
+await fetch(`${baseUrl}/server_actions/logs`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: user.email,
+    status: "login",
+    ip,
+    userAgent: req.headers.get("user-agent"),
+  }),
+});
   return response;
 }

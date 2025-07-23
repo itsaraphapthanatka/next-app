@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // decode cookie, but don't return full session
     const base64 = cookie.value;
     const json = Buffer.from(base64, "base64").toString("utf-8");
     const session = JSON.parse(json);
@@ -19,7 +18,6 @@ export async function GET(req: NextRequest) {
         user: { 
           email: session?.user?.email, 
           firstName: session?.user?.firstName, 
-          token: session?.token,
           id: session?.user?.id
         } 
       }, { status: 200 });

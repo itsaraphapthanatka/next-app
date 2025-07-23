@@ -4,25 +4,25 @@ import React, { useEffect, useState } from "react";
 import { Table, TableProps } from 'antd';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 import { ModalProperty } from "../components/ModalProperty";
-import { getProperties } from "@/app/server_actions/property";
+import { getRequestReports } from "@/app/server_actions/request-reports";
 
 interface RequestApiItem {
     id: number;
     key: number;
     no: number;
-    enqno: string;
-    project: string;
-    invid: string;
-    tw: string;
+    enqRequest: string;
+    projectName: string;
+    invId: string;  
+    tower: string;
     floor: string;
     size: number;
-    bed: number;
-    bath: number;
-    rental: number;
-    selling: number;
+    bedRoom: number;
+    bathRoom: number;   
+    rentalPrice: number;
+    salePrice: number;
     status: string;
-    lastUpdate: string;
-    approve: string;
+    lastedUpdate: string;
+    requestStatus   : string;
     availableOn: string;
     RentalPG?: string;
     vipStatusColor?: string;
@@ -32,6 +32,9 @@ interface RequestApiItem {
     rentPGText?: string;
     salePGText?: string;
     vipStatus?: string;
+    requestDate?: string;
+    actionDate?: string;
+
 }
 
 interface GetPropertiesResponse {
@@ -45,7 +48,7 @@ type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
 export const TableRequest = ({token}: {token: string}) => {
-    console.log("TableRequest token",token);
+    // console.log("TableRequest token",token);
     const [selectedRequest, setSelectedRequest] = useState<RequestApiItem | null>(null);
     const [modalType, setModalType] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,8 +67,8 @@ export const TableRequest = ({token}: {token: string}) => {
         },
         {
             title: 'Project',
-            dataIndex: 'project',
-            sorter: (a, b) => a.project.localeCompare(b.project),
+            dataIndex: 'projectName',
+            sorter: (a, b) => a.projectName.localeCompare(b.projectName),
             render: (text, record) => (
                 <div
                     style={{ cursor: 'pointer', color: '#1677ff' }}
@@ -88,26 +91,26 @@ export const TableRequest = ({token}: {token: string}) => {
         },
         {
             title: 'Bed',
-            dataIndex: 'bed',
-            sorter: (a, b) => a.bed - b.bed,
+            dataIndex: 'bedRoom',
+            sorter: (a, b) => a.bedRoom - b.bedRoom ,
             width: 70,
         },
         {
             title: 'Bath',
-            dataIndex: 'bath',
-            sorter: (a, b) => a.bath - b.bath,
+            dataIndex: 'bathRoom',
+            sorter: (a, b) => a.bathRoom - b.bathRoom,
             width: 70,
         },
         {
             title: 'Rental',
-            dataIndex: 'rental',
-            sorter: (a, b) => a.rental - b.rental,
+            dataIndex: 'rentalPrice',
+            sorter: (a, b) => a.rentalPrice - b.rentalPrice,
             width: 70,
         },
         {
             title: 'Selling',
-            dataIndex: 'selling',
-            sorter: (a, b) => a.selling - b.selling,
+            dataIndex: 'salePrice',
+            sorter: (a, b) => a.salePrice - b.salePrice,
             width: 70,
         },
         {
@@ -118,7 +121,7 @@ export const TableRequest = ({token}: {token: string}) => {
         },
         {
             title: 'Approve',
-            dataIndex: 'approve',
+            dataIndex: 'requestStatus',
             width: 150,
         },
         Table.EXPAND_COLUMN,
@@ -126,25 +129,24 @@ export const TableRequest = ({token}: {token: string}) => {
 
     useEffect(() => {
         setLoading(true);
-        getProperties(
-          { page: { current: page, size: pageSize }, orderBy: 'asc' },
-          token
+        getRequestReports(
+          { token, saleRequestStatus: 1 },
         ).then((data: GetPropertiesResponse) => {
           const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-      
+          // console.log("Data", data);    
           const mapped: RequestApiItem[] = items.map((item, index) => ({
             id: item.id ?? 0,
             key: item.id ?? index,
             no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-            project: item.project ?? "-",
+            projectName: item.projectName ?? "-",
             size: item.size ?? 0,
-            bed: item.bed ?? 0,
-            bath: item.bath ?? 0,
-            rental: item.rental ?? 0,
-            selling: item.selling ?? 0,
+            bedRoom: item.bedRoom ?? 0,
+            bathRoom: item.bathRoom ?? 0,
+            rentalPrice: item.rentalPrice ?? 0,
+            salePrice: item.salePrice ?? 0,
             status: item.status ?? "-",
-            invid: item.invid ?? "-",
-            tw: item.tw ?? "-",
+            invId: item.invId ?? "-",
+            tower: item.tower ?? "-",
             floor: item.floor ?? "-",
             RentalPG: item.RentalPG ?? "-",
             vipStatusColor: item.vipStatusColor ?? "-",
@@ -154,10 +156,12 @@ export const TableRequest = ({token}: {token: string}) => {
             rentPGText: item.rentPGText ?? "-",
             salePGText: item.salePGText ?? "-",
             availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-            lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+            lastedUpdate: item.lastedUpdate ? new Date(item.lastedUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
             vipStatus: item.vipStatus ?? "-",
-            enqno: item.enqno ?? "-",
-            approve: item.approve ?? "-",
+            enqRequest: item.enqRequest ?? "-",
+            requestStatus: item.requestStatus ?? "-",
+            requestDate: item.requestDate ?? "-",
+            actionDate: item.actionDate ?? "-",
           }));
       
           setTotalRecords(data.allRecord ?? 0);
@@ -174,31 +178,25 @@ export const TableRequest = ({token}: {token: string}) => {
           console.log("e.detail.status",e.detail.status)
 
           setLoading(true);
-          getProperties(
-            { page: { current: page, size: pageSize }, orderBy: 'asc' },
-            token,
-            
+          getRequestReports(
+            { token, saleRequestStatus: e.detail.status },
           ).then((data: GetPropertiesResponse) => {
             const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-            console.log("Data", data);
-            const mapped: RequestApiItem[] = items.filter((item) => {
-                if(e.detail.status === "-1"){
-                    return item;
-                }
-                return item.status === e.detail.status;
-            }).map((item, index) => ({
+            // console.log("Data", data);
+            const mapped: RequestApiItem[] = items.map((item, index) => {
+                return {
                 id: item.id ?? 0,
                 key: item.id ?? index,
                 no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-                project: item.project ?? "-",
+                projectName: item.projectName ?? "-",
                 size: item.size ?? 0,
-                bed: item.bed ?? 0,
-                bath: item.bath ?? 0,
-                rental: item.rental ?? 0,
-                selling: item.selling ?? 0,
+                bedRoom: item.bedRoom ?? 0,
+                bathRoom: item.bathRoom ?? 0,
+                rentalPrice: item.rentalPrice ?? 0,
+                salePrice: item.salePrice ?? 0,
                 status: item.status ?? "-",
-                invid: item.invid ?? "-",
-                tw: item.tw ?? "-",
+                invId: item.invId ?? "-",
+                tower: item.tower ?? "-",
                 floor: item.floor ?? "-",
                 RentalPG: item.RentalPG ?? "-",
                 vipStatusColor: item.vipStatusColor ?? "-",
@@ -208,11 +206,13 @@ export const TableRequest = ({token}: {token: string}) => {
                 rentPGText: item.rentPGText ?? "-",
                 salePGText: item.salePGText ?? "-",
                 availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-                lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+                lastedUpdate: item.lastedUpdate ? new Date(item.lastedUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
                 vipStatus: item.vipStatus ?? "-",
-                enqno: item.enqno ?? "-",
-                approve: item.approve ?? "-",
-            }));    
+                enqRequest: item.enqRequest ?? "-",
+                requestStatus: item.requestStatus ?? "-",
+                requestDate: item.requestDate ?? "-",
+                actionDate: item.actionDate ?? "-",
+            }});    
             setTotalRecords(data.allRecord ?? 0);
             setProperties(mapped);
             setPage(data.currentPage ?? 1);
@@ -232,19 +232,19 @@ export const TableRequest = ({token}: {token: string}) => {
         id: 0,
         key: 0,
         no: 0,
-        enqno: "",
-        project: '',
-        invid: "",
-        tw: "A",
+        enqRequest: "",
+        projectName: '',
+        invId: "",
+        tower: "A",
         floor: "1",
         size: 0,
-        bed: 0,
-        bath: 0,
-        rental: 0,
-        selling: 0,
-        lastUpdate: "",
+        bedRoom: 0,
+        bathRoom: 0,
+        rentalPrice: 0,
+        salePrice: 0,
+        lastedUpdate: "",
         status: '',
-        approve: '',
+        requestStatus: '',
         availableOn: "",
         RentalPG: "",
         vipStatusColor: "",
@@ -254,26 +254,29 @@ export const TableRequest = ({token}: {token: string}) => {
         rentPGText: "",
         salePGText: "",
         vipStatus: "",
+        requestDate: "",
+        actionDate: "",
     }]
 
     const defaultExpandable: ExpandableConfig<RequestApiItem> = {
         expandedRowRender: (record) => (
             <table>
+                <tbody>
                 <tr className="border-b border-dashed border-gray-200">
                     <td colSpan={2} className="p-2">ENQNO</td>
-                    <td colSpan={2} className="p-2 text-right">{record.enqno}</td>
+                    <td colSpan={2} className="p-2 text-right">{record.enqRequest} {record.requestDate ? new Date(record.requestDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-"}</td>
                 </tr>
                 <tr className='border-b border-dashed border-gray-200'>
                     <td className='p-2'>INVID</td>
-                    <td className='p-2'>{record.invid}</td>
+                    <td className='p-2'>{record.invId}</td>
                     <td className='p-2'>TW.</td>
-                    <td className='p-2'>{record.tw}</td>
+                    <td className='p-2'>{record.tower}</td>
                 </tr>
                 <tr className='border-b border-dashed border-gray-200 p-2'>
                     <td className='p-2'>FL.</td>
                     <td className='p-2'>{record.floor}</td>
                     <td className='p-2'>Action Update</td>
-                    <td className='p-2 text-[10px]'>{record.lastUpdate}</td>
+                    <td className='p-2 text-[10px]'>{record.actionDate ? new Date(record.actionDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-"}</td>
                 </tr>
                 <tr className='border-b border-dashed border-gray-200 p-2'>
                     <td className='p-2'>Status</td>
@@ -281,6 +284,7 @@ export const TableRequest = ({token}: {token: string}) => {
                     <td className='p-2'>Available On</td>
                     <td className='p-2 text-[10px]'>{record.availableOn}</td>
                 </tr>
+                </tbody>
             </table>
         ),
         fixed: 'right',
@@ -320,7 +324,7 @@ export const TableRequest = ({token}: {token: string}) => {
         <ModalProperty
             selectedProperty={selectedRequest ?? emptyDataType[0]}
             modalType={modalType}
-            text={selectedRequest?.project ?? ""}
+            text={selectedRequest?.projectName ?? ""}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             token={token}

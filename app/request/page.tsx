@@ -47,7 +47,7 @@ export default async function RequestContent() {
           <h1>Request Report</h1>
         </div>
         <div className="mt-4">
-          <RequestSearchFrom />
+          <RequestSearchFrom token={token as string}/>
           <TableRequest token={token as string} />
         </div>
       </div>
