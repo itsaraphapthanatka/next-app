@@ -31,11 +31,10 @@ export function Dashboard({ session }: DashboardProps) {
     toast(`เมนู ${itemTitle}\nคลิกเมนู ${itemTitle} เรียบร้อยแล้ว`);
   };
 
-  const ip = useRef(null)
-  const userAgent = useRef(null)
   const handleLogout = async () => {
-    
-    await fetch("/api/auth/logs", { method: "POST", body: JSON.stringify({ email: session?.user?.email, status: "logout" ,ip: ip.current, userAgent: userAgent.current}) });
+    const ip = window.location.hostname
+    const userAgent = navigator.userAgent
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/auth/logs`, { method: "POST", body: JSON.stringify({ email: session?.user?.email, status: "logout" ,ip: ip, userAgent: userAgent}) });
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.href = "/";
   };
