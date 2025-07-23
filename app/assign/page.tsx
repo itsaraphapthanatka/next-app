@@ -41,7 +41,7 @@ export default async function AssignPage() {
                     <Link href="/menu" passHref>  
                         <ArrowLeftCircleIcon className="w-10 h-10 cursor-pointer text-amber-500" />
                     </Link>
-                    <h1>Assign</h1>
+                    <h1>Assign Report</h1>
                     </div>
                     <div className="mt-4">
                     <AssignSearchFrom />
