@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Navbar } from "../components/navbar";
 import { ArrowLeftCircleIcon } from "lucide-react";
 import Link from "next/link";
-import { TableAssign } from "./TableAssign";
+import TableAssign from "./TableAssign";
 import { AssignSearchFrom } from "./AssignSearchFrom";
 
 interface SessionUser {
