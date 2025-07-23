@@ -4,6 +4,7 @@ import { Building2, FileText, ClipboardList, FolderOpen, BarChart3, Users, LogOu
 import { ProfileHeader } from "./ProfileHeader";
 import { MenuCard } from "./MenuCard";
 import { toast } from "sonner";
+import { useRef } from "react";
 
 type DashboardProps = {
   session: {
@@ -30,6 +31,15 @@ export function Dashboard({ session }: DashboardProps) {
     toast(`เมนู ${itemTitle}\nคลิกเมนู ${itemTitle} เรียบร้อยแล้ว`);
   };
 
+  const ip = useRef(null)
+  const userAgent = useRef(null)
+  const handleLogout = async () => {
+    
+    await fetch("/api/auth/logs", { method: "POST", body: JSON.stringify({ email: session?.user?.email, status: "logout" ,ip: ip.current, userAgent: userAgent.current}) });
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/";
+  };
+
 
 
 
@@ -54,8 +64,7 @@ export function Dashboard({ session }: DashboardProps) {
             title="Log Out"
             icon={LogOut}
             onClick={() => {
-              fetch("/api/auth/logout", { method: "POST" });
-              window.location.href = "/";
+              handleLogout();
             }}
             className="bg-white border-red-200 hover:bg-red-50 hover:border-red-300"
           />

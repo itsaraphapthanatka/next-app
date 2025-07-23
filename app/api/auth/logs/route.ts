@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const logLine = `[${new Date().toISOString()}] [${status.toUpperCase()}] ${email} - IP: ${ip ?? 'unknown'} - UA: ${userAgent ?? 'unknown'}\n`
+    const logLine = `[${new Date().toLocaleString()}] [${status.toUpperCase()}] ${email} - IP: ${ip ?? 'unknown'} - UA: ${userAgent ?? 'unknown'}\n`
     const logPath = path.join(process.cwd(), 'logs', 'login.log')
     console.log("logPath: ", logPath)
     // สร้างโฟลเดอร์ logs ถ้ายังไม่มี

@@ -41,14 +41,15 @@ export async function GET(req: NextRequest) {
   });
 
 // ✅ log login
-const baseUrl = `${process.env.NODE_ENV === "production" ? "https" : "http"}://${req.headers.get("host")}`;
+const baseUrl = new URL(req.url).origin
 const ip =
   req.headers.get("x-forwarded-for") ||
   req.headers.get("x-real-ip") ||
   req.headers.get("x-client-ip") ||
   "unknown";
-
-await fetch(`${baseUrl}/server_actions/logs`, {
+console.log("baseUrl: ", baseUrl);
+console.log("ip: ", ip);
+await fetch(`${baseUrl}/api/auth/logs`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
