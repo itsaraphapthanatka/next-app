@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, Select, message} from "antd";
+import { Card, Input, Button, Modal, Form, message} from "antd";
 import { RequestProp } from "@/app/property/RequestProp";
 import { getRevealCount } from "@/app/server_actions/reveal-count";
 import Swal from "sweetalert2";

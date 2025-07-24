@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, Select, message} from "antd";
+import { Card, Input, Button, Modal, Form, message} from "antd";
 import { RequestProp } from "@/app/property/RequestProp";
 import { getSaleLimit } from "@/app/server_actions/saleLimit";
 import Swal from "sweetalert2";
@@ -22,7 +22,6 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   const [isRequestPropOpen, setIsRequestPropOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [saleLimit, setSaleLimit] = useState(0);
-  // console.log("token in PropertySearchForm", token);
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
