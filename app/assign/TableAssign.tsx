@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
-import { getProperties } from '@/app/server_actions/property';
+import { getAssignReports } from '@/app/server_actions/assign-reports';
 import { ModalProperty } from '../components/ModalProperty';
+import { getAssignReportsFilter } from '@/app/server_actions/assign-reports-filter';
+
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -13,59 +15,52 @@ interface DataType {
   id: number;
   key: number;
   no: number;
-  project: string;
-  size: number;
-  bed: number;
-  bath: number;
-  rental: number;
-  selling: number;
-  status: string;
-  invid: string;
-  tw: string;
-  floor: string;
-  RentalPG: string;
-  vipStatusColor: string;
-  salePG: number;
-  rentPGColor: string;
-  salePGColor: string;
-  rentPGText: string;
-  salePGText: string;
-  availableOn: string;
-  lastUpdate: string;
-  selePG?: string;
-  vipStatus?: string;
+  projectName: string,
+  address: string,
+  unitCode: string,
+  invId: string,
+  floor: number,
+  tower: string,
+  size: number,
+  bedRoom: number,
+  bathRoom: number,
+  rentalPrice: number,
+  salePrice: number,
+  lastedUpdate: string,
+  status: string,
+  saleName: string,
+  startDate: string,
+  toDate: string,
+  assignerName: string,
+  displayDuration: string,
+  toSalePropertyId: number,
+  propertyId: number,
+  revealStatus: string
 }
 
 interface PropertyApiItem {
   id?: number;
-  project?: string;
-  size?: number;
-  bed?: number;
-  bath?: number;
-  rental?: number;
-  sellingPrice?: number;
-  status?: string;
-  allRecord?: number;
-  totalPage?: number;
-  currentPage?: number;
-  recordPerPage?: number;
-  recordStart?: number;
-  recordEnd?: number;
-  invid?: string;
-  tw?: string;
-  floor?: string;
-  RentalPG?: string;
-  vipStatusColor?: string;
-  salePG?: number;
-  selling?: number;
-  rentPGColor?: string;
-  salePGColor?: string;
-  rentPGText?: string;
-  salePGText?: string;
-  availableOn?: string;
-  lastUpdate?: string;
-  selePG?: string;
-  vipStatus?: string;
+  projectName: string,
+  address: string,
+  unitCode: string,
+  invId: string,
+  floor: number,
+  tower: string,
+  size: number,
+  bedRoom: number,
+  bathRoom: number,
+  rentalPrice: number,
+  salePrice: number,
+  lastedUpdate: string,
+  status: string,
+  saleName: string,
+  startDate: string,
+  toDate: string,
+  assignerName: string,
+  displayDuration: string,
+  toSalePropertyId: number,
+  propertyId: number,
+  revealStatus: string
   // Add other fields if needed
 }
 
@@ -97,9 +92,9 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
     },
     {
       title: 'Project',
-      dataIndex: 'project',
+        dataIndex: 'projectName',
       fixed: 'left',
-      sorter: (a, b) => a.project.localeCompare(b.project),
+      sorter: (a, b) => a.projectName.localeCompare(b.projectName),
       render: (text, record) => (
         <div
           style={{ cursor: 'pointer', color: '#1677ff' }}
@@ -115,6 +110,12 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
     },
     {
+      title: 'Address',
+      dataIndex: 'address',
+      width: 100,
+      ellipsis: false,
+    },
+    {
       title: 'Size',
       dataIndex: 'size',
       sorter: (a, b) => a.size - b.size,
@@ -128,8 +129,8 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
     },
     {
       title: 'Bed',
-      dataIndex: 'bed',
-      sorter: (a, b) => a.bed - b.bed,
+      dataIndex: 'bedRoom',
+      sorter: (a, b) => a.bedRoom - b.bedRoom,
       width: 50,
       ellipsis: false,
       render: (text) => (
@@ -139,20 +140,9 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       ),
     },
     {
-      title: 'Bath',
-      dataIndex: 'bath',
-      sorter: (a, b) => a.bath - b.bath,
-      width: 50,
-      render: (text) => (
-        <div className='text-center'>
-          {text}
-        </div>
-      ),
-    },
-    {
       title: 'Rental',
-      dataIndex: 'rental',
-      sorter: (a, b) => a.rental - b.rental,
+      dataIndex: 'rentalPrice',
+      sorter: (a, b) => a.rentalPrice - b.rentalPrice,
       width: 70,
       render: (text) => (
         <div className='text-center'>
@@ -162,8 +152,8 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
     },
     {
       title: 'Selling',
-      dataIndex: 'selling',
-      sorter: (a, b) => a.selling - b.selling,
+      dataIndex: 'salePrice',
+      sorter: (a, b) => a.salePrice - b.salePrice,
       width: 70,
       render: (text) => (
         <div className='text-center'>
@@ -184,32 +174,32 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
   const defaultExpandable: ExpandableConfig<DataType> = {
     expandedRowRender: (record) => 
     <table>
-      <tr className='border-b border-dashed border-gray-200'>
-        <td className='p-2'>INVID</td>
-        <td className='p-2' style={{color: record.vipStatusColor}}>{record.invid}</td>
-        <td className='p-2'>Sale PG</td>
-        <td className='p-2' style={{color: record.salePGColor}}>
-          {record.salePGText ? record.salePGText + " %" : "%"}
-        </td>
-      </tr>
-      <tr className='border-b border-dashed border-gray-200 p-2'>
-        <td className='p-2'>TW.</td>
-        <td className='p-2'>{record.tw}</td>
-        <td className='p-2'>Last Update</td>
-        <td className='p-2'>{record.lastUpdate}</td>
-      </tr>
-      <tr className='border-b border-dashed border-gray-200 p-2'>
-        <td className='p-2'>FL.</td>
-        <td className='p-2'>{record.floor}</td>
-        <td className='p-2'>Available On</td>
-        <td className='p-2'>{record.availableOn}</td>
-      </tr>
-      <tr className='border-b border-dashed border-gray-200 p-2'>
-        <td className='p-2'>Rent PG</td>
-        <td className='p-2' style={{color: record.rentPGColor}}>
-          {record.rentPGText ? record.rentPGText + " %" : "%"}
-        </td>
-      </tr>
+      <tbody>
+        <tr className='border-b border-dashed border-gray-200'>
+          <td className='p-2'>Sale</td>
+          <td className='p-2'>{record.saleName}</td>
+          <td className='p-2'>Bath</td>
+          <td className='p-2'>{record.bathRoom}</td>
+        </tr>
+        <tr className='border-b border-dashed border-gray-200 p-2'>
+          <td className='p-2'>Assign From</td>
+          <td className='p-2'>{record.assignerName}</td>
+          <td className='p-2'>Duration</td>
+          <td className='p-2'>{record.displayDuration}</td>
+        </tr>
+        <tr className='border-b border-dashed border-gray-200 p-2'>
+          <td className='p-2'>Unit Code</td>
+          <td className='p-2'>{record.unitCode}</td>
+          <td className='p-2'>Lasted Update</td>
+          <td className='p-2'>{record.lastedUpdate}</td>
+        </tr>
+        <tr className='border-b border-dashed border-gray-200 p-2'>
+          <td className='p-2'>INVID</td>
+          <td className='p-2'>{record.invId}</td>
+          <td className='p-2'>Reveal Status</td>
+          <td className='p-2'>{record.revealStatus}</td>
+        </tr>
+      </tbody>
     </table>,
     fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>
@@ -222,9 +212,11 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
 
   useEffect(() => {
     setLoading(true);
-    getProperties(
-      { page: { current: page, size: pageSize }, orderBy: 'asc' },
-      token
+    getAssignReports( 
+      token,
+      { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
+      "",
+      ""
     ).then((data: GetPropertiesResponse) => {
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
   
@@ -232,26 +224,27 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
         id: item.id ?? 0,
         key: item.id ?? index,
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-        project: item.project ?? "-",
+        projectName: item.projectName ?? "-",
+        address: item.address ?? "-",
         size: item.size ?? 0,
-        bed: item.bed ?? 0,
-        bath: item.bath ?? 0,
-        rental: item.rental ?? 0,
-        selling: item.selling ?? 0,
+        bedRoom: item.bedRoom ?? 0,
+        bathRoom: item.bathRoom ?? 0,
+        rentalPrice: item.rentalPrice ?? 0,
+        salePrice: item.salePrice ?? 0,
         status: item.status ?? "-",
-        invid: item.invid ?? "-",
-        tw: item.tw ?? "-",
+        invId: item.invId ?? "-",
+        tower: item.tower ?? "-",
         floor: item.floor ?? "-",
-        RentalPG: item.RentalPG ?? "-",
-        vipStatusColor: item.vipStatusColor ?? "-",
-        salePG: item.salePG ?? 0,
-        rentPGColor: item.rentPGColor ?? "-",
-        salePGColor: item.salePGColor ?? "-",
-        rentPGText: item.rentPGText ?? "-",
-        salePGText: item.salePGText ?? "-",
-        availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-        lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-        vipStatus: item.vipStatus ?? "-",
+        unitCode: item.unitCode ?? "-",
+        lastedUpdate: item.lastedUpdate ?? "-",
+        saleName: item.saleName ?? "-",
+        startDate: item.startDate ?? "-",
+        toDate: item.toDate ?? "-",
+        assignerName: item.assignerName ?? "-",
+        displayDuration: item.displayDuration ?? "-",
+        toSalePropertyId: item.toSalePropertyId ?? 0,
+        propertyId: item.propertyId ?? 0,
+        revealStatus: item.revealStatus ?? "-",
       }));
   
       setProperties(mapped);
@@ -268,11 +261,52 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       console.log("e.detail.projectName",e.detail.projectName)
       console.log("e.detail.addressUnit",e.detail.addressUnit)
       setLoading(true);
-      getProperties(
-        { page: { current: page, size: pageSize }, orderBy: 'asc' },
-        token,
-        e.detail.projectName ?? "",
-        e.detail.addressUnit ?? ""
+        getAssignReportsFilter(
+          token,
+          { page: { current: page, size: pageSize }, 
+           orderBy: 'asc',
+          assignReportSortType: 'Duration',
+          sortType: 'Project',
+          projectName: e.detail.projectName ?? "",
+          addressUnit: e.detail.addressUnit ?? [],
+          revealStatus: e.detail.revealStatus ?? "",
+          assignFrom: e.detail.assignFrom ?? "",
+          unitTypeIds: e.detail.unitTypeIds ?? [],
+          startSize: e.detail.startSize ?? 0,
+          toSize: e.detail.toSize ?? 0,
+          bedRoom: e.detail.bedRoom ?? 0,
+          bathRoom: e.detail.bathRoom ?? 0,
+          startRentalRate: e.detail.startRentalRate ?? 0,
+          toRentalRate: e.detail.toRentalRate ?? 0,
+          startRentalRatePerSQM: e.detail.startRentalRatePerSQM ?? 0,
+          toRentalRatePerSQM: e.detail.toRentalRatePerSQM ?? 0,
+          startSellingRate: e.detail.startSellingRate ?? 0,
+          toSellingRate: e.detail.toSellingRate ?? 0,
+          startSellingRatePerSQM: e.detail.startSellingRatePerSQM ?? 0,
+          toSellingRatePerSQM: e.detail.toSellingRatePerSQM ?? 0,
+          decorationIds: e.detail.decorationIds ?? [],
+          pictureStatusIds: e.detail.pictureStatusIds ?? [],
+          startFloor: e.detail.startFloor ?? 0,
+          toFloor: e.detail.toFloor ?? 0,
+          propertyStatusIds: e.detail.propertyStatusIds ?? [],
+          showOnWeb: e.detail.showOnWeb ?? 0,
+          hotDeal: e.detail.hotDeal ?? 0,
+          havePicture: e.detail.havePicture ?? 0,
+          forRentOrSale: e.detail.forRentOrSale ?? 0,
+          railwayStationId: e.detail.railwayStationId ?? 0,
+          startDistance: e.detail.startDistance ?? 0,
+          toDistance: e.detail.toDistance ?? 0,
+          forwardMKT: e.detail.forwardMKT ?? 0,
+          petFriendly: e.detail.petFriendly ?? 0,
+          privateLift: e.detail.privateLift ?? 0,
+          duplex: e.detail.duplex ?? 0,
+          penthouse: e.detail.penthouse ?? 0,
+          fixParking: e.detail.fixParking ?? 0,
+          projectTypeIds: e.detail.projectTypeIds ?? [],
+          bootedProppit: e.detail.bootedProppit ?? 0,
+          vipStatusIds: e.detail.vipStatusIds ?? [],
+          foreignerOwner: e.detail.foreignerOwner ?? 0,
+        }
       ).then((data: GetPropertiesResponse) => {
         const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
         console.log("Data", data);
@@ -280,26 +314,27 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
           id: item.id ?? 0,
           key: item.id ?? index,
           no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-          project: item.project ?? "-",
-          size: item.size ?? 0,
-          bed: item.bed ?? 0,
-          bath: item.bath ?? 0,
-          rental: item.rental ?? 0,
-          selling: item.selling ?? 0,
-          status: item.status ?? "-",
-          invid: item.invid ?? "-",
-          tw: item.tw ?? "-",
+          projectName: item.projectName ?? "-",
+          address: item.address ?? "-",
+          unitCode: item.unitCode ?? "-",
+          invId: item.invId ?? "-",
           floor: item.floor ?? "-",
-          RentalPG: item.RentalPG ?? "-",
-          vipStatusColor: item.vipStatusColor ?? "-",
-          salePG: item.salePG ?? 0,
-          rentPGColor: item.rentPGColor ?? "-",
-          salePGColor: item.salePGColor ?? "-",
-          rentPGText: item.rentPGText ?? "-",
-          salePGText: item.salePGText ?? "-",
-          availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-          lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-          vipStatus: item.vipStatus ?? "-",
+          tower: item.tower ?? "-",
+          size: item.size ?? 0,
+          bedRoom: item.bedRoom ?? 0,
+          bathRoom: item.bathRoom ?? 0,
+          rentalPrice: item.rentalPrice ?? 0,
+          salePrice: item.salePrice ?? 0,
+          status: item.status ?? "-",
+          lastedUpdate: item.lastedUpdate ?? "-",
+          saleName: item.saleName ?? "-",
+          startDate: item.startDate ?? "-",
+          toDate: item.toDate ?? "-",
+          assignerName: item.assignerName ?? "-",
+          displayDuration: item.displayDuration ?? "-",
+          toSalePropertyId: item.toSalePropertyId ?? 0,
+          propertyId: item.propertyId ?? 0,
+          revealStatus: item.revealStatus ?? "-",
         }));
         setProperties(mapped);
         setTotalRecords(data.allRecord ?? 0);
@@ -310,38 +345,37 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
 
       
     };
-    window.addEventListener('propertyTableReload', handleTableReload as EventListener);
+    window.addEventListener('assignTableReload', handleTableReload as EventListener);
     return () => {
-      window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
+      window.removeEventListener('assignTableReload', handleTableReload as EventListener);
     };
   }, [page, pageSize, token]);
 
-  // Instead of using `as any`, provide a default DataType object
   const emptyDataType: DataType = {
     id: 0,
     key: 0,
     no: 0,
-    project: "",
+    projectName: "",
+    address: "",
+    unitCode: "",
+    invId: "",
+    floor: 0,
+    tower: "",
     size: 0,
-    bed: 0,
-    bath: 0,
-    rental: 0,
-    selling: 0,
+    bedRoom: 0,
+    bathRoom: 0,
+    rentalPrice: 0,
+    salePrice: 0,
+    lastedUpdate: "",
     status: "",
-    invid: "",
-    tw: "",
-    floor: "",
-    RentalPG: "",
-    vipStatusColor: "",
-    salePG: 0,
-    rentPGColor: "",
-    salePGColor: "",
-    rentPGText: "",
-    salePGText: "",
-    availableOn: "",
-    lastUpdate: "",
-    selePG: "",
-    vipStatus: "",
+    saleName: "",
+    startDate: "",
+    toDate: "",
+    assignerName: "",
+    displayDuration: "",
+    toSalePropertyId: 0,
+    propertyId: 0,
+    revealStatus: "",
   };
 
   return (
@@ -393,7 +427,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       <ModalProperty
         selectedProperty={selectedProperty ?? emptyDataType}
         modalType={modalType}
-        text={selectedProperty?.project ?? ""}
+        text={selectedProperty?.projectName ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         token={token}

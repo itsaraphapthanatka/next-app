@@ -225,7 +225,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   useEffect(() => {
     setLoading(true);
     getProperties(
-      { page: { current: page, size: pageSize }, orderBy: 'asc' },
+      { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
       token
     ).then((data: GetPropertiesResponse) => {
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
@@ -271,7 +271,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       console.log("e.detail.addressUnit",e.detail.addressUnit)
       setLoading(true);
       getProperties(
-        { page: { current: page, size: pageSize }, orderBy: 'asc' },
+        { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
         token,
         e.detail.projectName ?? "",
         e.detail.addressUnit ?? ""

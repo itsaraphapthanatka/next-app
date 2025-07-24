@@ -31,8 +31,8 @@ export default async function AssignPage() {
         } catch {
             return redirect("/");
         }
-        const token = session?.user?.token || "";
-        console.log(token);
+        const token = session?.token as string;
+        console.log("token in AssignPage : ", token);
         return (
             <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
                 <Navbar />
@@ -44,7 +44,7 @@ export default async function AssignPage() {
                     <h1>Assign Report</h1>
                     </div>
                     <div className="mt-4">
-                    <AssignSearchFrom />
+                    <AssignSearchFrom token={token} />
                     <TableAssign token={token} />
                     </div>
             </div>

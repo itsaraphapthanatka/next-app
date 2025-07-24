@@ -28,6 +28,7 @@ interface GetPropertiesParams {
   page?: PropertyPageParams;
   sortBy?: PropertyBackOfficeSortType;
   orderBy?: string;
+  assignReportSortBy?: string;
 }
 
 export const getProperties = async (params?: GetPropertiesParams,token?:string,projectName?:string,addressUnit?:string) => {
@@ -45,6 +46,7 @@ export const getProperties = async (params?: GetPropertiesParams,token?:string,p
       },
       sortBy: params?.sortBy ?? "LastedUpdate",
       orderBy: params?.orderBy ?? "DESC",
+      assignReportSortBy: params?.assignReportSortBy ?? "Duration",
     },
     {
       headers: {

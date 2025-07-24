@@ -45,7 +45,7 @@ export default async function PropertyPage() {
           <h1>Property Management</h1>
         </div>
         <div className="mt-4">
-          <PropertySearchForm />
+          <PropertySearchForm token={session.token as string} />
           <TableProperty token={session.token as string} />
         </div>
       </div>
