@@ -5,6 +5,7 @@ import type { TableProps } from 'antd';
 import { Table } from 'antd';
 import { getProperties } from '@/app/server_actions/property';
 import { ModalProperty } from './ModalProperty';
+import { getSaleLimit } from '../server_actions/saleLimit';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -76,7 +77,7 @@ interface GetPropertiesResponse {
   recordPerPage?: number;
 }
 
-const MAX_SELECTION = 20;
+// const saleLimit = 20;
 
 const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -88,6 +89,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalType, setModalType] = useState<string>("");
+  const [saleLimit, setSaleLimit] = useState(0);
   const columns: ColumnsType<DataType> = [
     {
       title: 'No.',
@@ -221,6 +223,12 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
       ),
   };
+
+  useEffect(() => {
+    getSaleLimit(token).then((data) => {
+      setSaleLimit(data);
+    });
+  }, [token]);
 
   useEffect(() => {
     setLoading(true);
@@ -378,8 +386,8 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
           onChange: (newSelectedKeys) => {
             let limitedKeys = newSelectedKeys;
 
-            if (newSelectedKeys.length > MAX_SELECTION) {
-              limitedKeys = newSelectedKeys.slice(0, MAX_SELECTION);
+            if (newSelectedKeys.length > saleLimit) {
+              limitedKeys = newSelectedKeys.slice(0, saleLimit);
             }
 
             setSelectedRowKeys(limitedKeys);
@@ -387,7 +395,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
             window.dispatchEvent(event);
           },
           getCheckboxProps: (record) => ({
-            disabled: selectedRowKeys.length >= MAX_SELECTION && !selectedRowKeys.includes(record.key),
+            disabled: selectedRowKeys.length >= saleLimit && !selectedRowKeys.includes(record.key),
           }),
         }}
       />
