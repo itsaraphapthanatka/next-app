@@ -35,7 +35,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     return () => {
       window.removeEventListener('propertySelectionCount', handleSelectionCount as EventListener);
     };
-  }, []);
+  }, [token]);
 
   const handleSearch = () => {
     console.log("Search clicked", { projectName });

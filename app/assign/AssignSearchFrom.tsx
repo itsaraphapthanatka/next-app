@@ -35,7 +35,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
     return () => {
       window.removeEventListener('propertySelectionCount', handleSelectionCount as EventListener);
     };
-  }, []);
+  }, [token]);
 
   const handleSearch = () => {
     console.log("Search clicked", { projectName });

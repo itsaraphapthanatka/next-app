@@ -1,15 +1,8 @@
 "use client";
 
 import { Clock } from "lucide-react";
-import { useState } from "react";
 
 export function Navbar() {
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  const notifications = [
-    { id: 1, message: "You have a new report request." },
-    { id: 2, message: "Assignment updated successfully." },
-  ];
 
   return (
     <div className="bg-white p-4 border-b border-gray-200 ">
