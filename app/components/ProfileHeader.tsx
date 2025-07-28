@@ -1,19 +1,24 @@
 "use client";
+import { Badge, Space } from "antd";
 import { Clock } from "lucide-react";
 import Image from "next/image";
+import { CountdownTime } from "@/app/components/CountdownTime";
 
 interface ProfileHeaderProps {
   userName?: string;
-  userRole?: string;
+  userEmail?: string;
 }
 
-export function ProfileHeader({ userName = "คุณ, ตัวอย่าง สมมติ", userRole = "ขอให้ทำงานอย่างมีความสุข" }: ProfileHeaderProps) {
+export function ProfileHeader({ userName = "คุณ, ตัวอย่าง สมมติ", userEmail = "ตัวอย่าง@gmail.com" }: ProfileHeaderProps) {
+  const countdown = CountdownTime();
   return (
     <header className="bg-white rounded-xl p-4 mb-6 shadow-sm">
        <div className="text-right">
-          <button className="p-1 hover:bg-secondary rounded-full transition-colors">
-            <Clock className="w-5 h-5 text-muted-foreground" />
-          </button>
+       <Space size="middle">
+            <Badge count={countdown}>
+              <Clock className="w-6 h-6 text-muted-foreground" />
+            </Badge>
+          </Space>
         </div>
        <div className="w-12 h-12 bg-profile-bg rounded-full flex items-center justify-between">
        
@@ -31,8 +36,8 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
         <div className="flex items-center space-x-3">
          
           <div>
-            <h2 className="text-lg font-semibold text-foreground font-prompt">สวัสดี {userName} {}!</h2>
-            <p className="text-sm text-text-greeting font-prompt">{userRole}</p>
+            <h2 className="text-lg font-semibold text-foreground font-prompt">สวัสดี {userName}!</h2>
+            <p className="text-sm text-text-greeting font-prompt">{userEmail}</p>
           </div>
         </div>
         

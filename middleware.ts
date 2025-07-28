@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const SESSION_COOKIE_NAME = "serve_session";
-const SESSION_TIMEOUT_MS = 60 * 60; // 1 ชม.
+const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1 ชม.
 // const SESSION_TIMEOUT_MS = 60 * 60 * 24; // 1 วัน
 // const SESSION_TIMEOUT_MS = 5 * 60; // 5 นาที
 

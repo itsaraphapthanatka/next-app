@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     user: {
       id: user.id,
       firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
     },
     token,
@@ -30,7 +31,7 @@ export async function GET(req: NextRequest) {
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 วัน
+    maxAge: 60 * 60 * 24, // 1 day
     // maxAge: 60 * 60, // 1 ชม.
   });
   response.cookies.set("accessToken", token, {
@@ -38,8 +39,15 @@ export async function GET(req: NextRequest) {
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 วัน
+    maxAge: 60 * 60 * 24, // 1 day
     // maxAge: 60 * 60, // 1 ชม.
+  });
+  response.cookies.set("session_created_at", Date.now().toString(), {
+    httpOnly: false, // ✅ ให้ client-side อ่านได้
+    secure: true,
+    path: "/",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24,
   });
 
 // ✅ log login

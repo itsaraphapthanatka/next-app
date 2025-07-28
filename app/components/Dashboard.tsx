@@ -10,6 +10,7 @@ type DashboardProps = {
   session: {
     user?: {
       firstName?: string;
+      lastName?: string;
       email?: string;
       [key: string]: unknown;
     };
@@ -47,7 +48,7 @@ export function Dashboard({ session }: DashboardProps) {
     <div className="min-h-screen bg-dashboard-bg font-prompt">
       <div className="max-w-md mx-auto p-4">
         <div className="space-y-3">
-          <ProfileHeader userName={session?.user?.firstName ?? "Guest"} />
+          <ProfileHeader userName={session?.user?.firstName + " " + session?.user?.lastName} userEmail={session?.user?.email} />
 
           {menuItems.map((item, index) => (
             <MenuCard

@@ -11,14 +11,16 @@ export async function GET(req: NextRequest) {
     const base64 = cookie.value;
     const json = Buffer.from(base64, "base64").toString("utf-8");
     const session = JSON.parse(json);
-
+    console.log("session in session route", session);
     if (session?.user?.id) {
       return NextResponse.json({ 
         loggedIn: true,
         user: { 
           email: session?.user?.email, 
           firstName: session?.user?.firstName, 
-          id: session?.user?.id
+          lastName: session?.user?.lastName,
+          id: session?.user?.id,
+          createdAt: session?.createdAt
         } 
       }, { status: 200 });
     }
