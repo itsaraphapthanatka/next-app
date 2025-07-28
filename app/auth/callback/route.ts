@@ -30,14 +30,16 @@ export async function GET(req: NextRequest) {
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 วัน
+    // maxAge: 60 * 60 * 24, // 1 วัน
+    maxAge: 60 * 60, // 1 ชม.
   });
   response.cookies.set("accessToken", token, {
     httpOnly: true,
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 วัน
+    // maxAge: 60 * 60 * 24, // 1 วัน
+    maxAge: 60 * 60, // 1 ชม.
   });
 
 // ✅ log login
