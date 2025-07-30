@@ -11,10 +11,10 @@ function getRemainingMinutes(): number {
   const createdAt = Number(match[1]);
   const expiresAt = createdAt + SESSION_TIMEOUT_MS;
   const remaining = Math.max(0, expiresAt - Date.now());
-  return Math.floor(remaining / 60000); // คำนวณเป็น "นาที"
+  return Math.floor(remaining / 60000);
 }
 
-export function CountdownTime() {
+export function useCountdownTime(): number {
   const [remainingMinutes, setRemainingMinutes] = useState(getRemainingMinutes());
   const router = useRouter();
 
@@ -22,17 +22,13 @@ export function CountdownTime() {
     const interval = setInterval(() => {
       const mins = getRemainingMinutes();
       setRemainingMinutes(mins);
-      console.log("mins", mins);
-      if (mins === 0) router.push("/");
-    }, 60 * 1000); // Update ทุก 1 นาที
+      if (mins === 0) {
+        router.push("/");
+      }
+    }, 60 * 1000);
 
     return () => clearInterval(interval);
   }, [router]);
-
-  if (remainingMinutes === 0) {
-    console.log("remainingMinutes is 0");
-    return <span title="Session expired">--</span>;
-  }
 
   return remainingMinutes;
 }
