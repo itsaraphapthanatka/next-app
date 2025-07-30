@@ -6,6 +6,7 @@ import { Table } from 'antd';
 import { getProperties } from '@/app/server_actions/property';
 import { ModalProperty } from './ModalProperty';
 import { getSaleLimit } from '../server_actions/saleLimit';
+import { formatNumberShort } from '@/app/utils/formatNumber';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -158,7 +159,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
       render: (text) => (
         <div className='text-center'>
-          {text.toLocaleString()}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -169,7 +170,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
       render: (text) => (
         <div className='text-center'>
-          {text.toLocaleString()}
+          {formatNumberShort(text)}
         </div>
       ),
     },
