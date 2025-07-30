@@ -95,12 +95,12 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       title: 'No.',
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
-      width: 35,
+      width: 45,
+      fixed: 'left',
     },
     {
       title: 'Project',
       dataIndex: 'project',
-      fixed: 'left',
       sorter: (a, b) => a.project.localeCompare(b.project),
       render: (text, record) => (
         <div
@@ -177,7 +177,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => a.status.localeCompare(b.status),
-      width: 150,
+      width: 70,
       ellipsis: false,
     },
     Table.EXPAND_COLUMN,
@@ -363,7 +363,7 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         // className="custom-table-font"
         size="small"
         columns={columns}
-        scroll={{ x: 1000, y: 500 }}
+        scroll={{ x: 800, y: 500 }}
         dataSource={properties}
         pagination={{
           position: ['bottomCenter'],

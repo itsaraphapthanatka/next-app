@@ -22,6 +22,7 @@ export function CountdownTime() {
     const interval = setInterval(() => {
       const mins = getRemainingMinutes();
       setRemainingMinutes(mins);
+      console.log("mins", mins);
       if (mins === 0) router.push("/");
     }, 60 * 1000); // Update ทุก 1 นาที
 
@@ -29,7 +30,8 @@ export function CountdownTime() {
   }, [router]);
 
   if (remainingMinutes === 0) {
-    return "--";
+    console.log("remainingMinutes is 0");
+    return <span title="Session expired">--</span>;
   }
 
   return remainingMinutes;

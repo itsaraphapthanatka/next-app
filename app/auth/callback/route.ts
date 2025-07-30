@@ -3,8 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
   if (!token) return NextResponse.redirect(new URL("/", req.url));
-
-  const userRes = await fetch(`https://api.serve.co.th/users/me`, {
+  const userRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
