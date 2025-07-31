@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-// ✅ ดึงค่าจาก env
-export const SESSION_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
+export const SESSION_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS || 30 * 60 * 1000); // fallback 30 นาที
 
 function getRemainingMinutes(): number {
   if (typeof document === "undefined") return 0;
@@ -25,14 +24,18 @@ export function useCountdownTime(): number {
       const mins = getRemainingMinutes();
       setRemainingMinutes(mins);
 
-      if (mins === 0) {
+      if (mins <= 0) {
+        console.log("🔒 Session expired, logging out...");
         await fetch("/api/auth/logout", { method: "POST" });
+
+        // Clear cookies
         document.cookie = "accessToken=; path=/; max-age=0";
         document.cookie = "session_created_at=; path=/; max-age=0";
         document.cookie = "serve_session=; path=/; max-age=0";
-        router.push("/");
+
+        router.push("/"); // Redirect to login
       }
-    }, 1000); // 1 วินาที
+    }, 60 * 1000); // ✅ ทุก 1 นาที ก็พอ
 
     return () => clearInterval(interval);
   }, [router]);
