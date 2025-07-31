@@ -148,6 +148,36 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
             form={form}
             layout="vertical"
             name="propertyFilter"
+            initialValues={{
+              minSize: 0,
+              maxSize: 0,
+              bedRoom: 0,
+              bathRoom: 0,
+              minRentalRateOnWeb: 0,
+              maxRentalRateOnWeb: 0,
+              minRentalRatePerSQM: 0,
+              maxRentalRatePerSQM: 0,
+              minFloor: 0,
+              maxFloor: 0,
+              propertyStatus: [],
+              havePicture: 0,
+              showOnWeb: 0,
+              hotDeal: 0,
+              forRentSaleStatus: 0,
+              foreignerOwner: 0,
+              massTransit: [],
+              startDistance: 0,
+              toDistance: 1000,  
+              fixParking: 0,
+              duplexLoft: 0,
+              petFriendly: 0,
+              privateLift: 0,
+              penthouse: 0,
+              propertyType: [], 
+              vipStatus: [],
+              revealStatus: [],
+              assignFrom: [],
+            }}
           
           >
           <div className="gap-3 w-full">
@@ -162,16 +192,17 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
           <div className="gap-3 w-full">
             <Form.Item
               label="Unit Type"
-              name="addressUnitFilter"
+              name="unitTypeFilter"
               style={{ marginBottom: "10px" }}
             >
               <Select
                 mode="multiple"
                 allowClear
                 style={{ width: '100%' }}
-                placeholder="Please select"
+                placeholder="Please select" size="large"
                 onChange={handleChange}
                 options={options}
+                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
               />
             </Form.Item>
           </div>
@@ -267,6 +298,7 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 placeholder="Please select" size="large" 
                 onChange={handlePropertyStatusChange}
                 options={propertyStatuses}
+                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                  />
               </Form.Item>
             </div>
@@ -278,8 +310,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
-                  <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={0}>Show All Status</Select.Option>
+                  <Select.Option value={1}>Have Picture</Select.Option>
+                  <Select.Option value={2}>Not have Picture</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -290,8 +323,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
                   <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={2}>No</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -303,8 +337,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
                   <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={2}>No</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -315,8 +350,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
                   <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={2}>No</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -327,8 +363,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
                   <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={2}>No</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -344,6 +381,7 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 placeholder="Please select" size="large" 
                 onChange={handleMassTransitChange}
                 options={masstransits}
+                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                  />
               </Form.Item>
             </div>
@@ -371,8 +409,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
-                  <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={0}>Show All Status</Select.Option>
+                  <Select.Option value={1}>Have</Select.Option>
+                  <Select.Option value={2}>Not Have</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -383,8 +422,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
                   <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={2}>No</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -396,8 +436,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
-                  <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={0}>Show All Status</Select.Option>
+                  <Select.Option value={1}>Pet Friendly</Select.Option>
+                  <Select.Option value={2}>Not Friendly</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -408,8 +449,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
-                  <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={0}>Show All Status</Select.Option>
+                  <Select.Option value={1}>Have Private Lift </Select.Option>
+                  <Select.Option value={2}>Not Have Private Lift</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -420,8 +462,9 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Show All Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
                   <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={0}>No</Select.Option>
+                  <Select.Option value={2}>No</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -437,7 +480,8 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 placeholder="Please select" size="large" 
                 onChange={handlePropertyTypeChange}
                 options={propertyTypes}
-                 />
+                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                />
               </Form.Item>
             </div>
             <div className="gap-3 w-full">
@@ -453,7 +497,8 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 onChange={handleVipStatusChange}
                 options={vipStatuses}
                 tagRender={tagRender}
-                 />
+                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                />
               </Form.Item>
             </div>
             {moduleType === "assign" && (
