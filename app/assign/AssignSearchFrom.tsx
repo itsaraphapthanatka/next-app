@@ -178,7 +178,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         }}
       >
         <div>
-            <ModalFilter form={form} moduleType="assign" />
+            <ModalFilter form={form} moduleType="assign" token={token} />
         </div>
       </Modal>
       <Modal
