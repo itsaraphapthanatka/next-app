@@ -7,6 +7,7 @@ import { getProperties } from '@/app/server_actions/property';
 import { ModalProperty } from './ModalProperty';
 import { getSaleLimit } from '../server_actions/saleLimit';
 import { formatNumberShort } from '@/app/utils/formatNumber';
+import { getPropertyFilter } from '@/app/server_actions/property-filter'; 
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -188,29 +189,29 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
     expandedRowRender: (record) => 
     <table>
       <tbody className='text-xs'>
-      <tr className='border-b border-dashed border-gray-200'>
-        <td className='underline'>INVID</td>
-        <td style={{color: record.vipStatusColor}}>{record.invid}</td>
+      <tr className='border-b-2 border-dashed border-gray-200 p-1'>
+        <td className='p-1 underline'>INVID</td>
+        <td className='p-1 text-right' style={{color: record.vipStatusColor}}>{record.invid}</td>
         <td className='pl-4 underline'>Sale PG</td>
-        <td style={{color: record.salePGColor}}>
+        <td className='p-1 text-right' style={{color: record.salePGColor}}>
           {record.salePGText ? record.salePGText + " %" : "%"}
         </td>
       </tr>
-      <tr className='border-b border-dashed border-gray-200'>
-        <td className='underline'>TW.</td>
-        <td>{record.tw}</td>
+      <tr className='border-b-2 border-dashed border-gray-200 p-1'>
+        <td className='p-1 underline'>TW.</td>
+        <td className='p-1 text-right'>{record.tw}</td>
         <td className='pl-4 underline'>Last Update</td>
-        <td>{record.lastUpdate}</td>
+        <td className='p-1 text-right'>{record.lastUpdate}</td>
       </tr>
-      <tr className='border-b border-dashed border-gray-200'>
-        <td className='underline'>FL.</td>
-        <td>{record.floor}</td>
+      <tr className='border-b-2 border-dashed border-gray-200 p-1'>
+        <td className='p-1 underline'>FL.</td>
+        <td className='p-1 text-right'>{record.floor}</td>
         <td className='pl-4 underline'>Available On</td>
-        <td>{record.availableOn}</td>
+        <td className='p-1 text-right'>{record.availableOn}</td>
       </tr>
-      <tr className='border-b border-dashed border-gray-200'>
-        <td className='underline'>Rent PG</td>
-        <td style={{color: record.rentPGColor}}>
+      <tr className='border-b-2 border-dashed border-gray-200 p-1'>
+        <td className='p-1 underline'>Rent PG</td>
+        <td className='p-1 text-right' style={{color: record.rentPGColor}}>
           {record.rentPGText ? record.rentPGText + " %" : "%"}
         </td>
       </tr>
@@ -276,14 +277,53 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   useEffect(() => {
     const handleTableReload = (e: CustomEvent) => {
       console.log("Table reload", e.detail);
-      console.log("e.detail.projectName",e.detail.projectName)
-      console.log("e.detail.addressUnit",e.detail.addressUnit)
+      console.log("e.detail.projectName",e.detail.projectName);
+      console.log("e.detail.unitTypeIds",e.detail.unitTypeIds);
+      console.log("token send to server",token);
       setLoading(true);
-      getProperties(
-        { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-        token,
-        e.detail.projectName ?? "",
-        e.detail.addressUnit ?? ""
+      getPropertyFilter(
+        { 
+          projectName: e.detail.projectName ?? "",
+          unitTypeIds: e.detail.unitTypeIds ?? [],
+          startSize: e.detail.startSize ?? 0,
+          toSize: e.detail.toSize ?? 0,
+          bedRoom: e.detail.bedRoom ?? 0,
+          bathRoom: e.detail.bathRoom ?? 0,
+          startRentalRate: e.detail.startRentalRate ?? 0,
+          toRentalRate: e.detail.toRentalRate ?? 0,
+          startRentalRatePerSQM: e.detail.startRentalRatePerSQM ?? 0,
+          toRentalRatePerSQM: e.detail.toRentalRatePerSQM ?? 0,
+          startSellingRate: e.detail.startSellingRate ?? 0,
+          toSellingRate: e.detail.toSellingRate ?? 0,
+          startSellingRatePerSQM: e.detail.startSellingRatePerSQM ?? 0,
+          toSellingRatePerSQM: e.detail.toSellingRatePerSQM ?? 0,
+          decorationIds: e.detail.decorationIds ?? [],
+          pictureStatusIds: e.detail.pictureStatusIds ?? [],
+          startFloor: e.detail.startFloor ?? 0,
+          toFloor: e.detail.toFloor ?? 0,
+          propertyStatusIds: e.detail.propertyStatusIds ?? [],
+          showOnWeb: e.detail.showOnWeb ?? 0,
+          hotDeal: e.detail.hotDeal ?? 0,
+          havePicture: e.detail.havePicture ?? 0,
+          forRentOrSale: e.detail.forRentOrSale ?? 0,
+          railwayStationId: e.detail.railwayStationId ?? 0,
+          startDistance: e.detail.startDistance ?? 0,
+          toDistance: e.detail.toDistance ?? 0,
+          forwardMKT: e.detail.forwardMKT ?? 0,
+          petFriendly: e.detail.petFriendly ?? 0,
+          privateLift: e.detail.privateLift ?? 0,
+          duplex: e.detail.duplex ?? 0,
+          penthouse: e.detail.penthouse ?? 0,
+          fixParking: e.detail.fixParking ?? 0,
+          projectTypeIds: e.detail.projectTypeIds ?? [],
+          bootedProppit: e.detail.bootedProppit ?? 0,
+          vipStatusIds: e.detail.vipStatusIds ?? [],
+          foreignerOwner: e.detail.foreignerOwner ?? 0,
+          page: { current: page, size: pageSize },
+          orderBy: 'asc',
+          assignReportSortBy: 'Duration',
+        },
+        token
       ).then((data: GetPropertiesResponse) => {
         const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
         console.log("Data", data);
@@ -326,6 +366,60 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
     };
   }, [page, pageSize, token]);
+ 
+  // useEffect(() => {
+  //   const handleTableReload = (e: CustomEvent) => {
+  //     console.log("Table reload", e.detail);
+  //     console.log("e.detail.projectName",e.detail.projectName)
+  //     console.log("e.detail.addressUnit",e.detail.addressUnit)
+  //     setLoading(true);
+  //     getProperties(
+  //       { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
+  //       token,
+  //       e.detail.projectName ?? "",
+  //       e.detail.addressUnit ?? ""
+  //     ).then((data: GetPropertiesResponse) => {
+  //       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
+  //       console.log("Data", data);
+  //       const mapped: DataType[] = items.map((item, index) => ({
+  //         id: item.id ?? 0,
+  //         key: item.id ?? index,
+  //         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
+  //         project: item.project ?? "-",
+  //         size: item.size ?? 0,
+  //         bed: item.bed ?? 0,
+  //         bath: item.bath ?? 0,
+  //         rental: item.rental ?? 0,
+  //         selling: item.selling ?? 0,
+  //         status: item.status ?? "-",
+  //         invid: item.invid ?? "-",
+  //         tw: item.tw ?? "-",
+  //         floor: item.floor ?? "-",
+  //         RentalPG: item.RentalPG ?? "-",
+  //         vipStatusColor: item.vipStatusColor ?? "-",
+  //         salePG: item.salePG ?? 0,
+  //         rentPGColor: item.rentPGColor ?? "-",
+  //         salePGColor: item.salePGColor ?? "-",
+  //         rentPGText: item.rentPGText ?? "-",
+  //         salePGText: item.salePGText ?? "-",
+  //         availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+  //         lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+  //         vipStatus: item.vipStatus ?? "-",
+  //       }));
+  //       setProperties(mapped);
+  //       setTotalRecords(data.allRecord ?? 0);
+  //       setPage(data.currentPage ?? 1);
+  //       setPageSize(data.recordPerPage ?? 10);
+  //       setLoading(false);
+  //     });
+
+      
+  //   };
+  //   window.addEventListener('propertyTableReload', handleTableReload as EventListener);
+  //   return () => {
+  //     window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
+  //   };
+  // }, [page, pageSize, token]);
 
   // Instead of using `as any`, provide a default DataType object
   const emptyDataType: DataType = {

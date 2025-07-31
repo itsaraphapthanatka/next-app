@@ -151,16 +151,16 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         cancelText="Close"
         footer={
           <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
-            <Button color="default" size="middle" variant="outlined" onClick={handleResetFilter}>
+            <Button color="default" size="small" variant="outlined" onClick={handleResetFilter}>
               Copy Link
             </Button>
-            <Button color="default" size="middle" variant="outlined" onClick={handleResetFilter}>
+            <Button color="default" size="small" variant="outlined" onClick={handleResetFilter}>
               Reset Filter
             </Button>
-            <Button color="danger" size="middle" variant="outlined" onClick={handleFilterSearch}>
+            <Button color="danger" size="small" variant="outlined" onClick={handleFilterSearch}>
               Search
             </Button>
-            <Button color="default" size="middle" variant="outlined" onClick={handleClose}>
+            <Button color="default" size="small" variant="outlined" onClick={handleClose}>
               Close
             </Button>
           </div>

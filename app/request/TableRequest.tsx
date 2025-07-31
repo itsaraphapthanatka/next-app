@@ -5,6 +5,7 @@ import { Table, TableProps } from 'antd';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 import { ModalProperty } from "../components/ModalProperty";
 import { getRequestReports } from "@/app/server_actions/request-reports";
+import { formatNumberShort } from '@/app/utils/formatNumber';
 
 interface RequestApiItem {
     id: number;
@@ -106,23 +107,39 @@ export const TableRequest = ({token}: {token: string}) => {
             dataIndex: 'rentalPrice',
             sorter: (a, b) => a.rentalPrice - b.rentalPrice,
             width: 70,
+            render: (text) => (
+                <div className='text-center'>
+                    {formatNumberShort(text)}
+                </div>
+            ),
         },
         {
             title: 'Selling',
             dataIndex: 'salePrice',
             sorter: (a, b) => a.salePrice - b.salePrice,
             width: 70,
+            render: (text) => (
+                <div className='text-center'>
+                    {formatNumberShort(text)}
+                </div>
+            ),
         },
         {
             title: 'Status',
             dataIndex: 'status',
             sorter: (a, b) => a.status.localeCompare(b.status),
-            width: 150,
+            width: 100,
         },
         {
             title: 'Approve',
             dataIndex: 'requestStatus',
-            width: 150,
+            sorter: (a, b) => a.requestStatus.localeCompare(b.requestStatus),
+            width: 100,
+            render: (text) => (
+                <div className="flex justify-end text-green-500">
+                    {text}
+                </div>
+            ),
         },
         Table.EXPAND_COLUMN,
     ];
@@ -261,28 +278,28 @@ export const TableRequest = ({token}: {token: string}) => {
     const defaultExpandable: ExpandableConfig<RequestApiItem> = {
         expandedRowRender: (record) => (
             <table>
-                <tbody>
-                <tr className="border-b border-dashed border-gray-200">
-                    <td colSpan={2} className="p-2">ENQNO</td>
-                    <td colSpan={2} className="p-2 text-right">{record.enqRequest} {record.requestDate ? new Date(record.requestDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-"}</td>
+                <tbody className='text-xs'>
+                <tr className="border-b border-dashed border-gray-200 border-b-2">
+                    <td colSpan={2} className="p-1 underline">ENQ. No</td>
+                    <td colSpan={2} className="p-1 text-right">{record.enqRequest} {record.requestDate ? new Date(record.requestDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-"}</td>
                 </tr>
-                <tr className='border-b border-dashed border-gray-200'>
-                    <td className='p-2'>INVID</td>
-                    <td className='p-2'>{record.invId}</td>
-                    <td className='p-2'>TW.</td>
-                    <td className='p-2'>{record.tower}</td>
+                <tr className='border-b border-dashed border-gray-200 border-dashed'>
+                    <td className='p-1 underline'>INVID</td>
+                    <td className='p-1 text-right'>{record.invId}</td>
+                    <td className='pl-4 underline'>TW.</td>
+                    <td className='p-1 text-right'>{record.tower}</td>
                 </tr>
-                <tr className='border-b border-dashed border-gray-200 p-2'>
-                    <td className='p-2'>FL.</td>
-                    <td className='p-2'>{record.floor}</td>
-                    <td className='p-2'>Action Update</td>
-                    <td className='p-2 text-[10px]'>{record.actionDate ? new Date(record.actionDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-"}</td>
+                <tr className='border-b border-dashed border-gray-200 border-dashed p-1'>
+                    <td className='p-1 underline'>FL.</td>
+                    <td className='p-1 text-right'>{record.floor}</td>
+                    <td className='pl-4 underline'>Action Update</td>
+                    <td className='p-1 text-right'>{record.actionDate ? new Date(record.actionDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-"}</td>
                 </tr>
-                <tr className='border-b border-dashed border-gray-200 p-2'>
-                    <td className='p-2'>Status</td>
-                    <td className='p-2'>{record.status}</td>
-                    <td className='p-2'>Available On</td>
-                    <td className='p-2 text-[10px]'>{record.availableOn}</td>
+                <tr className='border-b border-dashed border-gray-200 border-dashed p-1'>
+                    <td className='p-1 underline'>Status</td>
+                    <td className='p-1 text-right'>{record.status}</td>
+                    <td className='pl-4 underline'>Available On</td>
+                    <td className='p-1 text-right'>{record.availableOn}</td>
                 </tr>
                 </tbody>
             </table>

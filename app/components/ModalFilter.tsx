@@ -149,6 +149,8 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
             layout="vertical"
             name="propertyFilter"
             initialValues={{
+              projectNameFilter: "",
+              unitTypeFilter: [],
               minSize: 0,
               maxSize: 0,
               bedRoom: 0,
@@ -168,6 +170,11 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
               massTransit: [],
               startDistance: 0,
               toDistance: 1000,  
+              decorationIds: [],
+              pictureStatusIds: [],
+              startFloor: 0,
+              toFloor: 0,
+              propertyStatusIds: [],
               fixParking: 0,
               duplexLoft: 0,
               petFriendly: 0,

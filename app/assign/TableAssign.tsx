@@ -6,7 +6,7 @@ import { Table } from 'antd';
 import { getAssignReports } from '@/app/server_actions/assign-reports';
 import { ModalProperty } from '../components/ModalProperty';
 import { getAssignReportsFilter } from '@/app/server_actions/assign-reports-filter';
-
+import { formatNumberShort } from '@/app/utils/formatNumber';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -88,7 +88,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       title: 'No.',
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
-      width: 35,
+      width: 50,
     },
     {
       title: 'Project',
@@ -146,7 +146,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
       render: (text) => (
         <div className='text-center'>
-          {text.toLocaleString()}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -157,7 +157,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       width: 70,
       render: (text) => (
         <div className='text-center'>
-          {text.toLocaleString()}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -165,7 +165,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => a.status.localeCompare(b.status),
-      width: 150,
+      width: 100,
       ellipsis: false,
     },
     Table.EXPAND_COLUMN,
@@ -174,30 +174,30 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
   const defaultExpandable: ExpandableConfig<DataType> = {
     expandedRowRender: (record) => 
     <table>
-      <tbody>
-        <tr className='border-b border-dashed border-gray-200'>
-          <td className='p-2'>Sale</td>
-          <td className='p-2'>{record.saleName}</td>
-          <td className='p-2'>Bath</td>
-          <td className='p-2'>{record.bathRoom}</td>
+      <tbody className='text-xs'>
+        <tr className='border-b-2 border-dashed border-gray-200 p-1'>
+          <td className='p-1 underline'>Sale</td>
+          <td className='p-1 text-right'>{record.saleName}</td>
+          <td className='pl-4 underline'>Bath</td>
+          <td className='p-1 text-right'>{record.bathRoom}</td>
         </tr>
-        <tr className='border-b border-dashed border-gray-200 p-2'>
-          <td className='p-2'>Assign From</td>
-          <td className='p-2'>{record.assignerName}</td>
-          <td className='p-2'>Duration</td>
-          <td className='p-2'>{record.displayDuration}</td>
+        <tr className='border-b border-dashed border-gray-200 p-1'>
+          <td className='p-1 underline'>Assign From</td>
+          <td className='p-1 text-right'>{record.assignerName}</td>
+          <td className='pl-4 underline'>Duration</td>
+          <td className='p-1 text-right'>{record.displayDuration}</td>
         </tr>
-        <tr className='border-b border-dashed border-gray-200 p-2'>
-          <td className='p-2'>Unit Code</td>
-          <td className='p-2'>{record.unitCode}</td>
-          <td className='p-2'>Lasted Update</td>
-          <td className='p-2'>{record.lastedUpdate}</td>
+        <tr className='border-b border-dashed border-gray-200 p-1'>
+          <td className='p-1 underline'>Unit Code</td>
+          <td className='p-1 text-right'>{record.unitCode}</td>
+          <td className='pl-4 underline'>Lasted Update</td>
+          <td className='p-1 text-right'>{record.lastedUpdate}</td>
         </tr>
-        <tr className='border-b border-dashed border-gray-200 p-2'>
-          <td className='p-2'>INVID</td>
-          <td className='p-2'>{record.invId}</td>
-          <td className='p-2'>Reveal Status</td>
-          <td className='p-2'>{record.revealStatus}</td>
+          <tr className='border-b border-dashed border-gray-200 p-1'>
+          <td className='p-1 underline'>INVID</td>
+          <td className='p-1 text-right'>{record.invId}</td>
+          <td className='pl-4 underline'>Reveal Status</td>
+          <td className='p-1 text-right'>{record.revealStatus}</td>
         </tr>
       </tbody>
     </table>,
