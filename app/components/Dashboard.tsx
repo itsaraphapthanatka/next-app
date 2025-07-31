@@ -3,8 +3,7 @@
 import { Building2, FileText, ClipboardList, FolderOpen, BarChart3, Users, LogOut } from "lucide-react";
 import { ProfileHeader } from "./ProfileHeader";
 import { MenuCard } from "./MenuCard";
-import { toast } from "sonner";
-
+import {  App as AntdApp } from "antd";
 
 type DashboardProps = {
   session: {
@@ -22,14 +21,19 @@ const menuItems = [
   { title: "Property", icon: Building2, href: "/property" },
   { title: "Request Report", icon: FileText, href: "/request" },
   { title: "Assigned Report", icon: ClipboardList, href: "/assign" },
-  { title: "Project", icon: FolderOpen, href: "/project" },
-  { title: "Dashboard", icon: BarChart3, href: "/dashboard" },
-  { title: "Leads Management", icon: Users, href: "/leads-management" },
+  { title: "Project", icon: FolderOpen, href: "/project" ,disabled: true},
+  { title: "Dashboard", icon: BarChart3, href: "/dashboard" ,disabled: true},
+  { title: "Leads Management", icon: Users, href: "/leads-management" ,disabled: true},
 ];
 
 export function Dashboard({ session }: DashboardProps) {
-  const handleMenuClick = (itemTitle: string) => {
-    toast(`เมนู ${itemTitle}\nคลิกเมนู ${itemTitle} เรียบร้อยแล้ว`);
+  const { message } = AntdApp.useApp();
+  const handleMenuClick = (itemTitle: string, disabled: boolean) => {
+    console.log("disabled", disabled);
+    if (disabled) {
+      message.info(`เมนู ${itemTitle} อยู่ระหว่างการพัฒนา (Under Construction)`);
+      return;
+    }
   };
 
   const handleLogout = async () => {
@@ -55,8 +59,9 @@ export function Dashboard({ session }: DashboardProps) {
               key={index}
               title={item.title}
               icon={item.icon}
-              onClick={() => handleMenuClick(item.title)}
+              onClick={() => handleMenuClick(item.title, item.disabled ?? false)}
               href={item.href}
+              disabled={item.disabled}
             />
           ))}
 

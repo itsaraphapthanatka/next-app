@@ -3,7 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 import "./globals.css";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, App as AntdApp } from "antd";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 
@@ -23,9 +23,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             },
           }}
         >
-          <SessionProvider>
-            {children}
-          </SessionProvider>
+          <AntdApp>
+            <SessionProvider>
+              {children}
+            </SessionProvider>
+          </AntdApp>
         </ConfigProvider>
       </body>
     </html>
