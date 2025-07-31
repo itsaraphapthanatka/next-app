@@ -1,3 +1,4 @@
+import { SESSION_TIMEOUT_MS } from "@/app/components/CountdownTime";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -25,12 +26,13 @@ export async function GET(req: NextRequest) {
  
 
   const response = NextResponse.redirect(new URL("/menu", req.url));
+  const SESSION_TIMEOUT_SEC = Number(process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
   response.cookies.set("serve_session", encoded, {
     httpOnly: true,
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 day
+    maxAge: SESSION_TIMEOUT_SEC  ,
     // maxAge: 60 * 60, // 1 ชม.
   });
   response.cookies.set("accessToken", token, {
@@ -38,7 +40,7 @@ export async function GET(req: NextRequest) {
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24, // 1 day
+    maxAge: SESSION_TIMEOUT_SEC  , 
     // maxAge: 60 * 60, // 1 ชม.
   });
   response.cookies.set("session_created_at", Date.now().toString(), {
@@ -46,9 +48,11 @@ export async function GET(req: NextRequest) {
     secure: true,
     path: "/",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24,
+    maxAge: SESSION_TIMEOUT_SEC  , 
   });
-
+  console.log("✅ Set-Cookie:", response.headers.getSetCookie?.());
+  console.log("🔑 Decoded session:", session);
+  console.log("⏳ Age:", Date.now() - session.createdAt, "/", SESSION_TIMEOUT_MS);
 // ✅ log login
 const baseUrl = new URL(req.url).origin
 const ip =

@@ -8,7 +8,6 @@ import { useCountdownTime } from "@/app/components/CountdownTime";
 export function Navbar() {
   const countdown = useCountdownTime();
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);

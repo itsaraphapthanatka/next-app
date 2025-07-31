@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const SESSION_COOKIE_NAME = "serve_session";
-const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1 ชม.
-// const SESSION_TIMEOUT_MS = 60 * 60 * 24; // 1 วัน
-// const SESSION_TIMEOUT_MS = 5 * 60; // 5 นาที
+const SESSION_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
 
 export function middleware(req: NextRequest) {
   const cookie = req.cookies.get(SESSION_COOKIE_NAME);
@@ -36,9 +34,13 @@ export function middleware(req: NextRequest) {
       secure: true,
       path: "/",
       sameSite: "lax",
-      maxAge: 60 * 60, // keep 1 hour
+      maxAge: SESSION_TIMEOUT_MS, // keep 1 hour
       // maxAge: 60 * 60 * 24, // keep 1 day
     });
+    console.log("📦 Raw cookie:", cookie?.value);
+    console.log("🔑 Decoded session:", session);
+    console.log("⏳ Age:", Date.now() - session.createdAt, "/", SESSION_TIMEOUT_MS);
+    console.log("✅ Set-Cookie middleware:", res.headers.getSetCookie?.());
 
     return res;
   } catch {

@@ -187,30 +187,30 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const defaultExpandable: ExpandableConfig<DataType> = {
     expandedRowRender: (record) => 
     <table>
-      <tbody>
+      <tbody className='text-xs'>
       <tr className='border-b border-dashed border-gray-200'>
-        <td className='p-2'>INVID</td>
-        <td className='p-2' style={{color: record.vipStatusColor}}>{record.invid}</td>
-        <td className='p-2'>Sale PG</td>
-        <td className='p-2' style={{color: record.salePGColor}}>
+        <td className='underline'>INVID</td>
+        <td style={{color: record.vipStatusColor}}>{record.invid}</td>
+        <td className='pl-4 underline'>Sale PG</td>
+        <td style={{color: record.salePGColor}}>
           {record.salePGText ? record.salePGText + " %" : "%"}
         </td>
       </tr>
-      <tr className='border-b border-dashed border-gray-200 p-2'>
-        <td className='p-2'>TW.</td>
-        <td className='p-2'>{record.tw}</td>
-        <td className='p-2'>Last Update</td>
-        <td className='p-2'>{record.lastUpdate}</td>
+      <tr className='border-b border-dashed border-gray-200'>
+        <td className='underline'>TW.</td>
+        <td>{record.tw}</td>
+        <td className='pl-4 underline'>Last Update</td>
+        <td>{record.lastUpdate}</td>
       </tr>
-      <tr className='border-b border-dashed border-gray-200 p-2'>
-        <td className='p-2'>FL.</td>
-        <td className='p-2'>{record.floor}</td>
-        <td className='p-2'>Available On</td>
-        <td className='p-2'>{record.availableOn}</td>
+      <tr className='border-b border-dashed border-gray-200'>
+        <td className='underline'>FL.</td>
+        <td>{record.floor}</td>
+        <td className='pl-4 underline'>Available On</td>
+        <td>{record.availableOn}</td>
       </tr>
-      <tr className='border-b border-dashed border-gray-200 p-2'>
-        <td className='p-2'>Rent PG</td>
-        <td className='p-2' style={{color: record.rentPGColor}}>
+      <tr className='border-b border-dashed border-gray-200'>
+        <td className='underline'>Rent PG</td>
+        <td style={{color: record.rentPGColor}}>
           {record.rentPGText ? record.rentPGText + " %" : "%"}
         </td>
       </tr>
