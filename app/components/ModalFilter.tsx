@@ -1,8 +1,148 @@
-import { Form, Input, Select } from "antd";
-
+import { Form, Input, Select, Tag } from "antd";
 import { FormInstance } from "antd/es/form";
+import { getUnitType } from "@/app/server_actions/unittype";
+import { getPropertyStatuses, getMasstransits, getPropertyTypes, getVipStatuses } from "@/app/server_actions/master";
+import {  useEffect, useState } from "react";
+import type { SelectProps } from 'antd';
 
-export const ModalFilter = ({form, moduleType}: {form: FormInstance, moduleType: string}) => {
+
+
+export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, moduleType: string, token: string}) => {
+
+    // const token = await getToken();
+    const [options, setOptions] = useState<{label: string, value: string}[]>([]);
+    const [propertyStatuses, setPropertyStatuses] = useState<{label: string, value: string}[]>([]);
+    const [masstransits, setMasstransits] = useState<{label: string, value: string}[]>([]);
+    const [propertyTypes, setPropertyTypes] = useState<{label: string, value: string}[]>([]);
+    const [vipStatuses, setVipStatuses] = useState<{label: string, value: string, color: string}[]>([]);
+
+    useEffect(() => {
+      const fetchOptions = async () => {
+          const unitType = await getUnitType(token);
+          const options = unitType.map((option: {id: number, name: string}) => ({
+              label: option.name,
+              value: option.id
+          }));
+          setOptions(options);
+          console.log("options", options);
+      };
+      fetchOptions();
+    }, [token]);
+
+    useEffect(() => {
+      const fetchPropertyStatuses = async () => {
+        const propertyStatuses = await getPropertyStatuses(token);
+        const options = propertyStatuses.map((option: {id: number, name: string}) => ({
+          label: option.name,
+          value: option.id
+        }));  
+        setPropertyStatuses(options);
+      };
+      fetchPropertyStatuses();
+    }, [token]);
+
+    useEffect(() => {
+      const fetchMasstransits = async () => {
+        const masstransits = await getMasstransits(token);
+        const options = masstransits.map((option: {id: number, name: string}) => ({
+          label: option.name,
+          value: option.id
+        }));  
+        setMasstransits(options);
+      };
+      fetchMasstransits();
+    }, [token]);
+
+    useEffect(() => {
+      const fetchPropertyTypes = async () => {
+        const propertyTypes = await getPropertyTypes(token);
+        const options = propertyTypes.map((option: {id: number, name: string}) => ({
+          label: option.name,
+          value: option.id
+        }));    
+        setPropertyTypes(options);
+      };
+      fetchPropertyTypes();
+    }, [token]);
+
+    useEffect(() => {
+      const fetchVipStatuses = async () => {
+        const vipStatuses = await getVipStatuses(token);
+        console.log("vipStatuses", vipStatuses);
+        const options = vipStatuses.map((option: {id: number, name: string, color: string}) => ({
+          label: option.name,
+          value: option.id,
+          color: option.color
+        }));    
+        setVipStatuses(options);
+      };
+      fetchVipStatuses();
+    }, [token]);
+
+    const tagRender: SelectProps['tagRender'] = (props) => {
+      const { label, value, closable, onClose } = props;
+      const selectedOption = vipStatuses.find(option => option.value === value);
+      const color = selectedOption?.color || '#000'; // fallback
+    
+      const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+      };
+    
+      return (
+        <Tag
+          color={color}
+          onMouseDown={onPreventMouseDown}
+          closable={closable}
+          onClose={onClose}
+          style={{ marginInlineEnd: 4 }}
+        >
+          {label}
+        </Tag>
+      );
+    };
+
+    const handleVipStatusChange = (value: string[]) => {
+
+        console.log("value", value);
+        const event = new CustomEvent('vipStatusChange', {
+            detail: { value }
+        });
+        window.dispatchEvent(event);
+    };
+
+    const handleChange = (value: string[]) => {
+        console.log("value", value);
+        const event = new CustomEvent('unitTypeChange', {
+            detail: { value }
+        });
+        window.dispatchEvent(event);
+    };
+
+    const handlePropertyTypeChange = (value: string[]) => {
+        console.log("value", value);
+        const event = new CustomEvent('propertyTypeChange', {
+            detail: { value }
+        });
+        window.dispatchEvent(event);
+    };
+
+    const handlePropertyStatusChange = (value: string[]) => {
+        console.log("value", value);
+        const event = new CustomEvent('propertyStatusChange', {
+            detail: { value }
+        });
+        window.dispatchEvent(event);
+    };
+
+    const handleMassTransitChange = (value: string[]) => {
+        console.log("value", value);
+        const event = new CustomEvent('massTransitChange', {
+            detail: { value }
+        });
+        window.dispatchEvent(event);
+    };
+
     return (
         <Form
             form={form}
@@ -25,7 +165,14 @@ export const ModalFilter = ({form, moduleType}: {form: FormInstance, moduleType:
               name="addressUnitFilter"
               style={{ marginBottom: "10px" }}
             >
-              <Input placeholder="Unit Type" size="large" />
+              <Select
+                mode="multiple"
+                allowClear
+                style={{ width: '100%' }}
+                placeholder="Please select"
+                onChange={handleChange}
+                options={options}
+              />
             </Form.Item>
           </div>
             <div className="flex gap-3 w-full">  
@@ -114,7 +261,13 @@ export const ModalFilter = ({form, moduleType}: {form: FormInstance, moduleType:
                 name="propertyStatus"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Property Status" size="large" />
+                <Select 
+                mode="multiple"
+                allowClear
+                placeholder="Please select" size="large" 
+                onChange={handlePropertyStatusChange}
+                options={propertyStatuses}
+                 />
               </Form.Item>
             </div>
             <div className="flex gap-3 w-full">
@@ -185,7 +338,13 @@ export const ModalFilter = ({form, moduleType}: {form: FormInstance, moduleType:
                 name="massTransit"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Mass Transit" size="large" disabled />
+                <Select 
+                mode="multiple"
+                allowClear
+                placeholder="Please select" size="large" 
+                onChange={handleMassTransitChange}
+                options={masstransits}
+                 />
               </Form.Item>
             </div>
             <div className="gap-3 flex w-full">
@@ -272,7 +431,13 @@ export const ModalFilter = ({form, moduleType}: {form: FormInstance, moduleType:
                 name="propertyType"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Property Type" size="large" disabled />
+                <Select 
+                mode="multiple"
+                allowClear
+                placeholder="Please select" size="large" 
+                onChange={handlePropertyTypeChange}
+                options={propertyTypes}
+                 />
               </Form.Item>
             </div>
             <div className="gap-3 w-full">
@@ -281,7 +446,14 @@ export const ModalFilter = ({form, moduleType}: {form: FormInstance, moduleType:
                 name="vipStatus"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="VIP Status" size="large" disabled />
+                <Select 
+                mode="multiple"
+                allowClear
+                placeholder="Please select" size="large" 
+                onChange={handleVipStatusChange}
+                options={vipStatuses}
+                tagRender={tagRender}
+                 />
               </Form.Item>
             </div>
             {moduleType === "assign" && (

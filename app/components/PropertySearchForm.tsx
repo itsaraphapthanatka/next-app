@@ -183,7 +183,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
         }}
       >
         <div>
-            <ModalFilter form={form} moduleType="property" />
+            <ModalFilter form={form} moduleType="property" token={token} />
         </div>
       </Modal>
       <Modal
