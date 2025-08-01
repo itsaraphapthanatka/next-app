@@ -4,6 +4,8 @@ import { getUnitType } from "@/app/server_actions/unittype";
 import { getPropertyStatuses, getMasstransits, getPropertyTypes, getVipStatuses } from "@/app/server_actions/master";
 import {  useEffect, useState } from "react";
 import type { SelectProps } from 'antd';
+import { getProjectsName } from "@/app/server_actions/projectsName";
+
 
 
 
@@ -15,7 +17,7 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     const [masstransits, setMasstransits] = useState<{label: string, value: string}[]>([]);
     const [propertyTypes, setPropertyTypes] = useState<{label: string, value: string}[]>([]);
     const [vipStatuses, setVipStatuses] = useState<{label: string, value: string, color: string}[]>([]);
-
+    const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
     useEffect(() => {
       const fetchOptions = async () => {
           const unitType = await getUnitType(token);
@@ -104,7 +106,6 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
 
     const handleVipStatusChange = (value: string[]) => {
 
-        console.log("value", value);
         const event = new CustomEvent('vipStatusChange', {
             detail: { value }
         });
@@ -112,7 +113,6 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     };
 
     const handleChange = (value: string[]) => {
-        console.log("value", value);
         const event = new CustomEvent('unitTypeChange', {
             detail: { value }
         });
@@ -120,7 +120,6 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     };
 
     const handlePropertyTypeChange = (value: string[]) => {
-        console.log("value", value);
         const event = new CustomEvent('propertyTypeChange', {
             detail: { value }
         });
@@ -128,7 +127,6 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     };
 
     const handlePropertyStatusChange = (value: string[]) => {
-        console.log("value", value);
         const event = new CustomEvent('propertyStatusChange', {
             detail: { value }
         });
@@ -136,12 +134,27 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     };
 
     const handleMassTransitChange = (value: string[]) => {
-        console.log("value", value);
         const event = new CustomEvent('massTransitChange', {
             detail: { value }
         });
         window.dispatchEvent(event);
     };
+
+    const handleProjectNameChange = async (value: string) => {
+      if (value.length < 2) return; // ป้องกันการยิง API ถ้าพิมพ์น้อยเกินไป
+    
+      console.log("value project name", value);
+      const result = await getProjectsName(token, value);
+      console.log("projectsName", result);
+    
+      const options = result.map((name: string) => ({
+        label: name,
+        value: name,
+      }));
+    
+      setProjectsName(options);
+    };
+    
 
     return (
         <Form
@@ -188,13 +201,23 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
           
           >
           <div className="gap-3 w-full">
-            <Form.Item
-              label="Project"
-              name="projectNameFilter"
-              style={{ marginBottom: "10px" }}
-            >
-              <Input placeholder="Project Name" size="large" />
-            </Form.Item>
+          <Form.Item
+            label="Project"
+            name="projectNameFilter"
+            style={{ marginBottom: "10px" }}
+          >
+            <Select 
+              allowClear
+              showSearch
+              placeholder="Project Name" 
+              size="large" 
+              onSearch={handleProjectNameChange}
+              onChange={(val) => form.setFieldsValue({ projectNameFilter: val })}
+              options={projectsName}
+              filterOption={false}
+            />
+          </Form.Item>
+
           </div>
           <div className="gap-3 w-full">
             <Form.Item

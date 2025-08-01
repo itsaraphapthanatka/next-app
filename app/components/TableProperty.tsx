@@ -236,8 +236,9 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
     setLoading(true);
     getProperties(
       { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-      token
+        token,
     ).then((data: GetPropertiesResponse) => {
+      console.log("Data from server", data);
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
   
       const mapped: DataType[] = items.map((item, index) => ({
@@ -274,16 +275,20 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
     });
   }, [page, pageSize, token]);
 
+
+
   useEffect(() => {
     const handleTableReload = (e: CustomEvent) => {
       console.log("Table reload", e.detail);
       console.log("e.detail.projectName",e.detail.projectName);
+      console.log("e.detail.addressUnit",e.detail.addressUnit);
       console.log("e.detail.unitTypeIds",e.detail.unitTypeIds);
       console.log("token send to server",token);
       setLoading(true);
       getPropertyFilter(
         { 
           projectName: e.detail.projectName ?? "",
+          addressUnit: e.detail.addressUnit ?? "",
           unitTypeIds: e.detail.unitTypeIds ?? [],
           startSize: e.detail.startSize ?? 0,
           toSize: e.detail.toSize ?? 0,
@@ -367,6 +372,61 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
     };
   }, [page, pageSize, token]);
  
+//   useEffect(() => {
+    
+//     const handleTableSearch = (e: CustomEvent) => {
+//       console.log("Table reload", e.detail);
+//       console.log("e.detail.projectName",e.detail.projectName);
+//       console.log("e.detail.addressUnit",e.detail.addressUnit);
+//       console.log("token send to server",token);
+//     setLoading(true);
+//     getProperties(
+//       { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
+//       token,
+//       e.detail.projectName ?? "",
+//       e.detail.addressUnit ?? ""
+//     ).then((data: GetPropertiesResponse) => {
+//       console.log("Data from server", data);
+//       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
+  
+//       const mapped: DataType[] = items.map((item, index) => ({
+//         id: item.id ?? 0,
+//         key: item.id ?? index,
+//         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
+//         project: item.project ?? "-",
+//         size: item.size ?? 0,
+//         bed: item.bed ?? 0,
+//         bath: item.bath ?? 0,
+//         rental: item.rental ?? 0,
+//         selling: item.selling ?? 0,
+//         status: item.status ?? "-",
+//         invid: item.invid ?? "-",
+//         tw: item.tw ?? "-",
+//         floor: item.floor ?? "-",
+//         RentalPG: item.RentalPG ?? "-",
+//         vipStatusColor: item.vipStatusColor ?? "-",
+//         salePG: item.salePG ?? 0,
+//         rentPGColor: item.rentPGColor ?? "-",
+//         salePGColor: item.salePGColor ?? "-",
+//         rentPGText: item.rentPGText ?? "-",
+//         salePGText: item.salePGText ?? "-",
+//         availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+//         lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+//         vipStatus: item.vipStatus ?? "-",
+//       }));
+  
+//       setProperties(mapped);
+//       setTotalRecords(data.allRecord ?? 0);
+//       setPage(data.currentPage ?? 1);
+//       setPageSize(data.recordPerPage ?? 10);
+//       setLoading(false);
+//     });
+//   };
+//   window.addEventListener('propertyTableSearch', handleTableSearch as EventListener);
+//   return () => {
+//     window.removeEventListener('propertyTableSearch', handleTableSearch as EventListener);
+//   };
+// }, [page, pageSize, token]);
   // useEffect(() => {
   //   const handleTableReload = (e: CustomEvent) => {
   //     console.log("Table reload", e.detail);

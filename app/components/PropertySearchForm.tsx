@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, message} from "antd";
+import { Card, Input, Button, Modal, Form, message, Select} from "antd";
 import { RequestProp } from "@/app/property/RequestProp";
 import { getSaleLimit } from "@/app/server_actions/saleLimit";
 import Swal from "sweetalert2";
 import { ModalFilter } from "./ModalFilter";
+import { getProjectsName } from "@/app/server_actions/projectsName";
 
 interface PropertySearchFormProps {
   className?: string;
@@ -22,6 +23,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   const [isRequestPropOpen, setIsRequestPropOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [saleLimit, setSaleLimit] = useState(0);
+  const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -37,11 +39,24 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     };
   }, [token]);
 
+   const handleProjectNameSearch = async (value: string) => {
+    const response = await getProjectsName(token, value);
+    setProjectsName(response);
+  };
+
   const handleSearch = () => {
-    console.log("Search clicked", { projectName });
-    const event = new CustomEvent('propertyTableReload', {
-      detail: { projectName, addressUnit }
+    const values = form.getFieldsValue();
+    console.log("Search clicked", values);
+
+    const event = new CustomEvent("propertyTableReload", {
+      detail: {
+        projectName: values.projectNameFilter ?? "",
+        addressUnit: values.addressUnitFilter ?? "",
+        page: 1,
+        pageSize: 10,
+      },
     });
+
     window.dispatchEvent(event);
   };
 
@@ -136,30 +151,46 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     console.log("Copy Link clicked");
   };
 
-
+  const handleProjectNameChange = async (value: string) => {
+    if (value.length < 3) return; // ป้องกันการยิง API ถ้าพิมพ์น้อยเกินไป
+  
+    console.log("value project name", value);
+    const result = await getProjectsName(token, value);
+    console.log("projectsName", result);
+  
+    const options = result.map((name: string) => ({
+      label: name,
+      value: name,
+    }));
+  
+    setProjectsName(options);
+  };
 
   return (
     <>
     {contextHolder}
     
     <Card className={`p-6 w-full space-y-4 ${className}`}>
-      <div className="space-y-4">
-        <div className="flex gap-3">
-        <Input size="large"
-          placeholder="Project Name"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-          className="w-1/2"
-        />
-        </div>
-        <div className="flex gap-3">
-        <Input size="large"
-          placeholder="Select from address or unit code"
-          value={addressUnit}
-          onChange={(e) => setAddressUnit(e.target.value)}
-          className="w-1/2"
-        />
-        </div>
+    <Form form={form} layout="vertical">
+        <Form.Item name="projectNameFilter" style={{ marginBottom: 10 }}>
+          <Select
+            allowClear
+            showSearch
+            placeholder="Select Project"
+            size="large"
+            onSearch={handleProjectNameChange}
+            options={projectsName}
+            filterOption={false}
+          />
+        </Form.Item>
+
+        <Form.Item name="addressUnitFilter" style={{ marginBottom: 10 }}>
+          <Input
+            size="large"
+            placeholder="Enter address or unit code"
+          />
+        </Form.Item>
+
         <div className="flex gap-3">
           <Button color="cyan" size="large"
             variant="solid"
@@ -176,7 +207,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
             Filter
           </Button>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 pt-2">
         <Button color="default" size="large"
           variant="solid"
           onClick={handleRequestProp}
@@ -185,7 +216,8 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
           Request Prop. ({requestCount === 0 ? null : requestCount + "/"} {saleLimit})
         </Button>
         </div>
-      </div>
+      </Form>
+      
       <Modal
         title="Property Filter"
         open={isModalOpen}

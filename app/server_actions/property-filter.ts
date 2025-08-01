@@ -19,6 +19,7 @@ type PropertyBackOfficeSortType =
   
 interface GetPropertiesParams {
   projectName?: string;
+  addressUnit?: string;
   unitTypeIds?: string[];
   startSize?: number;
   toSize?: number;
