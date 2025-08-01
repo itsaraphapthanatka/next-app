@@ -14,8 +14,8 @@ interface PropertySearchFormProps {
 }
 
 export const PropertySearchForm = ({ className = "", token }: PropertySearchFormProps) => {
-  const [projectName, setProjectName] = useState("");
-  const [addressUnit, setAddressUnit] = useState("");
+  // const [projectName, setProjectName] = useState("");
+  // const [addressUnit, setAddressUnit] = useState("");
   const [requestCount, setRequestCount] = useState(0);
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,10 +39,10 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     };
   }, [token]);
 
-   const handleProjectNameSearch = async (value: string) => {
-    const response = await getProjectsName(token, value);
-    setProjectsName(response);
-  };
+  //  const handleProjectNameSearch = async (value: string) => {
+  //   const response = await getProjectsName(token, value);
+  //   setProjectsName(response);
+  // };
 
   const handleSearch = () => {
     const values = form.getFieldsValue();
