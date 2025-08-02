@@ -61,3 +61,17 @@ export const getProperties = async (params?: GetPropertiesParams,token?:string,p
   );
   return response.data;
 };
+
+export const getPropertyById = async (id: number,token?:string) => {
+    const response: AxiosResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/gets/${id}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        }
+    );
+    return response.data;
+}
