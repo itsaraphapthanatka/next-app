@@ -8,7 +8,6 @@ import { getPropertyById } from "@/app/server_actions/property";
 import { getUnitType } from "@/app/server_actions/unittype";
 import { getPropertyStatuses, getVipStatuses } from "@/app/server_actions/master";
 import dayjs from "dayjs";
-import DatePicker from "@/app/utils/antd-dayjs-adapter";
 
 type PropertyDetail = {
   id?: number;
