@@ -196,7 +196,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
           </div>
         }
       >
-        <RequestProp />
+        <RequestProp selectedIds={[]} setEnqNo={() => {}} enqNo={""} />
       </Modal>
     </Card>
     </>
