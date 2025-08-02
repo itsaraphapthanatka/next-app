@@ -438,14 +438,7 @@ export const FormProperty = ({
             className="text-[12px]"
             style={{ marginBottom: "10px" }}
         >
-            <DatePicker
-                size="large"
-                disabledDate={(date) => {
-                    console.log("incoming date:", date);
-                    const d = dayjs(date);
-                    return !d.isValid();
-                  }}
-            />
+            <Input size="large" />
         </Form.Item>
         <Form.Item
             label="Last Update Status"
@@ -453,14 +446,7 @@ export const FormProperty = ({
             className="text-[12px]"
             style={{ marginBottom: "10px" }}
         >
-            <DatePicker
-                size="large"
-                disabledDate={(date) => {
-                    console.log("incoming date:", date);
-                    const d = dayjs(date);
-                    return !d.isValid();
-                  }}                               
-            />
+            <Input size="large" />
         </Form.Item>
         </div>
         <div className="flex gap-3 w-full">
@@ -470,14 +456,7 @@ export const FormProperty = ({
                 className="text-[12px] w-full"
                 style={{ marginBottom: "10px" }}
             >
-                <DatePicker
-                    size="large"
-                    disabledDate={(date) => {
-                        console.log("incoming date:", date);
-                        const d = dayjs(date);
-                        return !d.isValid();
-                      }}
-                />
+                <Input size="large" />
             </Form.Item>
             <Form.Item
                 label="Bedroom"
