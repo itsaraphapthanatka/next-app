@@ -84,10 +84,7 @@ type VipStatus = {
   color: string;
 };
 
-const STATUS_OPTIONS = [
-  { label: "Available", value: 1 },
-  { label: "Sold", value: 0 },
-];
+
 
 const CHECKBOX_GROUPS = [
   { value: "forSale", label: "For Sale" },
