@@ -48,20 +48,20 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     const values = form.getFieldsValue();
     console.log("Search clicked", values);
 
-    const event = new CustomEvent("propertyTableReload", {
+    const event = new CustomEvent("propertyTableSearch", {
       detail: {
-        projectName: values.projectNameFilter ?? "",
-        addressUnit: values.addressUnitFilter ?? "",
+        projectName: values.projectNameSearch ?? "",
+        addressUnit: values.addressUnitSearch ?? "",
         page: 1,
         pageSize: 10,
       },
     });
-
+    console.log("event send to server", event);
     window.dispatchEvent(event);
   };
 
   const handleFilter = () => {
-    console.log("Filter clicked");
+    form.resetFields();
     setIsModalOpen(true);
   };
 
@@ -95,7 +95,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   };
 
   const handleFilterSearch = () => {
-    
+
     const values = form.getFieldsValue();
     console.log("Filter Search clicked", values);
     const event = new CustomEvent('propertyTableReload', {
@@ -139,6 +139,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
       }
     });
     window.dispatchEvent(event);
+    form.resetFields();
     handleClose();
   };
 
@@ -172,7 +173,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     
     <Card className={`p-6 w-full space-y-4 ${className}`}>
     <Form form={form} layout="vertical">
-        <Form.Item name="projectNameFilter" style={{ marginBottom: 10 }}>
+        <Form.Item name="projectNameSearch" style={{ marginBottom: 10 }}>
           <Select
             allowClear
             showSearch
@@ -184,7 +185,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
           />
         </Form.Item>
 
-        <Form.Item name="addressUnitFilter" style={{ marginBottom: 10 }}>
+        <Form.Item name="addressUnitSearch" style={{ marginBottom: 10 }}>
           <Input
             size="large"
             placeholder="Enter address or unit code"

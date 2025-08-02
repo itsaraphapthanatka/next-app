@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons';
-import type { TableProps } from 'antd';
-import { Table } from 'antd';
-import { getProperties } from '@/app/server_actions/property';
-import { ModalProperty } from './ModalProperty';
-import { getSaleLimit } from '../server_actions/saleLimit';
-import { formatNumberShort } from '@/app/utils/formatNumber';
-import { getPropertyFilter } from '@/app/server_actions/property-filter'; 
+import React, { useEffect, useState } from "react";
+import { Table } from "antd";
+import { DownCircleOutlined, UpCircleOutlined } from "@ant-design/icons";
+import { getProperties } from "@/app/server_actions/property";
+import { getPropertyFilter } from "@/app/server_actions/property-filter";
+import { getSaleLimit } from "../server_actions/saleLimit";
+import { ModalProperty } from "./ModalProperty";
+import { formatNumberShort } from "@/app/utils/formatNumber";
+import type { TableProps } from "antd/es/table";
 
+type LoadMode = "default" | "search" | "filter";
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
@@ -79,6 +80,50 @@ interface GetPropertiesResponse {
   recordPerPage?: number;
 }
 
+interface SearchParams {
+  projectName?: string;
+  addressUnit?: string;
+}
+
+interface FilterParams {
+  projectNameFilter?: string;
+  unitTypeIds?: string[];
+  startSize?: number;
+  toSize?: number;
+  bedRoom?: number;
+  bathRoom?: number;
+  startRentalRate?: number;
+  toRentalRate?: number;  
+  startRentalRatePerSQM?: number;
+  toRentalRatePerSQM?: number;
+  startSellingRate?: number;
+  toSellingRate?: number;
+  startSellingRatePerSQM?: number;
+  toSellingRatePerSQM?: number;
+  decorationIds?: string[];
+  pictureStatusIds?: string[];
+  startFloor?: number;
+  toFloor?: number;
+  propertyStatusIds?: string[];
+  showOnWeb?: number;
+  hotDeal?: number;
+  havePicture?: number;
+  forRentOrSale?: number;
+  railwayStationId?: number;
+  startDistance?: number;
+  toDistance?: number;
+  forwardMKT?: number;
+  petFriendly?: number;
+  privateLift?: number;
+  duplex?: number;
+  penthouse?: number;
+  fixParking?: number;
+  projectTypeIds?: string[];
+  bootedProppit?: number;
+  vipStatusIds?: string[];
+  foreignerOwner?: number;
+}
+
 // const saleLimit = 20;
 
 const TableProperty: React.FC<{ token: string }> = ({ token }) => {
@@ -86,12 +131,15 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   const [properties, setProperties] = useState<DataType[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(50); // ตั้ง default เท่ากับ API
+  const [pageSize, setPageSize] = useState<number>(50);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalType, setModalType] = useState<string>("");
   const [saleLimit, setSaleLimit] = useState(0);
+  const [loadMode, setLoadMode] = useState<LoadMode>("default"); // 💡 NEW
+  const [searchParams, setSearchParams] = useState<SearchParams>({});
+  const [filterParams, setFilterParams] = useState<FilterParams>({});
   const columns: ColumnsType<DataType> = [
     {
       title: 'No.',
@@ -233,15 +281,24 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
   }, [token]);
 
   useEffect(() => {
-    setLoading(true);
-    getProperties(
-      { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-        token,
-    ).then((data: GetPropertiesResponse) => {
-      console.log("Data from server", data);
+    const fetchData = async () => {
+      setLoading(true);
+      let data;
+      
+
+      if (loadMode === "search" && searchParams) {
+        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token, searchParams.projectName, searchParams.addressUnit);
+      } else if (loadMode === "filter" && filterParams) {
+        data = await getPropertyFilter({ ...filterParams, page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token);
+      } else {
+        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token);
+      }
+      console.log("loadMode",loadMode);
+      console.log("data",data);
+
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-  
-      const mapped: DataType[] = items.map((item, index) => ({
+
+      const mapped = items.map((item: PropertyApiItem, index: number) => ({
         id: item.id ?? 0,
         key: item.id ?? index,
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
@@ -262,171 +319,44 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
         salePGColor: item.salePGColor ?? "-",
         rentPGText: item.rentPGText ?? "-",
         salePGText: item.salePGText ?? "-",
-        availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-        lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
+        availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-",
+        lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-",
         vipStatus: item.vipStatus ?? "-",
       }));
-  
+
       setProperties(mapped);
       setTotalRecords(data.allRecord ?? 0);
       setPage(data.currentPage ?? 1);
       setPageSize(data.recordPerPage ?? 10);
       setLoading(false);
-    });
-  }, [page, pageSize, token]);
+    };
 
+    fetchData();
+  }, [page, pageSize, loadMode, searchParams, filterParams, token]);
 
+  // 🎯 Search Event
+  useEffect(() => {
+    const handleTableSearch = (e: CustomEvent) => {
+      console.log("Search Triggered", e.detail);
+      setPage(1); // Reset to first page
+      setSearchParams({ projectName: e.detail.projectName ?? "", addressUnit: e.detail.addressUnit ?? "" });
+      setLoadMode("search");
+    };
+    window.addEventListener("propertyTableSearch", handleTableSearch as EventListener);
+    return () => window.removeEventListener("propertyTableSearch", handleTableSearch as EventListener);
+  }, []);
 
+   // 🎯 Filter Event
   useEffect(() => {
     const handleTableReload = (e: CustomEvent) => {
-      console.log("Table reload", e.detail);
-      console.log("e.detail.projectName",e.detail.projectName);
-      console.log("e.detail.addressUnit",e.detail.addressUnit);
-      console.log("e.detail.unitTypeIds",e.detail.unitTypeIds);
-      console.log("token send to server",token);
-      setLoading(true);
-      getPropertyFilter(
-        { 
-          projectName: e.detail.projectName ?? "",
-          addressUnit: e.detail.addressUnit ?? "",
-          unitTypeIds: e.detail.unitTypeIds ?? [],
-          startSize: e.detail.startSize ?? 0,
-          toSize: e.detail.toSize ?? 0,
-          bedRoom: e.detail.bedRoom ?? 0,
-          bathRoom: e.detail.bathRoom ?? 0,
-          startRentalRate: e.detail.startRentalRate ?? 0,
-          toRentalRate: e.detail.toRentalRate ?? 0,
-          startRentalRatePerSQM: e.detail.startRentalRatePerSQM ?? 0,
-          toRentalRatePerSQM: e.detail.toRentalRatePerSQM ?? 0,
-          startSellingRate: e.detail.startSellingRate ?? 0,
-          toSellingRate: e.detail.toSellingRate ?? 0,
-          startSellingRatePerSQM: e.detail.startSellingRatePerSQM ?? 0,
-          toSellingRatePerSQM: e.detail.toSellingRatePerSQM ?? 0,
-          decorationIds: e.detail.decorationIds ?? [],
-          pictureStatusIds: e.detail.pictureStatusIds ?? [],
-          startFloor: e.detail.startFloor ?? 0,
-          toFloor: e.detail.toFloor ?? 0,
-          propertyStatusIds: e.detail.propertyStatusIds ?? [],
-          showOnWeb: e.detail.showOnWeb ?? 0,
-          hotDeal: e.detail.hotDeal ?? 0,
-          havePicture: e.detail.havePicture ?? 0,
-          forRentOrSale: e.detail.forRentOrSale ?? 0,
-          railwayStationId: e.detail.railwayStationId ?? 0,
-          startDistance: e.detail.startDistance ?? 0,
-          toDistance: e.detail.toDistance ?? 0,
-          forwardMKT: e.detail.forwardMKT ?? 0,
-          petFriendly: e.detail.petFriendly ?? 0,
-          privateLift: e.detail.privateLift ?? 0,
-          duplex: e.detail.duplex ?? 0,
-          penthouse: e.detail.penthouse ?? 0,
-          fixParking: e.detail.fixParking ?? 0,
-          projectTypeIds: e.detail.projectTypeIds ?? [],
-          bootedProppit: e.detail.bootedProppit ?? 0,
-          vipStatusIds: e.detail.vipStatusIds ?? [],
-          foreignerOwner: e.detail.foreignerOwner ?? 0,
-          page: { current: page, size: pageSize },
-          orderBy: 'asc',
-          assignReportSortBy: 'Duration',
-        },
-        token
-      ).then((data: GetPropertiesResponse) => {
-        const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-        console.log("Data", data);
-        const mapped: DataType[] = items.map((item, index) => ({
-          id: item.id ?? 0,
-          key: item.id ?? index,
-          no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-          project: item.project ?? "-",
-          size: item.size ?? 0,
-          bed: item.bed ?? 0,
-          bath: item.bath ?? 0,
-          rental: item.rental ?? 0,
-          selling: item.selling ?? 0,
-          status: item.status ?? "-",
-          invid: item.invid ?? "-",
-          tw: item.tw ?? "-",
-          floor: item.floor ?? "-",
-          RentalPG: item.RentalPG ?? "-",
-          vipStatusColor: item.vipStatusColor ?? "-",
-          salePG: item.salePG ?? 0,
-          rentPGColor: item.rentPGColor ?? "-",
-          salePGColor: item.salePGColor ?? "-",
-          rentPGText: item.rentPGText ?? "-",
-          salePGText: item.salePGText ?? "-",
-          availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-          lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-          vipStatus: item.vipStatus ?? "-",
-        }));
-        setProperties(mapped);
-        setTotalRecords(data.allRecord ?? 0);
-        setPage(data.currentPage ?? 1);
-        setPageSize(data.recordPerPage ?? 10);
-        setLoading(false);
-      });
-
-      
+      console.log("Filter Triggered", e.detail);
+      setPage(1); // Reset to first page
+      setFilterParams(e.detail);
+      setLoadMode("filter");
     };
-    window.addEventListener('propertyTableReload', handleTableReload as EventListener);
-    return () => {
-      window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
-    };
-  }, [page, pageSize, token]);
- 
-//   useEffect(() => {
-    
-//     const handleTableSearch = (e: CustomEvent) => {
-//       console.log("Table reload", e.detail);
-//       console.log("e.detail.projectName",e.detail.projectName);
-//       console.log("e.detail.addressUnit",e.detail.addressUnit);
-//       console.log("token send to server",token);
-//     setLoading(true);
-//     getProperties(
-//       { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-//       token,
-//       e.detail.projectName ?? "",
-//       e.detail.addressUnit ?? ""
-//     ).then((data: GetPropertiesResponse) => {
-//       console.log("Data from server", data);
-//       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-  
-//       const mapped: DataType[] = items.map((item, index) => ({
-//         id: item.id ?? 0,
-//         key: item.id ?? index,
-//         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-//         project: item.project ?? "-",
-//         size: item.size ?? 0,
-//         bed: item.bed ?? 0,
-//         bath: item.bath ?? 0,
-//         rental: item.rental ?? 0,
-//         selling: item.selling ?? 0,
-//         status: item.status ?? "-",
-//         invid: item.invid ?? "-",
-//         tw: item.tw ?? "-",
-//         floor: item.floor ?? "-",
-//         RentalPG: item.RentalPG ?? "-",
-//         vipStatusColor: item.vipStatusColor ?? "-",
-//         salePG: item.salePG ?? 0,
-//         rentPGColor: item.rentPGColor ?? "-",
-//         salePGColor: item.salePGColor ?? "-",
-//         rentPGText: item.rentPGText ?? "-",
-//         salePGText: item.salePGText ?? "-",
-//         availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-//         lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-//         vipStatus: item.vipStatus ?? "-",
-//       }));
-  
-//       setProperties(mapped);
-//       setTotalRecords(data.allRecord ?? 0);
-//       setPage(data.currentPage ?? 1);
-//       setPageSize(data.recordPerPage ?? 10);
-//       setLoading(false);
-//     });
-//   };
-//   window.addEventListener('propertyTableSearch', handleTableSearch as EventListener);
-//   return () => {
-//     window.removeEventListener('propertyTableSearch', handleTableSearch as EventListener);
-//   };
-// }, [page, pageSize, token]);
+    window.addEventListener("propertyTableReload", handleTableReload as EventListener);
+    return () => window.removeEventListener("propertyTableReload", handleTableReload as EventListener);
+  }, []); 
   // useEffect(() => {
   //   const handleTableReload = (e: CustomEvent) => {
   //     console.log("Table reload", e.detail);
