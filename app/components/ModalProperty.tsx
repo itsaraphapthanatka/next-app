@@ -11,16 +11,23 @@ import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
 
 type SelectedProperty = {
+  id?: number;
+  key?: number;
+  no?: number;
+  project?: string;
+  size?: number;
+  bed?: number;
+  bath?: number;
+  rental?: number;
+  selling?: number;
+  status?: string;
   rentPGColor?: string;
   rentPGText?: string;
   salePGColor?: string;
   salePGText?: string;
   vipStatusColor?: string;
   invid?: string;
-  project?: string;
   vipStatus?: string;
-  selling?: number;
-  rental?: number;
   rentalPrice?: number;
   salePrice?: number;
 };
@@ -47,7 +54,7 @@ export const ModalProperty = ({
     {
       key: '1',
       label: 'Property',
-      children: <FormProperty selectedProperty={selectedProperty} token={token} />,
+      children: <FormProperty selectedProperty={selectedProperty as SelectedProperty} token={token} />,
     },
     selectedProperty.rental === 0 || selectedProperty.rental === null || selectedProperty.rentalPrice === 0 || selectedProperty.rentalPrice === null ? {
       key: '2',

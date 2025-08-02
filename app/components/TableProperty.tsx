@@ -120,7 +120,7 @@ interface FilterParams {
 
 // const saleLimit = 20;
 
-const TableProperty: React.FC<{ token: string }> = ({ token }) => {
+const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: number[]) => void }> = ({ token, onSelectionChange }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
@@ -287,8 +287,6 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
       } else {
         data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token);
       }
-      console.log("loadMode",loadMode);
-      console.log("data",data);
 
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
 
@@ -351,59 +349,6 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
     window.addEventListener("propertyTableReload", handleTableReload as EventListener);
     return () => window.removeEventListener("propertyTableReload", handleTableReload as EventListener);
   }, []); 
-  // useEffect(() => {
-  //   const handleTableReload = (e: CustomEvent) => {
-  //     console.log("Table reload", e.detail);
-  //     console.log("e.detail.projectName",e.detail.projectName)
-  //     console.log("e.detail.addressUnit",e.detail.addressUnit)
-  //     setLoading(true);
-  //     getProperties(
-  //       { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-  //       token,
-  //       e.detail.projectName ?? "",
-  //       e.detail.addressUnit ?? ""
-  //     ).then((data: GetPropertiesResponse) => {
-  //       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-  //       console.log("Data", data);
-  //       const mapped: DataType[] = items.map((item, index) => ({
-  //         id: item.id ?? 0,
-  //         key: item.id ?? index,
-  //         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-  //         project: item.project ?? "-",
-  //         size: item.size ?? 0,
-  //         bed: item.bed ?? 0,
-  //         bath: item.bath ?? 0,
-  //         rental: item.rental ?? 0,
-  //         selling: item.selling ?? 0,
-  //         status: item.status ?? "-",
-  //         invid: item.invid ?? "-",
-  //         tw: item.tw ?? "-",
-  //         floor: item.floor ?? "-",
-  //         RentalPG: item.RentalPG ?? "-",
-  //         vipStatusColor: item.vipStatusColor ?? "-",
-  //         salePG: item.salePG ?? 0,
-  //         rentPGColor: item.rentPGColor ?? "-",
-  //         salePGColor: item.salePGColor ?? "-",
-  //         rentPGText: item.rentPGText ?? "-",
-  //         salePGText: item.salePGText ?? "-",
-  //         availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-  //         lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
-  //         vipStatus: item.vipStatus ?? "-",
-  //       }));
-  //       setProperties(mapped);
-  //       setTotalRecords(data.allRecord ?? 0);
-  //       setPage(data.currentPage ?? 1);
-  //       setPageSize(data.recordPerPage ?? 10);
-  //       setLoading(false);
-  //     });
-
-      
-  //   };
-  //   window.addEventListener('propertyTableReload', handleTableReload as EventListener);
-  //   return () => {
-  //     window.removeEventListener('propertyTableReload', handleTableReload as EventListener);
-  //   };
-  // }, [page, pageSize, token]);
 
   // Instead of using `as any`, provide a default DataType object
   const emptyDataType: DataType = {
@@ -472,6 +417,10 @@ const TableProperty: React.FC<{ token: string }> = ({ token }) => {
             setSelectedRowKeys(limitedKeys);
             const event = new CustomEvent('propertySelectionCount', { detail: limitedKeys.length });
             window.dispatchEvent(event);
+
+            if (onSelectionChange) {
+              onSelectionChange(limitedKeys as number[]);
+            }
           },
           getCheckboxProps: (record) => ({
             disabled: selectedRowKeys.length >= saleLimit && !selectedRowKeys.includes(record.key),

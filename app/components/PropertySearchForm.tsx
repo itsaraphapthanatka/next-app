@@ -7,6 +7,8 @@ import { getSaleLimit } from "@/app/server_actions/saleLimit";
 import Swal from "sweetalert2";
 import { ModalFilter } from "./ModalFilter";
 import { getProjectsName } from "@/app/server_actions/projectsName";
+import TableProperty from "./TableProperty";
+import { createSaleRequest } from "../server_actions/sale-requests";
 
 interface PropertySearchFormProps {
   className?: string;
@@ -14,8 +16,6 @@ interface PropertySearchFormProps {
 }
 
 export const PropertySearchForm = ({ className = "", token }: PropertySearchFormProps) => {
-  // const [projectName, setProjectName] = useState("");
-  // const [addressUnit, setAddressUnit] = useState("");
   const [requestCount, setRequestCount] = useState(0);
   const maxRequests = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +24,9 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   const [messageApi, contextHolder] = message.useMessage();
   const [saleLimit, setSaleLimit] = useState(0);
   const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [enqNo, setEnqNo] = useState("");
+
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -31,7 +34,6 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     getSaleLimit(token).then((data) => {
       setSaleLimit(data);
     });
-    console.log("saleLimit in PropertySearchForm", saleLimit);
     window.addEventListener('propertySelectionCount', handleSelectionCount as EventListener);
   
     return () => {
@@ -39,14 +41,9 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     };
   }, [token]);
 
-  //  const handleProjectNameSearch = async (value: string) => {
-  //   const response = await getProjectsName(token, value);
-  //   setProjectsName(response);
-  // };
 
   const handleSearch = () => {
     const values = form.getFieldsValue();
-    console.log("Search clicked", values);
 
     const event = new CustomEvent("propertyTableSearch", {
       detail: {
@@ -56,7 +53,6 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
         pageSize: 10,
       },
     });
-    console.log("event send to server", event);
     window.dispatchEvent(event);
   };
 
@@ -83,21 +79,31 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
     setIsModalOpen(false);
   };
 
-  const handleAssignProp = () => {
+  const handleAssignProp = async () => {
+    const response = await createSaleRequest(enqNo, selectedIds, token);
+    if (Array.isArray(response.errors) && response.errors.length === 0 && response.notHaveError === true) {
     Swal.fire({
       title: 'บันทึกสำเร็จ',
       icon: 'success',
       showConfirmButton: false,
       timer: 1500
     }).then(() => {
+        setIsRequestPropOpen(false);
+      });
+    }else{
+      Swal.fire({
+        title: 'บันทึกไม่สำเร็จ',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 1500
+      });
       setIsRequestPropOpen(false);
-    });
+    }
   };
 
   const handleFilterSearch = () => {
 
     const values = form.getFieldsValue();
-    console.log("Filter Search clicked", values);
     const event = new CustomEvent('propertyTableReload', {
       detail: { 
         projectName: values.projectNameFilter ?? "", 
@@ -145,19 +151,15 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
 
   const handleResetFilter = () => {
     form.resetFields();
-    console.log("Reset Filter clicked");
   };
 
   const handleCopyLink = () => {
-    console.log("Copy Link clicked");
   };
 
   const handleProjectNameChange = async (value: string) => {
     if (value.length < 3) return; // ป้องกันการยิง API ถ้าพิมพ์น้อยเกินไป
   
-    console.log("value project name", value);
     const result = await getProjectsName(token, value);
-    console.log("projectsName", result);
   
     const options = result.map((name: string) => ({
       label: name,
@@ -272,8 +274,9 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
           </div>
         }
       >
-        <RequestProp />
+        <RequestProp selectedIds={selectedIds} setEnqNo={setEnqNo} enqNo={enqNo} />
       </Modal>
+      <TableProperty token={token} onSelectionChange={setSelectedIds} />
     </Card>
     </>
   );

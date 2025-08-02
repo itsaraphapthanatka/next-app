@@ -7,13 +7,22 @@ import { useEffect, useState } from "react";
 
 
 type SelectedProperty = {
+    id?: number;
+    key?: number;
+    no?: number;
+    project?: string;
+    size?: number;
+    bed?: number;
+    bath?: number;
+    rental?: number;
+    selling?: number;
+    status?: string;
     rentPGColor?: string;
     rentPGText?: string;
     salePGColor?: string;
     salePGText?: string;
     vipStatusColor?: string;
     invid?: string;
-    project?: string;
     vipStatus?: string;
     oldinvid?: string;
     headline?: string;
@@ -29,9 +38,7 @@ type SelectedProperty = {
     liftLobby?: string;
     unitType?: string;
     parkingSlot?: string;
-    status?: string;
     rentedFor?: string;
-    size?: string;
     availableOn?: string;
     lastUpdateStatus?: string;
     hotDealExpireDate?: string;

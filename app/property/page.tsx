@@ -5,7 +5,6 @@ import { Navbar } from "../components/navbar";
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid'
 import Link from "next/link";
 import { PropertySearchForm } from "../components/PropertySearchForm";
-import TableProperty from "../components/TableProperty";
 
 
 interface SessionUser {
@@ -30,10 +29,7 @@ export default async function PropertyPage() {
   } catch {
     return redirect("/");
   }
-
-  const userName = session?.user?.firstName || "User";
-  console.log(userName);
-
+  
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
       <Navbar />
@@ -46,7 +42,6 @@ export default async function PropertyPage() {
         </div>
         <div className="mt-4">
           <PropertySearchForm token={session.token as string} />
-          <TableProperty token={session.token as string} />
         </div>
       </div>
     </div>
