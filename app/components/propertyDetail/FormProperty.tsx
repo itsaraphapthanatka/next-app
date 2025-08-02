@@ -441,8 +441,8 @@ export const FormProperty = ({
             <DatePicker
                 size="large"
                 disabledDate={(date) => {
-                    return !date || !dayjs(date).isValid();
-                }}
+                    return !date || !dayjs(date).isValid?.();
+                  }}
             />
         </Form.Item>
         <Form.Item
@@ -454,8 +454,8 @@ export const FormProperty = ({
             <DatePicker
                 size="large"
                 disabledDate={(date) => {
-                    return !date || !dayjs(date).isValid();
-                }}                                
+                    return !date || !dayjs(date).isValid?.();
+                  }}                               
             />
         </Form.Item>
         </div>
@@ -469,8 +469,8 @@ export const FormProperty = ({
                 <DatePicker
                     size="large"
                     disabledDate={(date) => {
-                        return !date || !dayjs(date).isValid();
-                    }}
+                        return !date || !dayjs(date).isValid?.();
+                      }}
                 />
             </Form.Item>
             <Form.Item
