@@ -73,12 +73,6 @@ interface PropertyApiItem {
   // Add other fields if needed
 }
 
-interface GetPropertiesResponse {
-  resultLists?: PropertyApiItem[];
-  allRecord?: number;
-  currentPage?: number;
-  recordPerPage?: number;
-}
 
 interface SearchParams {
   projectName?: string;
