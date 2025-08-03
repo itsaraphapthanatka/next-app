@@ -87,7 +87,7 @@ export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: Selec
             </Form.Item>
             <Form.Item name="stockOwnerId" label="Stock Owner" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Select placeholder="Company's Stock" size="large">
-                    <Select.Option value={0}>Company's Stock</Select.Option>
+                    <Select.Option value={0}>Company&apos;s Stock</Select.Option>
                     <Select.Option value={1}>Adirek Ruangsaree</Select.Option>
                     <Select.Option value={2}>Aemphawee Patthamaphiboonporn</Select.Option>
                     <Select.Option value={3}>Ampaporn Ohnuch</Select.Option>

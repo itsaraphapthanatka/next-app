@@ -31,6 +31,7 @@ export const KeyHolderTabs = ({ selectedProperty, token }: { selectedProperty: S
         getPropertyById(selectedProperty.key as number, token).then((response) => {
             const detail = response.keyHolder;
             setPropertyKeyHolder(detail);
+            console.log("detail in KeyHolderTabs", propertyKeyHolder);
             form.setFieldsValue(detail);
         });
     }, [selectedProperty.key, token]);

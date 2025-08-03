@@ -27,8 +27,12 @@ type PictureItem = {
     url?: string;
     token: string;
 }
-
-const SortableItem = ({ id, guId, url, token }: PictureItem) => { 
+type SortablePictureItem = {
+    id: string;
+    guId: string;
+    url?: string;
+}
+const SortableItem = ({ id, guId, url }: PictureItem) => { 
   const {
     attributes,
     listeners,
@@ -72,11 +76,10 @@ export const SortablePictureMode = ({ selectedProperty, token }: { selectedPrope
   const [items, setItems] = useState<PictureItem[]>([]);
   useEffect(() => {
     getPropertyPictures(selectedProperty.key as number, token).then((response) => {
-      setItems(response.map((item: any) => ({
+      setItems(response.map((item: SortablePictureItem) => ({
         id: item.guId,
         guId: item.guId,
         url: item.url,
-        token: token,
       })));
     });
   }, [selectedProperty.key, token]);

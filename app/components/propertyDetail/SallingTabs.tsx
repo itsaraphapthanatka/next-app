@@ -37,6 +37,7 @@ export const SallingTabs = ({ selectedProperty, token }: { selectedProperty: Sel
         getPropertyById(selectedProperty.key as number, token).then((response) => {
             const detail = response.selling;
             setPropertySelling(detail);
+            console.log("detail in SallingTabs", propertySelling);
             form.setFieldsValue(detail);
         });
     }, [selectedProperty.key, token]);
