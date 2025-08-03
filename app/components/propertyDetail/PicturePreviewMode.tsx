@@ -39,12 +39,12 @@ export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProper
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Error downloading file:", error);
             if (error instanceof TypeError && error.message === "Failed to fetch") {
                 message.error("ไม่สามารถดาวน์โหลดไฟล์ได้: ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์หรือไฟล์ไม่พบ");
             } else {
-                message.error(`Error downloading file: ${error?.message || error}`);
+                message.error(`Error downloading file: ${error instanceof Error ? error.message : String(error)}`);
             }
             return;
         }
