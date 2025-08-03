@@ -1,97 +1,62 @@
 import { Form, Checkbox, Col, Row } from "antd";
+import { getPropertyById } from "@/app/server_actions/property";
+import { useEffect, useState } from "react";
 
-export const FacilityTabs = ({  token }: { token: string }) => {
+type SelectedProperty = {
+    key?: number;
+  };
+  type Facility = {
+    id: number;
+    name: string;
+    icon: string;
+    forProject: boolean;
+    forProperty: boolean;
+  };
+
+export const FacilityTabs = ({  token, selectedProperty, modalType }: { token: string, selectedProperty: SelectedProperty, modalType: string }) => {  
     console.log("token in FacilityTabs", token);
-
+    console.log("selectedProperty in FacilityTabs", selectedProperty);
+    const [propertyFacility, setPropertyFacility] = useState<Facility[]>([]);
+    const [form] = Form.useForm();
+    useEffect(() => {
+        getPropertyById(selectedProperty.key as number, token).then((response) => {
+            // กรองเฉพาะ facility ที่ forProperty === true
+            console.log("response.facilities in FacilityTabs", response.fafilities);
+            const filteredFacilities = (response.fafilities);
+            setPropertyFacility(filteredFacilities);
+    
+            // ตั้งค่าฟอร์มให้ checkbox ถูกติ๊กตาม facility ที่ได้มา
+            const formValues: Record<string, boolean> = {};
+            filteredFacilities.forEach((facility: Facility) => {
+                formValues[facility.id] = true;
+            });
+            form.setFieldsValue(formValues);
+        });
+    }, [selectedProperty.key, token]);
+    
 
     return (
-        <Form>
+        <Form form={form} layout="vertical" name="tabsFacilityDetail">
             <Row>
-                <Col span={12}>
-                    <Form.Item name="washingMachine" >
-                        <Checkbox>Washing Machine</Checkbox>
-                        <i className="icofont-washing-machine icofont-2x" aria-label="washing machine" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="refrigerator">
-                        <Checkbox>Refrigerator</Checkbox>
-                        <i className="icofont-refrigerator icofont-2x" aria-label="refrigerator" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="bathtub" >
-                        <Checkbox>Bathtub</Checkbox>
-                        <i className="icofont-bathtub icofont-2x" aria-label="bathtub" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="tv" >
-                        <Checkbox>TV</Checkbox>
-                        <i className="icofont-monitor icofont-2x" aria-label="tv" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="airCondition" >
-                        <Checkbox>Air Condition</Checkbox>
-                        <i className="icofont-snow-temp icofont-2x" aria-label="air conditioner" />
-                    </Form.Item>
-                </Col>
-                
-                <Col span={12}>
-                    <Form.Item name="waterHeater" >
-                        <Checkbox>Water Heater</Checkbox>
-                        <i className="icofont-water-drop icofont-2x" aria-label="water heater" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="security" >
-                        <Checkbox>24hr. security</Checkbox>
-                        <i className="icofont-police icofont-2x" aria-label="24hr. security" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="carPark" >
-                        <Checkbox>Car Park</Checkbox>
-                        <i className="icofont-car-alt-4 icofont-2x" aria-label="car park" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="petFriendly" >
-                        <Checkbox>Pet Friendly</Checkbox>
-                        <i className="icofont-cat-dog icofont-2x" aria-label="pet friendly" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="patio" >
-                        <Checkbox>Patio</Checkbox>
-                        <i className="icofont-beach-bed icofont-2x" aria-label="patio" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="wifi" >
-                        <Checkbox>Wifi</Checkbox>
-                        <i className="icofont-wifi icofont-2x" aria-label="wifi" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="cableTV" >
-                        <Checkbox>Cable TV</Checkbox>
-                        <i className="icofont-wifi-router icofont-2x" aria-label="cable tv" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="hillView" >
-                        <Checkbox>Hill View</Checkbox>
-                        <i className="icofont-hill icofont-2x" aria-label="hill view" />
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item name="seaView" >
-                        <Checkbox>Sea View</Checkbox>
-                        <i className="icofont-island-alt icofont-2x" aria-label="sea view" />
-                    </Form.Item>
-                </Col>
+                {propertyFacility.map((facility) => facility.forProject && modalType === "property" && (
+                    <Col span={12} key={facility.id}>
+                        <Form.Item name={facility.id} >
+                            <Checkbox>{facility.name} 
+                                <i className={`${facility.icon} icofont-2x ps-2`} aria-label={facility.name} />
+                            </Checkbox>
+                        </Form.Item>
+                    </Col>
+                ))}  
+                {propertyFacility.map((facility) => facility.forProject && modalType === "project" && (
+                    <Col span={12} key={facility.id}>
+                        <Form.Item name={facility.id} >
+                            <Checkbox>{facility.name} 
+                                <i className={`${facility.icon} icofont-2x ps-2`} aria-label={facility.name} />
+                            </Checkbox>
+                        </Form.Item>
+                    </Col>
+                ))}
+              
             </Row>
         </Form>
     )

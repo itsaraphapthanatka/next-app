@@ -1,7 +1,10 @@
 import { Form, Input, Select, Checkbox, Col, Row, Table, TableProps  } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { getPropertyById } from "@/app/server_actions/property";
+import { useEffect, useState } from "react";
 
 type SelectedProperty = {
+    key?: number;
     rentPGColor?: string;
     rentPGText?: string;
     salePGColor?: string;
@@ -14,62 +17,63 @@ type SelectedProperty = {
 
   type DataType = {
     no: number;
+    contractDurationID: number;
     duration: string;
     durationValue: string;
   };
 
+  type Rental = {
+    rentalPrice: number;
+    rentalPerSQM: number;
+    rentalRateBottom: number;
+    rentalCommission: number;
+    contractDurations: DataType[];
+  };
+
   const colums: TableProps<DataType>['columns'] = [
     {
-      title: 'No',
+      title: 'No.',
       dataIndex: 'no',
       key: 'no',
+      render: (text, record, index) =>
+      {
+        return text ? text : record.contractDurationID ? index + 1 : index + 1;
+      }
     },
     {
       title: 'Duration',
-      dataIndex: 'duration',
-      key: 'duration',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-        // title: 'Duration Value',
-        dataIndex: 'durationValue',
-        key: 'durationValue',
+        dataIndex: 'amount',
+        key: 'amount',
         render: (text: string) => {
             return <Input size="small" value={text} />
         }
     },
   ];    
 
-  const data: DataType[] = [
-    {
-      no: 1,
-      duration: 'Price for 1 Month',
-      durationValue: '0',
-    },
-    {
-        no: 2,
-        duration: 'Price for 3 Month',
-        durationValue: '0',
-    },
-    {
-        no: 3,
-        duration: 'Price for 6 Month',
-        durationValue: '0',
-    },
-    
 
-  ];
-
-export const RentalTabs = ({ selectedProperty }: { selectedProperty: SelectedProperty }) => {
+export const RentalTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     console.log("RentalTabs", selectedProperty)
     const [form] = Form.useForm();
+    const [propertyRental, setPropertyRental] = useState<Rental | null>(null);
+    useEffect(() => {
+        getPropertyById(selectedProperty.key as number, token).then((response) => {
+            console.log("response rental", response.rental);
+            const detail = response.rental;
+            setPropertyRental(detail);
+            form.setFieldsValue(detail);
+        });
+    }, [selectedProperty.key, token]);
     return (
+        <>
         <Form form={form}
             layout="vertical"
             name="tabsRentalDetail">
-                <Form.Item name="rantalRateOnWeb" label="Rental rate on Web" className="text-[12px]"  style={{ marginBottom: "10px" }}>
-                    <Input 
-                        size="large"
-                    />
+                <Form.Item name="rentalPrice" label="Rental rate on Web" className="text-[12px]" style={{ marginBottom: "10px" }}>
+                    <Input size="large" readOnly />
                 </Form.Item>
                 <Form.Item name="rentalPerSQM" label="Rental per SQM" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                     <Input 
@@ -82,7 +86,7 @@ export const RentalTabs = ({ selectedProperty }: { selectedProperty: SelectedPro
                         }
                     />
                 </Form.Item>
-                <Form.Item name="rentalRateBottom" label="Rental rate bottom" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+                <Form.Item name="rentalPriceButton" label="Rental rate bottom" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                     <Input 
                         size="large"
                     />
@@ -126,14 +130,15 @@ export const RentalTabs = ({ selectedProperty }: { selectedProperty: SelectedPro
                         size="large"
                     />
                 </Form.Item>
-                <Form.Item name="contractDuration" label="Contract Duration" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+                <Form.Item name="contractDurations" label="Contract Duration" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                     <Table 
                         columns={colums} 
-                        dataSource={data} 
+                        dataSource={propertyRental?.contractDurations} 
                         pagination={false} 
-                        rowKey={record => record.no || record.duration || record.durationValue || JSON.stringify(record)}
+                        rowKey={record => record.contractDurationID}
                     />
                 </Form.Item>
         </Form>
+        </>
     )
 }

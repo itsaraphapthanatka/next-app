@@ -8,6 +8,7 @@ import { PicturePreviewMode } from "./PicturePreviewMode";
 import { SortablePictureMode } from "./SortablePictureMode";
 
 type SelectedProperty = {
+    key?: number;
     picturePGColor?: string;
     picturePGText?: string;
     vipStatusColor?: string;
@@ -15,7 +16,7 @@ type SelectedProperty = {
     project?: string;
     vipStatus?: string;
   };
-export const PictureTabs = ({ selectedProperty }: { selectedProperty: SelectedProperty }) => {
+export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     console.log("selectedProperty in PictureTabs", selectedProperty)
     const [form] = Form.useForm();
 
@@ -37,12 +38,12 @@ export const PictureTabs = ({ selectedProperty }: { selectedProperty: SelectedPr
     {
         key: '1',
         label: 'Preview Mode',
-        children: <PicturePreviewMode />    ,
+        children: <PicturePreviewMode selectedProperty={selectedProperty} token={token}/>,
     },
     {
         key: '2',
         label: 'Sortable Mode',
-        children: <SortablePictureMode />,
+        children: <SortablePictureMode selectedProperty={selectedProperty} token={token}/>,
     },
     ];
       

@@ -1,27 +1,68 @@
 import { Table, Image } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Download } from "lucide-react";
-
+import { getPropertyPictures } from "@/app/server_actions/property";
+import { useEffect, useState } from "react";
+import {  App as AntdApp } from "antd";
+type SelectedProperty = {
+    key?: number;
+  };
 type PicturePreviewModeData = {
     key: string;
-    filename: string;
-    preview: string;
+    guId: string;
+    url: string;
 };
 
-export const PicturePreviewMode = () => {
+export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
+    const { message } = AntdApp.useApp();
+    const [propertyPictures, setPropertyPictures] = useState<PicturePreviewModeData[]>([]);
+    useEffect(() => {
+        getPropertyPictures(selectedProperty.key as number, token).then((response) => {
+            setPropertyPictures(response);
+        });
+    }, [selectedProperty.key, token]);
+
+    const handleDownload = async (record: PicturePreviewModeData) => {
+        try {
+            const fileUrl = `https://servesystem.s3.ap-southeast-1.amazonaws.com/${record.url}`;
+            const response = await fetch(fileUrl);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch file. Status: ${response.status} ${response.statusText}`);
+            }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            const extension = record.url.toLowerCase().endsWith('.jpg') ? 'jpg' : 'png';
+            a.download = `${record.guId}.${extension}`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error: any) {
+            console.error("Error downloading file:", error);
+            if (error instanceof TypeError && error.message === "Failed to fetch") {
+                message.error("ไม่สามารถดาวน์โหลดไฟล์ได้: ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์หรือไฟล์ไม่พบ");
+            } else {
+                message.error(`Error downloading file: ${error?.message || error}`);
+            }
+            return;
+        }
+      };
+      
     const columns: ColumnsType<PicturePreviewModeData> = [
         {
             title: 'Filename',
-            dataIndex: 'filename',
-            key: 'filename',
+            dataIndex: 'guId',
+            key: 'guId',
         },
         {
             title: 'Preview',
-            dataIndex: 'preview',
-            key: 'preview',
+            dataIndex: 'url',
+            key: 'url',
             render: (text: string, record: PicturePreviewModeData) => (
                 console.log("Preview: ", text),
-                <Image src={record.filename} width={100} height={100} alt="" />
+                <Image src={`https://servesystem.s3.ap-southeast-1.amazonaws.com/${record.url}`} width={100} height={100} alt="" />
             ),
         },
         {
@@ -29,32 +70,15 @@ export const PicturePreviewMode = () => {
             dataIndex: 'download',
             key: 'download',
             align: 'center',
-            render: (text: string, record: PicturePreviewModeData) => (
-                console.log("Download: ", text),
-                <a href={record.filename} download={record.filename}>
-                    <Download className="w-4 h-4 text-warning" />
-                </a>
-            ),
+            render: (_text: string, record: PicturePreviewModeData) => (
+                <Download
+                  className="w-4 h-4 text-warning cursor-pointer"
+                  onClick={() => handleDownload(record)}
+                />
+              )
         }
     ];
 
-    const data: PicturePreviewModeData[] = [
-        {
-            key: '1',
-            filename: 'picture1.jpg',
-            preview: 'picture1.jpg',
-        },
-        {
-            key: '2',
-            filename: 'picture2.jpg',
-            preview: 'picture2.jpg',
-        },
-        {
-            key: '3',
-            filename: 'picture3.jpg',
-            preview: 'picture3.jpg',
-        }
-    ];
 
     return (
         <Image.PreviewGroup
@@ -63,7 +87,7 @@ export const PicturePreviewMode = () => {
                     console.log(`current index: ${current}, prev index: ${prev}`),
             }}
         >
-            <Table columns={columns} dataSource={data} pagination={false} rowKey="key" />
+            <Table columns={columns} dataSource={propertyPictures} pagination={false} rowKey="guId" />
         </Image.PreviewGroup>
     );
 }

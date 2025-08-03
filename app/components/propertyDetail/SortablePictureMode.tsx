@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -17,14 +17,18 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Image } from "antd";
-
+import { getPropertyPictures } from "@/app/server_actions/property";  
+type SelectedProperty = {
+    key?: number;
+  };  
 type PictureItem = {
     id: string;
-    filename: string;
-    preview?: string; // Make preview optional
+    guId: string;
+    url?: string;
+    token: string;
 }
 
-const SortableItem = ({ id, filename, preview }: PictureItem) => {
+const SortableItem = ({ id, guId, url, token }: PictureItem) => { 
   const {
     attributes,
     listeners,
@@ -39,7 +43,7 @@ const SortableItem = ({ id, filename, preview }: PictureItem) => {
   };
 
   // Use preview if available, otherwise fallback to filename
-  const imageSrc = preview ?? filename;
+  const imageSrc = `https://servesystem.s3.ap-southeast-1.amazonaws.com/${url}`;
 
   return (
     <div
@@ -58,31 +62,24 @@ const SortableItem = ({ id, filename, preview }: PictureItem) => {
       {...attributes}
       {...listeners}
     >
-      <Image src={imageSrc} alt={filename} width={60} height={60} style={{ marginRight: "12px", objectFit: "cover" }} />
-      <span style={{ color: "#1677ff", cursor: "pointer" }}>{filename}</span>
+      <Image  src={imageSrc} alt={guId} width={60} height={60} style={{ marginRight: "12px", objectFit: "cover" }} />
+      <span className="text-sm p-4" style={{ color: "#000000", cursor: "pointer" }}>{guId}</span>
     </div>
   );
 };
 
-export const SortablePictureMode = () => {
-  const [items, setItems] = useState<PictureItem[]>([
-    {
-      id: "1",
-      filename: "picture1.jpg",
-      preview: "picture1.jpg",
-    },
-    {
-      id: "2",
-      filename: "picture2.jpg",
-      preview: "picture2.jpg",
-    },
-    {
-      id: "3",
-      filename: "picture3.jpg",
-      preview: "picture3.jpg",
-    },
-  ]);
-
+export const SortablePictureMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
+  const [items, setItems] = useState<PictureItem[]>([]);
+  useEffect(() => {
+    getPropertyPictures(selectedProperty.key as number, token).then((response) => {
+      setItems(response.map((item: any) => ({
+        id: item.guId,
+        guId: item.guId,
+        url: item.url,
+        token: token,
+      })));
+    });
+  }, [selectedProperty.key, token]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -110,7 +107,7 @@ export const SortablePictureMode = () => {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
         {items.map((item) => (
-          <SortableItem key={item.id} id={item.id} filename={item.filename} preview={item.preview} />
+          <SortableItem key={item.id} id={item.id} guId={item.guId} url={item.url} token={item.token} />
         ))}
       </SortableContext>
     </DndContext>

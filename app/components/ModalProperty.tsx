@@ -59,22 +59,22 @@ export const ModalProperty = ({
     selectedProperty.rental === 0 || selectedProperty.rental === null || selectedProperty.rentalPrice === 0 || selectedProperty.rentalPrice === null ? {
       key: '2',
       label: 'Rental',
-      children: <RentalTabs selectedProperty={selectedProperty} />,
+      children: <RentalTabs selectedProperty={selectedProperty} token={token}/>,
       disabled: true,
     } : {
       key: '2',
       label: 'Rental',
-      children: <RentalTabs selectedProperty={selectedProperty} />,
+      children: <RentalTabs selectedProperty={selectedProperty} token={token}/>,
     },
     selectedProperty.selling === 0 || selectedProperty.selling === null || selectedProperty.salePrice === 0 || selectedProperty.salePrice === null ? {
       key: '3',
       label: 'Selling',
-      children: <SallingTabs selectedProperty={selectedProperty}/>,
+      children: <SallingTabs selectedProperty={selectedProperty} token={token}/>,
       disabled: true,
     } : {
       key: '3',
       label: 'Selling',
-      children: <SallingTabs selectedProperty={selectedProperty}/>,
+      children: <SallingTabs selectedProperty={selectedProperty} token={token}/>,
     },
     {
       key: '4',
@@ -91,27 +91,31 @@ export const ModalProperty = ({
     {
       key: '6',
       label: 'Key Holder',
-      children: <KeyHolderTabs selectedProperty={selectedProperty}/>,
+      children: <KeyHolderTabs selectedProperty={selectedProperty} token={token}/>,
     },
     {
       key: '7',
       label: 'Picture',
-      children: <PictureTabs selectedProperty={selectedProperty}/>,
+      children: <PictureTabs selectedProperty={selectedProperty} token={token}/>,
     },
-    {
+    modalType === "property" ? {
       key: '8',
       label: 'Facility',
-      children: <FacilityTabs token={token}/>,
+      children: <FacilityTabs token={token} selectedProperty={selectedProperty} modalType={modalType} />,
+    } : {
+      key: '8',
+      label: 'Facility',
+      children: <FacilityTabs token={token} selectedProperty={selectedProperty} modalType={"project"} />,
     },
     {
       key: '9',
       label: 'Follow up',
-      children: <FollowupTabs token={token} modalType={modalType}/>,
+      children: <FollowupTabs token={token} modalType={modalType} selectedProperty={selectedProperty} />,
     },
     {
       key: '10',
       label: 'Data Edit',
-      children: <DataEditProperty token={token} modalType={modalType}/>,
+      children: <DataEditProperty token={token} modalType={modalType} selectedProperty={selectedProperty}/>,
     },
   ].filter(Boolean) as { key: string; label: string; children: React.ReactNode }[];
   return (

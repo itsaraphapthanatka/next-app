@@ -1,7 +1,10 @@
 import { Form, Input, Checkbox, Col, Row, Radio  } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useEffect, useState } from "react";
+import { getPropertyById } from "@/app/server_actions/property";
 
 type SelectedProperty = {
+    key?: number;
     salePGColor?: string;
     salePGText?: string;
     vipStatusColor?: string;
@@ -10,58 +13,82 @@ type SelectedProperty = {
     vipStatus?: string;
   };
 
-export const SallingTabs = ({ selectedProperty }: { selectedProperty: SelectedProperty }) => {
+type Selling = {
+    salePrice: number;
+    salePerSQM: number;
+    saleCommission: number;
+    saleCommissionRemark: string;
+    includeTransferFee: number;
+    sallingCondition: string;
+}
+
+const CHECKBOX_GROUPS = [
+    { value: "includeCommission", label: "Include Commission" },
+    { value: "includeSpecialBusinessTax", label: "Include Special Business Tax" },
+    { value: "includeWHT", label: "Include withholding taxes" },
+    { value: "sellIsACompany", label: "Sell is a Company" },
+]
+
+export const SallingTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     console.log("selectedProperty in SallingTabs", selectedProperty)
     const [form] = Form.useForm();
+    const [propertySelling, setPropertySelling] = useState<Selling | null>(null);
+    useEffect(() => {
+        getPropertyById(selectedProperty.key as number, token).then((response) => {
+            const detail = response.selling;
+            setPropertySelling(detail);
+            form.setFieldsValue(detail);
+        });
+    }, [selectedProperty.key, token]);
     return (
         <Form form={form}
             layout="vertical"
             name="tabsSallingDetail">
-            <Form.Item name="salePriceOnWeb" label="Salling Price On Web" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+            <Form.Item name="sellingPrice" label="Salling Price On Web" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Input 
                     size="large"
                 />
             </Form.Item>
-            <Form.Item name="salePricePerSQM" label="Salling Price per SQM" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+            <Form.Item name="sellingPricePerSQM" label="Salling Price per SQM" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Input 
                     size="large"
                 />
             </Form.Item>
-            <Form.Item name="saleCommission" label="Salling Commission" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+            <Form.Item name="sellingCondition" label="Salling Commission" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <TextArea 
                     size="large"
                 />
             </Form.Item>
-            <Form.Item name="saleCommissionRemark" label="Salling Commission Remark" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+            <Form.Item name="sellingCommissionRemark" label="Salling Commission Remark" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <TextArea 
                     size="large"
                 />
             </Form.Item>
-            <Form.Item name="includeTransferFee" label="Include Transfer Fee" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+            <Form.Item name="transferFee" label="Include Transfer Fee" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Radio.Group>
-                        <Radio value={1}>Exclude Transfer Fee</Radio>
-                        <Radio value={2}>Include Transfer Fee 50%</Radio>
-                        <Radio value={3}>Include Transfer Fee 100%</Radio>
+                        <Radio value={0}>Exclude Transfer Fee</Radio>
+                        <Radio value={50}>Include Transfer Fee 50%</Radio>
+                        <Radio value={100}>Include Transfer Fee 100%</Radio>
                 </Radio.Group>  
             </Form.Item>
-            <Form.Item label="Salling Condition" name="sallingCondition" style={{ marginBottom: "10px" }}>
-                <Checkbox.Group style={{ width: '100%' }}>
-                    <Row>
-                        <Col span={12}>
-                            <Checkbox value="includeCommission">Include Commission</Checkbox>
-                        </Col>
-                        <Col span={12}>
-                            <Checkbox value="includeSpecialBusinessTax">Include Special Business Tax</Checkbox>
-                        </Col>
-                        <Col span={12}>
-                            <Checkbox value="includeWithholdingTaxes">Include withholding taxes</Checkbox>
-                        </Col>
-                        <Col span={12}>
-                            <Checkbox value="sellIsACompany">Sell is a Company</Checkbox>
-                        </Col>
-                        
-                    </Row>
-                </Checkbox.Group>
+            {/* <Form.Item label="Salling Condition" name="sallingCondition" style={{ marginBottom: "10px" }}>
+                <Checkbox.Group style={{ width: '100%' }} options={CHECKBOX_GROUPS} />
+            </Form.Item> */}
+
+            <Form.Item label="Salling Condition" style={{ marginBottom: "10px" }}>
+            <Row gutter={[8, 8]}>
+                {CHECKBOX_GROUPS.map((item) => (
+                <Col span={12} key={item.value}>
+                    <Form.Item
+                    name={item.value}
+                    valuePropName="checked"
+                    noStyle
+                    >
+                    <Checkbox>{item.label}</Checkbox>
+                    </Form.Item>
+                </Col>
+                ))}
+            </Row>
             </Form.Item>
         </Form>
     )

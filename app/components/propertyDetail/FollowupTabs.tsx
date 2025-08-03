@@ -1,75 +1,99 @@
-import { Table, Modal, Form, Col, Row, Checkbox } from "antd";
-import { useState } from "react";
+import { Table, Modal, Form, Col, Row, Checkbox, Button } from "antd";
+import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
-
-export const FollowupTabs = ({ token, modalType }: { token: string, modalType: string }) => {
-  console.log("token in FollowupTabs", token);
+import { getPropertyFollowup, savePropertyFollowup } from "@/app/server_actions/property";  
+import { App as AntdApp } from "antd";
+type SelectedProperty = {
+    key?: number;
+  };
+  type Followup = {
+    id: number;
+    sourceId: number;
+    followUpType: string;
+    date: string;
+    followBy: string;
+    remark: string;
+  };
+export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: string, modalType: string, selectedProperty: SelectedProperty  }) => {
+  const { message } = AntdApp.useApp();
   const [form] = Form.useForm();  
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [selectedRemark, setSelectedRemark] = useState<string>("");
-
-  const openCommentDialog = (key: string) => {
-    const remarkText = "Headline --> Condo For Rent Pathumwan Resort Good Location BTS Phaya Thai 200 m.\nOverview --> Condo For Rent Pathumwan Resort Good Location BTS Phaya Thai 200 m.\n- 2 Beds 2 Baths\n- 60 sq.m.\n- City view\n- Fully furnished with Electric stove, Hood\n- Close to BTS Phaya Thai 200 m. & Airport Link Phaya Thai 200 m.\n- Close to King Power Rangnam, Siam Discovery, Siam Center, Siam Paragon, Bumrungrad Hospital, Mater Dei School, Triam Udom Suksa School\n\n** View the property via live video. Just let us know and we will set up a live video for you.\n\n#Ready to move in\n#Condo For Rent in Bangkok"
-    setSelectedKey(key);
+  const [propertyFollowup, setPropertyFollowup] = useState<Followup[]>([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    getPropertyFollowup(selectedProperty.key as number, token).then((response) => {
+      setPropertyFollowup(response);
+      setLoading(false);
+    });
+  }, [selectedProperty.key, token]);
+  const openCommentDialog = (index: string) => {
+    const remarkText = propertyFollowup[parseInt(index)]?.remark || "";
     setSelectedRemark(remarkText);
     setIsModalOpen(true);
-    console.log("selectedKey", selectedKey);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setSelectedKey(null);
     setSelectedRemark("");
   };
-
-  const dataSource = [
-    {
-      key: "1",
-      no: 1,
-      date: "21-Jul-2025",
-      time: "10:00",
-      followBy: "natnaree@serve.co.th",
-      remark: "Rental Rate on Web 36 --> 36,000\nRental per SQM 0 --> 600",
-    },
-    {
-      key: "2",
-      no: 2,
-      date: "21-Jul-2025",
-      time: "11:00",
-      followBy: "tidarat@serve.co.th",
-      remark: (
-        <a onClick={() => openCommentDialog("2")}>
-          Headline Change...
-        </a>
-      ),
-    },
-    {
-      key: "3",
-      no: 3,
-      date: "21-Jul-2025",
-      time: "12:00",
-      followBy: "tidarat@serve.co.th",
-      remark:
-        "Floor 1 --> 10\nFlow alias name --> 10\nSizes 40 --> 60\nBedroom 1 --> 2\nBathroom 1 --> 2\nDecoration N/A --> Fully Furnished - ห้องตกแต่ง พร้อมเข้าอยู่",
-    },
-  ];
-
+  const handleSave = async () => {
+    const followUp = form.getFieldValue("followUp");
+    const closeJob = modalType === "request" ? form.getFieldValue("closeJob") : false;
+    const followupData = {
+      id: 0,
+      remark: followUp,
+      closeJob: closeJob ? true : false,
+      followUpType: 0,
+      sourceId: selectedProperty.key as number,
+      saleRequestItemId: 0,
+      toSalePropertyId: 0,
+    };
+    console.log("followupData", followupData);
+    const res = await savePropertyFollowup(followupData, token);
+    console.log("response", res);
+    if (res.status === 200) {
+      message.success("Follow-up saved successfully");
+      setLoading(true);
+      getPropertyFollowup(selectedProperty.key as number, token).then((data) => {
+        setPropertyFollowup(data);
+        form.resetFields();
+        setLoading(false);
+      });
+    } else {
+      message.error("Failed to save follow-up");
+    }
+  };
   const columns = [
     {
       title: "No.",
-      dataIndex: "no",
-      key: "no",
+      dataIndex: "id",
+      key: "id",
+      render: (text: string, record: Followup, index: number) => {
+        return text ? text : record.id ? index + 1 : index + 1;
+      },
     },
     {
       title: "Date",
       dataIndex: "date",
       key: "date",
+      render: (text: string) => {
+        const date = new Date(text);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      },
     },
     {
       title: "Time",
-      dataIndex: "time",
-      key: "time",
+      dataIndex: "date",
+      
+      render: (text: string) => {
+        const date = new Date(text);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      },  
     },
     {
       title: "Follow by",
@@ -80,15 +104,30 @@ export const FollowupTabs = ({ token, modalType }: { token: string, modalType: s
       title: "Remark",
       dataIndex: "remark",
       key: "remark",
-      render: (text: string) => (
-        <div style={{ whiteSpace: "pre-line" }}>{text}</div>
+      render: (text: string, record: Followup, index: number) => ( 
+        record.remark.substring(0, 8) === "Headline" || record.remark.substring(0, 8) === "Overview" ?   (
+          <a onClick={() => openCommentDialog(index.toString())}>
+            <div style={{ whiteSpace: "pre-line" }}>{text.substring(0, 8)} Change...</div>
+          </a>
+          ) : (
+          <div style={{ whiteSpace: "pre-line" }}>{text}</div>
+        )
       ),
     },
   ];
 
   return (
     <div>
-      <Table scroll={{ x: 1000}} dataSource={dataSource} columns={columns} pagination={false} style={{ marginBottom: "10px" }}/>
+      <Table
+        loading={loading}
+        scroll={{ x: 1000}} 
+        dataSource={propertyFollowup} 
+        columns={columns} 
+        pagination={false} 
+        style={{ marginBottom: "10px" }}
+        rowKey={(record) => record.id + record.date} 
+        
+      />
       <Form layout="vertical" name="followupForm" form={form}>
         <Form.Item name="followUp" label="New Follow Up" style={{ marginBottom: "10px" }}>
           <TextArea rows={6} />
@@ -105,20 +144,19 @@ export const FollowupTabs = ({ token, modalType }: { token: string, modalType: s
           </Checkbox.Group>
       </Form.Item>
       )}
+      <div className="flex w-full mt-2">
+          <Button block color="green" variant="solid" onClick={handleSave}>Save</Button>
+      </div>
       </Form>
       <Modal
         title="Follow-up Detail"
         open={isModalOpen}
         onCancel={handleModalClose}
-        onOk={handleModalClose}
-        okText="OK"
         cancelText="Cancel"
       >
-        {/* <p>{selectedRemark}</p> */}
-        <TextArea disabled
-          rows={6}
+        <TextArea 
+          rows={10}
           value={selectedRemark}
-          onChange={(e) => setSelectedRemark(e.target.value)}
         />
       </Modal>
     </div>
