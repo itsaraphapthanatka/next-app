@@ -38,7 +38,7 @@ export const FacilityTabs = ({  token, selectedProperty, modalType }: { token: s
     return (
         <Form form={form} layout="vertical" name="tabsFacilityDetail">
             <Row>
-                {propertyFacility.map((facility) => facility.forProject && modalType === "property" && (
+                {propertyFacility.map((facility) => facility.forProperty && modalType === "property" && (
                     <Col span={12} key={facility.id}>
                         <Form.Item name={facility.id} >
                             <Checkbox>{facility.name} 
