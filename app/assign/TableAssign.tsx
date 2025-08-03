@@ -222,7 +222,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
   
       const mapped: DataType[] = items.map((item, index) => ({
         id: item.id ?? 0,
-        key: item.id ?? index,
+        key: item.propertyId ?? index,
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
         projectName: item.projectName ?? "-",
         address: item.address ?? "-",
@@ -312,7 +312,7 @@ const TableAssign: React.FC<{ token: string }> = ({ token }) => {
         console.log("Data", data);
         const mapped: DataType[] = items.map((item, index) => ({
           id: item.id ?? 0,
-          key: item.id ?? index,
+          key: item.propertyId ?? index,
           no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
           projectName: item.projectName ?? "-",
           address: item.address ?? "-",

@@ -30,6 +30,7 @@ type SelectedProperty = {
   vipStatus?: string;
   rentalPrice?: number;
   salePrice?: number;
+  propertyId?: number;
 };
 
 interface ModalPropertyProps {

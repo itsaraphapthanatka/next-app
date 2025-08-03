@@ -188,6 +188,7 @@ export const FormProperty = ({
   );
 
   useEffect(() => {
+    console.log("selectedProperty in FormProperty", selectedProperty);
     if (!selectedProperty.key) return;
     getPropertyById(selectedProperty.key as number, token).then((response) => {
       const detail = response.propertyDetail;

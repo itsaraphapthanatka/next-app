@@ -12,6 +12,7 @@ interface RequestApiItem {
     key: number;
     no: number;
     enqRequest: string;
+    project: string;
     projectName: string;
     invId: string;  
     tower: string;
@@ -35,6 +36,7 @@ interface RequestApiItem {
     vipStatus?: string;
     requestDate?: string;
     actionDate?: string;
+    propertyId?: number;    
 
 }
 
@@ -75,6 +77,7 @@ export const TableRequest = ({token}: {token: string}) => {
                     style={{ cursor: 'pointer', color: '#1677ff' }}
                     onClick={() => {
                         setSelectedRequest(record);
+                        console.log("record", selectedRequest);
                         setModalType("request");
                         setIsModalOpen(true);
                     }}
@@ -153,8 +156,9 @@ export const TableRequest = ({token}: {token: string}) => {
           // console.log("Data", data);    
           const mapped: RequestApiItem[] = items.map((item, index) => ({
             id: item.id ?? 0,
-            key: item.id ?? index,
+            key: item.propertyId ?? index,
             no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
+            project: item.project ?? "-",
             projectName: item.projectName ?? "-",
             size: item.size ?? 0,
             bedRoom: item.bedRoom ?? 0,
@@ -179,6 +183,7 @@ export const TableRequest = ({token}: {token: string}) => {
             requestStatus: item.requestStatus ?? "-",
             requestDate: item.requestDate ?? "-",
             actionDate: item.actionDate ?? "-",
+            propertyId: item.propertyId ?? 0,
           }));
       
           setTotalRecords(data.allRecord ?? 0);
@@ -203,8 +208,9 @@ export const TableRequest = ({token}: {token: string}) => {
             const mapped: RequestApiItem[] = items.map((item, index) => {
                 return {
                 id: item.id ?? 0,
-                key: item.id ?? index,
+                key: item.propertyId ?? index,
                 no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
+                project: item.project ?? "-",
                 projectName: item.projectName ?? "-",
                 size: item.size ?? 0,
                 bedRoom: item.bedRoom ?? 0,
@@ -229,6 +235,7 @@ export const TableRequest = ({token}: {token: string}) => {
                 requestStatus: item.requestStatus ?? "-",
                 requestDate: item.requestDate ?? "-",
                 actionDate: item.actionDate ?? "-",
+                propertyId: item.propertyId ?? 0,
             }});    
             setTotalRecords(data.allRecord ?? 0);
             setProperties(mapped);
@@ -245,11 +252,12 @@ export const TableRequest = ({token}: {token: string}) => {
         };
     }, [page, pageSize, token]);
 
-    const emptyDataType: RequestApiItem[] = [{
+    const emptyDataType: RequestApiItem = {
         id: 0,
         key: 0,
         no: 0,
         enqRequest: "",
+        project: "",
         projectName: '',
         invId: "",
         tower: "A",
@@ -273,7 +281,8 @@ export const TableRequest = ({token}: {token: string}) => {
         vipStatus: "",
         requestDate: "",
         actionDate: "",
-    }]
+        propertyId: 0,
+    };
 
     const defaultExpandable: ExpandableConfig<RequestApiItem> = {
         expandedRowRender: (record) => (
@@ -339,9 +348,9 @@ export const TableRequest = ({token}: {token: string}) => {
         />
 
         <ModalProperty
-            selectedProperty={selectedRequest ?? emptyDataType[0]}
+            selectedProperty={selectedRequest ?? emptyDataType}
             modalType={modalType}
-            text={selectedRequest?.projectName ?? ""}
+            text={selectedRequest?.propertyId ? selectedRequest.propertyId.toString() : ""}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             token={token}
