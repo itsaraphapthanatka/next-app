@@ -37,27 +37,32 @@ export const FacilityTabs = ({  token, selectedProperty, modalType }: { token: s
 
     return (
         <Form form={form} layout="vertical" name="tabsFacilityDetail">
-            <Row>
-                {propertyFacility.map((facility) => facility.forProperty && modalType === "property" && (
-                    <Col span={12} key={facility.id}>
-                        <Form.Item name={facility.id} >
-                            <Checkbox>{facility.name} 
-                                <i className={`${facility.icon} icofont-2x ps-2`} aria-label={facility.name} />
-                            </Checkbox>
-                        </Form.Item>
-                    </Col>
-                ))}  
-                {propertyFacility.map((facility) => facility.forProject && modalType === "project" && (
-                    <Col span={12} key={facility.id}>
-                        <Form.Item name={facility.id} >
-                            <Checkbox>{facility.name} 
-                                <i className={`${facility.icon} icofont-2x ps-2`} aria-label={facility.name} />
-                            </Checkbox>
-                        </Form.Item>
-                    </Col>
-                ))}
-              
-            </Row>
-        </Form>
+        <Row>
+          <Col span={24}>
+            <Form.Item name="facilities">
+              <Checkbox.Group style={{ width: "100%" }}>
+                <Row>
+                  {propertyFacility
+                    .filter((facility) =>
+                      modalType === "property" ? facility.forProperty : facility.forProject
+                    )
+                    .map((facility) => (
+                      <Col span={12} key={facility.id}>
+                        <Checkbox value={facility.id}>
+                          {facility.name}
+                          <i
+                            className={`${facility.icon} icofont-2x ps-2`}
+                            aria-label={facility.name}
+                          />
+                        </Checkbox>
+                      </Col>
+                    ))}
+                </Row>
+              </Checkbox.Group>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+      
     )
 }

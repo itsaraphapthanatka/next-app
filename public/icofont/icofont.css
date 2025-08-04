@@ -33,9 +33,74 @@ url("./fonts/icofont.woff") format("woff");
   -webkit-font-smoothing: antialiased;
 }
 
-.icofont-refrigerator:before
+.icofont-bbq:before
 {
-  content: "\ea50";
+  content: "\eb42";
+}
+
+.icofont-gym-alt-3:before
+{
+  content: "\eb37";
+}
+
+.icofont-swimmer:before
+{
+  content: "\edcf";
+}
+
+.icofont-toy-horse:before
+{
+  content: "\ebad";
+}
+
+.icofont-train-line:before
+{
+  content: "\ee38";
+}
+
+.icofont-basketball:before
+{
+  content: "\ed91";
+}
+
+.icofont-game-controller:before
+{
+  content: "\ea30";
+}
+
+.icofont-cycling:before
+{
+  content: "\eb32";
+}
+
+.icofont-bus-alt-2:before
+{
+  content: "\ee16";
+}
+
+.icofont-hotel-boy-alt:before
+{
+  content: "\ecf5";
+}
+
+.icofont-runner-alt-1:before
+{
+  content: "\edc5";
+}
+
+.icofont-video:before
+{
+  content: "\ecb5";
+}
+
+.icofont-wheelchair:before
+{
+  content: "\f029";
+}
+
+.icofont-shopping-cart:before
+{
+  content: "\efe7";
 }
 
 .icofont-washing-machine:before
@@ -56,6 +121,11 @@ url("./fonts/icofont.woff") format("woff");
 .icofont-wifi:before
 {
   content: "\f02b";
+}
+
+.icofont-refrigerator:before
+{
+  content: "\ea50";
 }
 
 .icofont-monitor:before
@@ -101,6 +171,21 @@ url("./fonts/icofont.woff") format("woff");
 .icofont-island-alt:before
 {
   content: "\ee4a";
+}
+
+.icofont-library:before
+{
+  content: "\ef65";
+}
+
+.icofont-ship:before
+{
+  content: "\ee34";
+}
+
+.icofont-cc-camera:before
+{
+  content: "\ebb2";
 }
 
 [class^="icofont-"].icofont-duotone,
