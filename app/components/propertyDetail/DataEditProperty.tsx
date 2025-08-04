@@ -49,7 +49,7 @@
             getEditData(token,selectedProperty.key as number).then((data) => {
                 setEditData(data);
                 form.setFieldsValue(data);
-                console.log("editData in DataEditProperty", data);
+                console.log("editData in DataEditProperty", editData);
             });
         }, [token]);
         const handleSave = async () => {
