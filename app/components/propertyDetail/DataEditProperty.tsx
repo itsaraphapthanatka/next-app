@@ -78,6 +78,11 @@
             const res = await savePropertyFollowup(followupData, token);
             if (res.status === 200) {
                 message.success("Follow-up saved successfully");
+                getEditData(token,selectedProperty.key as number).then((data) => {
+                    setEditData(data);
+                    formDataEdit.setFieldsValue(data);
+                    console.log("editData in DataEditProperty", data);
+                }); 
                 setIsSaveDisabled(true);
             } else {
                 message.error("Failed to save follow-up");
