@@ -44,7 +44,6 @@ interface ModalPropertyProps {
 
 export const ModalProperty = ({
   modalType,
-  text,
   isModalOpen,
   setIsModalOpen,
   selectedProperty,
