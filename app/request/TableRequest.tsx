@@ -36,8 +36,10 @@ interface RequestApiItem {
     vipStatus?: string;
     requestDate?: string;
     actionDate?: string;
-    propertyId?: number;    
-
+    propertyId?: number;   
+    saleRequestId?: number;
+    saleRequestItemId?: number;
+    toSalePropertyId?: number;
 }
 
 interface GetPropertiesResponse {
@@ -158,7 +160,7 @@ export const TableRequest = ({token}: {token: string}) => {
             id: item.id ?? 0,
             key: item.propertyId ?? index,
             no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-            project: item.project ?? "-",
+            project: item.projectName ?? "-",
             projectName: item.projectName ?? "-",
             size: item.size ?? 0,
             bedRoom: item.bedRoom ?? 0,
@@ -179,11 +181,15 @@ export const TableRequest = ({token}: {token: string}) => {
             availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
             lastedUpdate: item.lastedUpdate ? new Date(item.lastedUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
             vipStatus: item.vipStatus ?? "-",
+            vipStatusID: item.vipStatus ?? 0,
             enqRequest: item.enqRequest ?? "-",
             requestStatus: item.requestStatus ?? "-",
             requestDate: item.requestDate ?? "-",
             actionDate: item.actionDate ?? "-",
             propertyId: item.propertyId ?? 0,
+            saleRequestId: item.saleRequestId ?? 0,
+            saleRequestItemId: item.saleRequestItemId ?? 0,
+            toSalePropertyId: item.saleRequestItemId ?? 0,
           }));
       
           setTotalRecords(data.allRecord ?? 0);
@@ -210,7 +216,7 @@ export const TableRequest = ({token}: {token: string}) => {
                 id: item.id ?? 0,
                 key: item.propertyId ?? index,
                 no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-                project: item.project ?? "-",
+                project: item.projectName ?? "-",
                 projectName: item.projectName ?? "-",
                 size: item.size ?? 0,
                 bedRoom: item.bedRoom ?? 0,
@@ -231,11 +237,14 @@ export const TableRequest = ({token}: {token: string}) => {
                 availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
                 lastedUpdate: item.lastedUpdate ? new Date(item.lastedUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
                 vipStatus: item.vipStatus ?? "-",
+                vipStatusID: item.vipStatus ?? 0,
                 enqRequest: item.enqRequest ?? "-",
                 requestStatus: item.requestStatus ?? "-",
                 requestDate: item.requestDate ?? "-",
                 actionDate: item.actionDate ?? "-",
                 propertyId: item.propertyId ?? 0,
+                saleRequestId: item.saleRequestId ?? 0,
+                toSalePropertyId: item.saleRequestItemId ?? 0,
             }});    
             setTotalRecords(data.allRecord ?? 0);
             setProperties(mapped);
@@ -282,6 +291,9 @@ export const TableRequest = ({token}: {token: string}) => {
         requestDate: "",
         actionDate: "",
         propertyId: 0,
+        saleRequestId: 0,
+        saleRequestItemId: 0,
+        toSalePropertyId: 0,
     };
 
     const defaultExpandable: ExpandableConfig<RequestApiItem> = {

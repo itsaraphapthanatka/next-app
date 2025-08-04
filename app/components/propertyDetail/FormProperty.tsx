@@ -188,13 +188,15 @@ export const FormProperty = ({
   );
 
   useEffect(() => {
-    console.log("selectedProperty in FormProperty", selectedProperty);
-    if (!selectedProperty.key) return;
+    // console.log("selectedProperty in FormProperty", selectedProperty);
+    console.log("property in FormProperty", property);
+    // if (!selectedProperty.key) return;
     getPropertyById(selectedProperty.key as number, token).then((response) => {
       const detail = response.propertyDetail;
       setProperty(detail);
       form.setFieldsValue({
         ...detail,
+        vipStatus: detail.vipStatusID ?? detail.vipStatus,
         availableOn: detail.availableOn ? dayjs(detail.availableOn) : undefined,
         lastedUpdate: detail.lastedUpdate ? dayjs(detail.lastedUpdate) : undefined,
         hotDealExpiredDate: detail.hotDealExpiredDate ? dayjs(detail.hotDealExpiredDate) : undefined,

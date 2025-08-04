@@ -5,6 +5,8 @@ import { getPropertyFollowup, savePropertyFollowup } from "@/app/server_actions/
 import { App as AntdApp } from "antd";
 type SelectedProperty = {
     key?: number;
+    saleRequestId?: number;
+    saleRequestItemId?: number;
   };
   type Followup = {
     id: number;
@@ -42,13 +44,13 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
     const followUp = form.getFieldValue("followUp");
     const closeJob = modalType === "request" ? form.getFieldValue("closeJob") : false;
     const followupData = {
-      id: 0,
+      id: selectedProperty.key as number,
       remark: followUp,
       closeJob: closeJob ? true : false,
       followUpType: 0,
       sourceId: selectedProperty.key as number,
-      saleRequestItemId: 0,
-      toSalePropertyId: 0,
+      saleRequestItemId: selectedProperty.saleRequestId as number,
+      toSalePropertyId: selectedProperty.saleRequestItemId as number,
     };
     console.log("followupData", followupData);
     const res = await savePropertyFollowup(followupData, token);
@@ -145,7 +147,7 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
       </Form.Item>
       )}
       <div className="flex w-full mt-2">
-          <Button block color="green" variant="solid" onClick={handleSave}>Save</Button>
+          <Button block color="green" variant="solid" onClick={handleSave} loading={loading}>Save</Button>
       </div>
       </Form>
       <Modal

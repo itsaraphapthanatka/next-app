@@ -50,7 +50,6 @@ export const ModalProperty = ({
   selectedProperty,
   token,
 }: ModalPropertyProps) => {
-  console.log("selectedProperty in modal", selectedProperty);
   const items = [
     {
       key: '1',
