@@ -45,7 +45,6 @@
         const session = useSession();
         const [formFollowUp] = Form.useForm();
         const [formDataEdit] = Form.useForm();
-        const [formData, setFormData] = useState<EditData | null>(null);
         const { message } = AntdApp.useApp();
         const [propertyStatuses, setPropertyStatuses] = useState([]);
         const [editData, setEditData] = useState<EditData | null>(null);
