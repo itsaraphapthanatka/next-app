@@ -9,6 +9,8 @@
   
     type SelectedProperty = {
         key?: number;
+        saleRequestId?: number;
+        saleRequestItemId?: number;
       };
       type propertyStatus = {
         id: number;
@@ -65,13 +67,13 @@
             const followUp = formFollowUp.getFieldValue("followUp");
             const closeJob = modalType === "request" ? formFollowUp.getFieldValue("closeJob") : false;
             const followupData = {
-                id: 0,
+                id: selectedProperty.key as number,
                 remark: followUp,
                 closeJob: closeJob ? true : false,
                 followUpType: 0,
                 sourceId: selectedProperty.key as number,
-                saleRequestItemId: 0,
-                toSalePropertyId: 0,
+                saleRequestItemId: selectedProperty.saleRequestId as number,
+                toSalePropertyId: selectedProperty.saleRequestItemId as number,
             };
             const res = await savePropertyFollowup(followupData, token);
             if (res.status === 200) {
