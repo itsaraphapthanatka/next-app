@@ -65,6 +65,8 @@ type PropertyDetail = {
   privateLift?: boolean;
   foreignerOwner?: boolean;
   duplexLoft?: boolean;
+  rentProfitGap?: number;
+  saleProfitGap?: number;
 };
 
 type UnitType = {
@@ -196,6 +198,8 @@ export const FormProperty = ({
       setProperty(detail);
       form.setFieldsValue({
         ...detail,
+        rentPG: detail.rentProfitGap ? detail.rentProfitGap.toFixed(2) + " %" : "0.00 %",
+        salePG: detail.saleProfitGap ? detail.saleProfitGap.toFixed(2) + " %" : "0.00 %",
         vipStatus: detail.vipStatusID ?? detail.vipStatus,
         availableOn: detail.availableOn ? dayjs(detail.availableOn) : undefined,
         lastedUpdate: detail.lastedUpdate ? dayjs(detail.lastedUpdate) : undefined,
@@ -244,7 +248,7 @@ export const FormProperty = ({
           label="Sale Profit gap"
           initialValue={
             selectedProperty.salePGText
-              ? selectedProperty.salePGText + " %"
+              ? parseFloat(selectedProperty.salePGText).toFixed(2) + " %"
               : "%"
           }
           className="text-[12px]"

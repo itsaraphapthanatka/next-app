@@ -40,6 +40,8 @@ interface RequestApiItem {
     saleRequestId?: number;
     saleRequestItemId?: number;
     toSalePropertyId?: number;
+    rentProfitGap?: number;
+    saleProfitGap?: number;
 }
 
 interface GetPropertiesResponse {
@@ -172,12 +174,13 @@ export const TableRequest = ({token}: {token: string}) => {
             tower: item.tower ?? "-",
             floor: item.floor ?? "-",
             RentalPG: item.RentalPG ?? "-",
+            rentPG: item.RentalPG ?? "-",
             vipStatusColor: item.vipStatusColor ?? "-",
             salePG: item.salePG ?? 0,
             rentPGColor: item.rentPGColor ?? "-",
             salePGColor: item.salePGColor ?? "-",
-            rentPGText: item.rentPGText ?? "-",
-            salePGText: item.salePGText ?? "-",
+            rentPGText: item.rentPGText ?? "",
+            salePGText: item.salePGText ?? "",
             availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
             lastedUpdate: item.lastedUpdate ? new Date(item.lastedUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
             vipStatus: item.vipStatus ?? "-",
@@ -190,6 +193,8 @@ export const TableRequest = ({token}: {token: string}) => {
             saleRequestId: item.saleRequestId ?? 0,
             saleRequestItemId: item.saleRequestItemId ?? 0,
             toSalePropertyId: item.saleRequestItemId ?? 0,
+            rentProfitGap: item.rentProfitGap ?? 0,
+            saleProfitGap: item.saleProfitGap ?? 0,
           }));
       
           setTotalRecords(data.allRecord ?? 0);
@@ -232,8 +237,8 @@ export const TableRequest = ({token}: {token: string}) => {
                 salePG: item.salePG ?? 0,
                 rentPGColor: item.rentPGColor ?? "-",
                 salePGColor: item.salePGColor ?? "-",
-                rentPGText: item.rentPGText ?? "-",
-                salePGText: item.salePGText ?? "-",
+                rentPGText: item.rentPGText ?? "",
+                salePGText: item.salePGText ?? "",
                 availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
                 lastedUpdate: item.lastedUpdate ? new Date(item.lastedUpdate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "-",
                 vipStatus: item.vipStatus ?? "-",
@@ -245,6 +250,8 @@ export const TableRequest = ({token}: {token: string}) => {
                 propertyId: item.propertyId ?? 0,
                 saleRequestId: item.saleRequestId ?? 0,
                 toSalePropertyId: item.saleRequestItemId ?? 0,
+                rentProfitGap: item.rentProfitGap ?? 0,
+                saleProfitGap: item.saleProfitGap ?? 0,
             }});    
             setTotalRecords(data.allRecord ?? 0);
             setProperties(mapped);
@@ -294,6 +301,8 @@ export const TableRequest = ({token}: {token: string}) => {
         saleRequestId: 0,
         saleRequestItemId: 0,
         toSalePropertyId: 0,
+        rentProfitGap: 0,
+        saleProfitGap: 0,
     };
 
     const defaultExpandable: ExpandableConfig<RequestApiItem> = {
