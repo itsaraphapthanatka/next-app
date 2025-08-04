@@ -5,6 +5,7 @@
     import { App as AntdApp } from "antd";
     import { savePropertyFollowup } from "@/app/server_actions/property";
     import { getPropertyStatuses } from "@/app/server_actions/master";
+    import { getEditData } from "@/app/server_actions/data-edits";
   
     type SelectedProperty = {
         key?: number;
@@ -13,7 +14,26 @@
         id: number;
         name: string;
       };
-
+      type EditData = {
+        id: number;
+        propertyId: number;
+        propertyStatusId: number;
+        rentalPrice: number;
+        availableOn: string;
+        sellingPrice: number;
+        keycardWithId: number;
+        keyHolderTelephone: string;
+        keycardDetail: string;
+        sellingCondition: string;
+        workFlowStatus: string;
+        senderId: number;
+        approverId: number;
+        sendDate: string;
+        approveDate: string;
+        notApproveReason: string;
+        displayStatus: string;
+        senderName: string;
+      };
     export const DataEditProperty = ({ token, modalType, selectedProperty }: { token: string, modalType: string, selectedProperty: SelectedProperty  }) => {
         const [loading, setLoading] = useState(false);
         console.log("token in DataEditProperty", token);
@@ -21,9 +41,15 @@
         const [form] = Form.useForm();
         const { message } = AntdApp.useApp();
         const [propertyStatuses, setPropertyStatuses] = useState([]);
+        const [editData, setEditData] = useState<EditData | null>(null);
         useEffect(() => {
             getPropertyStatuses(token).then((data) => {
                 setPropertyStatuses(data);
+            });
+            getEditData(token,selectedProperty.key as number).then((data) => {
+                setEditData(data);
+                form.setFieldsValue(data);
+                console.log("editData in DataEditProperty", data);
             });
         }, [token]);
         const handleSave = async () => {
@@ -78,7 +104,7 @@
                 form={form}
             >
                 <p style={{ marginTop: "24px" }}>Request By {session?.data?.user?.email}</p>
-                <Form.Item name="status" label="Status">
+                <Form.Item name="propertyStatusId" label="Status">
                     <Select size="large" options={propertyStatuses.map((status: propertyStatus) => ({ label: status.name, value: status.id }))} />
                 </Form.Item>
                 <Form.Item name="rentalPrice" label="Rental Price" className="text-[12px]"  style={{ marginBottom: "10px" }}>
@@ -96,7 +122,7 @@
                         size="large"
                     />
                 </Form.Item>
-                <Form.Item name="keycardWith" label="Keycard With" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+                <Form.Item name="keycardWithId" label="Keycard With" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                     <Select size="large" options={[{ label: "Pending", value: "pending" }, { label: "Approved", value: "approved" }, { label: "Rejected", value: "rejected" }]} />
                 </Form.Item>
                 <Form.Item name="keyHolderTelphone" label="Key Holder Telphone" className="text-[12px]"  style={{ marginBottom: "10px" }}>
