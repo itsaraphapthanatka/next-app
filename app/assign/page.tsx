@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { Navbar } from "../components/navbar";
 import { ArrowLeftCircleIcon } from "lucide-react";
 import Link from "next/link";
-import TableAssign from "./TableAssign";
 import { AssignSearchFrom } from "./AssignSearchFrom";
 
 interface SessionUser {
@@ -45,7 +44,7 @@ export default async function AssignPage() {
                     </div>
                     <div className="mt-4">
                     <AssignSearchFrom token={token} />
-                    <TableAssign token={token} />
+                
                     </div>
             </div>
         </div>

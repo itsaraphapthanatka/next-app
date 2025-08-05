@@ -2,6 +2,7 @@ import { Form, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { getPropertyById } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
+import { getKeycards } from "@/app/server_actions/master";
 
 type SelectedProperty = {
     key?: number;
@@ -23,10 +24,17 @@ type SelectedProperty = {
     passcode: string;
     keyCardDetail: string;
   }
+
+  type Keycard = {
+    id: number;
+    name: string;
+  }
+
 export const KeyHolderTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string   }) => {
     console.log("selectedProperty in KeyHolderTabs", selectedProperty)
     const [form] = Form.useForm();
     const [propertyKeyHolder, setPropertyKeyHolder] = useState<KeyHolder | null>(null);
+    const [keycards, setKeycards] = useState<Keycard[]>([]);
     useEffect(() => {
         getPropertyById(selectedProperty.key as number, token).then((response) => {
             const detail = response.keyHolder;
@@ -35,6 +43,11 @@ export const KeyHolderTabs = ({ selectedProperty, token }: { selectedProperty: S
             form.setFieldsValue(detail);
         });
     }, [selectedProperty.key, token]);
+    useEffect(() => {
+        getKeycards(token).then((response) => {
+            setKeycards(response);
+        });
+    }, [token]);
     return (
         <Form form={form}
             layout="vertical"
@@ -42,9 +55,9 @@ export const KeyHolderTabs = ({ selectedProperty, token }: { selectedProperty: S
             <Form.Item name="keyCardWithId" label="Keycard With" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Select placeholder="Please select keycard with" size="large">
                     <Select.Option value={0}>Please select keycard with</Select.Option>
-                    <Select.Option value={1}>Agent</Select.Option>
-                    <Select.Option value={2}>Fulcrum</Select.Option>
-                    <Select.Option value={3}>Juristic</Select.Option>
+                    {keycards.map((keycard) => (
+                        <Select.Option key={keycard.id} value={keycard.id}>{keycard.name}</Select.Option>
+                    ))}
                 </Select>
             </Form.Item>
             <Form.Item name="keyHolderFirstname" label="Key Holder Firstname" className="text-[12px]"  style={{ marginBottom: "10px" }}>

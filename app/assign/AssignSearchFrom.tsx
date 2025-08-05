@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, message} from "antd";
+import { Card, Input, Button, Modal, Form, message, Select} from "antd";
 import { RequestProp } from "@/app/property/RequestProp";
 import { getRevealCount } from "@/app/server_actions/reveal-count";
 import Swal from "sweetalert2";
 import { ModalFilter } from "../components/ModalFilter";
+import { getProjectsName } from "@/app/server_actions/projectsName";
+import TableAssign from "./TableAssign";
 
 interface AssignSearchFromProps {
   className?: string;
@@ -13,27 +15,25 @@ interface AssignSearchFromProps {
 }
 
 export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProps) => {
+  const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
   const [projectName, setProjectName] = useState("");
   const [addressUnit, setAddressUnit] = useState("");
   const [revealCount, setRevealCount] = useState(0);
   const maxReveal = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const [isRequestPropOpen, setIsRequestPropOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   console.log("token in AssignSearchFrom : ", token);
   useEffect(() => {
-    const handleSelectionCount = (e: CustomEvent) => {
-      setRevealCount(Math.min(e.detail, maxReveal));
-    };
+    
     getRevealCount(token).then((data) => {
       setRevealCount(data);
     });
     console.log("revealCount in AssignSearchFrom", revealCount);
-    window.addEventListener('propertySelectionCount', handleSelectionCount as EventListener);
+    window.addEventListener('propertySelectionCount', handleSelectionCount as unknown as EventListener);
   
     return () => {
-      window.removeEventListener('propertySelectionCount', handleSelectionCount as EventListener);
+      window.removeEventListener('propertySelectionCount', handleSelectionCount as unknown as EventListener);
     };
   }, [token]);
 
@@ -50,33 +50,11 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
     setIsModalOpen(true);
   };
 
-  const handleRequestProp = () => {
-   if(revealCount < 1){
-    messageApi.open({
-      type: 'warning',
-      content: 'Please select item less than 1 item for assign to Sale',
-      duration: 10,
-    });
-   }else{setIsRequestPropOpen(true);}
-  };
-
-  const handleCloseRequestProp = () => {
-    setIsRequestPropOpen(false);
-  };
-
   const handleClose = () => {
     setIsModalOpen(false);
   };
 
-  const handleAssignProp = () => {
-    Swal.fire({
-      title: 'บันทึกสำเร็จ',
-      icon: 'success',
-      showConfirmButton: false,
-      timer: 1500
-    }).then(() => {
-      setIsRequestPropOpen(false);
-    });
+  const handleCopyLink = () => {
   };
 
   const handleFilterSearch = () => {
@@ -94,31 +72,50 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
     console.log("Reset Filter clicked");
   };
 
+  const handleProjectNameChange = async (value: string) => {
+    if (value.length < 3) return; // ป้องกันการยิง API ถ้าพิมพ์น้อยเกินไป
+  
+    const result = await getProjectsName(token, value);
+  
+    const options = result.map((name: string) => ({
+      label: name,
+      value: name,
+    }));
+  
+    setProjectsName(options);
+  };
+
+  const handleSelectionCount = (selectedIds: number[]) => {
+    setRevealCount(Math.min(selectedIds.length, maxReveal));
+  };
 
   return (
     <>
     {contextHolder}
     
     <Card className={`p-6 w-full space-y-4 ${className}`}>
-      <div className="space-y-4">
+    <Form form={form} layout="vertical">
+        <Form.Item name="projectNameSearch" style={{ marginBottom: 10 }}>
+          <Select
+            allowClear
+            showSearch
+            placeholder="Select Project"
+            size="large"
+            onSearch={handleProjectNameChange}
+            options={projectsName}
+            filterOption={false}
+          />
+        </Form.Item>
+
+        <Form.Item name="addressUnitSearch" style={{ marginBottom: 10 }}>
+          <Input
+            size="large"
+            placeholder="Enter address or unit code"
+          />
+        </Form.Item>
+
         <div className="flex gap-3">
-        <Input size="large"
-          placeholder="Project Name"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-          className="w-1/2"
-        />
-        </div>
-        <div className="flex gap-3">
-        <Input size="large"
-          placeholder="Select from address or unit code"
-          value={addressUnit}
-          onChange={(e) => setAddressUnit(e.target.value)}
-          className="w-1/2"
-        />
-        </div>
-        <div className="flex gap-3">
-          <Button color="green" size="large"
+          <Button color="cyan" size="large"
             variant="solid"
             onClick={handleSearch}
             className="flex-1"
@@ -133,16 +130,16 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
             Filter
           </Button>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 pt-2">
         <Button color="default" size="large"
           variant="solid"
-          onClick={handleRequestProp}
           className="w-full"
         >
-            Reveal Contact. ({revealCount}/{maxReveal})
+           Reveal Contact. ({revealCount}/{maxReveal})
         </Button>
         </div>
-      </div>
+      </Form>
+      
       <Modal
         title="Property Filter"
         open={isModalOpen}
@@ -151,7 +148,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         cancelText="Close"
         footer={
           <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
-            <Button color="default" size="small" variant="outlined" onClick={handleResetFilter}>
+            <Button color="default" size="small" variant="outlined" onClick={handleCopyLink}>
               Copy Link
             </Button>
             <Button color="default" size="small" variant="outlined" onClick={handleResetFilter}>
@@ -178,26 +175,11 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         }}
       >
         <div>
-            <ModalFilter form={form} moduleType="assign" token={token} />
+            <ModalFilter form={form} moduleType="property" token={token} />
         </div>
       </Modal>
-      <Modal
-        title="Request Property"
-        open={isRequestPropOpen}
-        onCancel={handleCloseRequestProp}
-        footer={
-          <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
-            <Button color="blue" size="middle" variant="solid" onClick={handleAssignProp}>
-              Request
-            </Button>
-            <Button color="default" size="middle" variant="outlined" onClick={handleCloseRequestProp}>
-              Cancel
-            </Button>
-          </div>
-        }
-      >
-        <RequestProp selectedIds={[]} setEnqNo={() => {}} enqNo={""} />
-      </Modal>
+      
+      <TableAssign token={token} onSelectionChange={handleSelectionCount} />
     </Card>
     </>
   );

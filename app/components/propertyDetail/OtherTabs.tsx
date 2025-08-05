@@ -2,7 +2,8 @@ import { Form, Input, Select  } from "antd";
 import { getDecorations } from "@/app/server_actions/decorations";
 import { getPictureStatuses } from "@/app/server_actions/picturestatuses";
 import { useEffect, useState } from "react";
-import { getPropertyById } from "@/app/server_actions/property";    
+import { getPropertyById } from "@/app/server_actions/property";  
+import { getEmployees } from "@/app/server_actions/master";
 
 type SelectedProperty = {
     key?: number;
@@ -34,12 +35,19 @@ type SelectedProperty = {
     viewDirection: string;
   }
 
+  type Employee = {
+    id: number;
+    firstName: string;
+    lastName: string;
+  }
+
 export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }  ) => {
     console.log("selectedProperty in OtherTabs", selectedProperty)
     const [form] = Form.useForm();
     const [decorations, setDecorations] = useState<Decoration[]>([]);
     const [pictureStatuses, setPictureStatuses] = useState<PictureStatus[]>([]);
     const [propertyOther, setPropertyOther] = useState<Other | null>(null);
+    const [employees, setEmployees] = useState<Employee[]>([]);
     useEffect(() => {
         const fetchDecorations = async () => {
             const decorations = await getDecorations(token);
@@ -53,6 +61,11 @@ export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: Selec
             setPictureStatuses(pictureStatuses);
         };
         fetchPictureStatuses();
+    }, [token]);
+    useEffect(() => {
+        getEmployees(token).then((response) => {
+            setEmployees(response);
+        });
     }, [token]);
     useEffect(() => {
         getPropertyById(selectedProperty.key as number, token).then((response) => {
@@ -88,18 +101,17 @@ export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: Selec
             <Form.Item name="stockOwnerId" label="Stock Owner" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Select placeholder="Company's Stock" size="large">
                     <Select.Option value={0}>Company&apos;s Stock</Select.Option>
-                    <Select.Option value={1}>Adirek Ruangsaree</Select.Option>
-                    <Select.Option value={2}>Aemphawee Patthamaphiboonporn</Select.Option>
-                    <Select.Option value={3}>Ampaporn Ohnuch</Select.Option>
-                    <Select.Option value={4}>Aorrawin Thanyajaroen</Select.Option>
+                    {employees.map((employee) => (
+                        <Select.Option key={employee.id} value={employee.id}>{employee.firstName} {employee.lastName}</Select.Option>
+                    ))}
                 </Select>
             </Form.Item>
             <Form.Item name="hilightId" label="Hilight" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Select placeholder="Not have Hilight" size="large">
                     <Select.Option value={0}>Not have Hilight</Select.Option>
-                    <Select.Option value={1}>Adirek Ruangsaree</Select.Option>
-                    <Select.Option value={2}>Aemphawee Patthamaphiboonporn</Select.Option>
-                    <Select.Option value={3}>Ampaporn Ohnuch</Select.Option>
+                    {employees.map((employee) => (
+                        <Select.Option key={employee.id} value={employee.id}>{employee.firstName} {employee.lastName}</Select.Option>
+                    ))}
                 </Select>
             </Form.Item>
             <Form.Item name="expriedDate" label="Expried Date (Clear)" className="text-[12px]"  style={{ marginBottom: "10px" }}>
@@ -112,9 +124,9 @@ export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: Selec
             <Form.Item name="salePushId" label="Sale Push" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Select placeholder="Not have Sale Push" size="large">
                     <Select.Option value={0}>Not have Sale Push</Select.Option>
-                    <Select.Option value={1}>Adirek Ruangsaree</Select.Option>
-                    <Select.Option value={2}>Aemphawee Patthamaphiboonporn</Select.Option>
-                    <Select.Option value={3}>Ampaporn Ohnuch</Select.Option>
+                    {employees.map((employee) => (
+                        <Select.Option key={employee.id} value={employee.id}>{employee.firstName} {employee.lastName}</Select.Option>
+                    ))}
                 </Select>
             </Form.Item>
             
