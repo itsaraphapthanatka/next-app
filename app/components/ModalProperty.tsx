@@ -9,7 +9,7 @@ import { FacilityTabs } from "./propertyDetail/FacilityTabs";
 import { FollowupTabs } from "./propertyDetail/FollowupTabs";
 import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
-import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
+// import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
 // import { App } from "antd";
 import { useState } from "react";
 
@@ -53,7 +53,7 @@ export const ModalProperty = ({
   token,
 }: ModalPropertyProps) => {
   // const { message } = App.useApp();
-  const [downloadOriginalFiles, setDownloadOriginalFiles] = useState(false);
+  const [downloadOriginalFiles] = useState(false);
   const items = [
     {
       key: '1',
