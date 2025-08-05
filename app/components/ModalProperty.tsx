@@ -139,29 +139,31 @@ export const ModalProperty = ({
 
   const handleDownloadOriginalFiles = async () => {
     try {
-      const blob = await getDownloadOriginalFiles(selectedProperty.key as number, token);
-      console.log("blob", blob);
-
-      if (blob) {
-        setDownloadOriginalFiles(true);
-                    
-      } else {
-        setDownloadOriginalFiles(false);
+      const response = await fetch(`/api/proxy/download-original-files?id=${selectedProperty.key}&token=${token}`);
+  
+      if (!response.ok) {
+        throw new Error("Failed to download file");
       }
-      // // สร้างลิงก์ดาวน์โหลด
-      // const url = window.URL.createObjectURL(blob);
-      // const link = document.createElement("a");
-      // link.href = url;
-      // link.setAttribute("download", `property-${selectedProperty.key}.zip`);
-      // document.body.appendChild(link);
-      // link.click();
-      // link.remove();
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error("Download failed:", err.message);
-      }
+  
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get("Content-Disposition") || "attachment; filename=Original.zip";
+  
+      // ดึงชื่อไฟล์จาก Content-Disposition
+      const fileName = contentDisposition.split("filename=")[1]?.replace(/"/g, "") || "download.zip";
+  
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed:", err);
     }
   };
+  
 
   return (
 
