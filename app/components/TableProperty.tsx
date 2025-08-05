@@ -134,6 +134,9 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
   const [loadMode, setLoadMode] = useState<LoadMode>("default"); // 💡 NEW
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [filterParams, setFilterParams] = useState<FilterParams>({});
+
+
+
   const columns: ColumnsType<DataType> = [
     {
       title: 'No.',
@@ -377,7 +380,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
     selePG: "",
     vipStatus: "",
   };
-
+ 
   return (
     <div className="mt-4">
       <Table<DataType>

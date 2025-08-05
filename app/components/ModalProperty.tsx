@@ -9,9 +9,10 @@ import { FacilityTabs } from "./propertyDetail/FacilityTabs";
 import { FollowupTabs } from "./propertyDetail/FollowupTabs";
 import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
-// import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
-// import { App } from "antd";
-import { useState } from "react";
+import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
+import { getGetLink, getSuggestionLinks } from "@/app/server_actions/suggestion-links";
+import { App } from "antd";
+import { useEffect, useState } from "react";
 
 type SelectedProperty = {
   id?: number;
@@ -52,8 +53,8 @@ export const ModalProperty = ({
   selectedProperty,
   token,
 }: ModalPropertyProps) => {
-  // const { message } = App.useApp();
-  const [downloadOriginalFiles] = useState(false);
+  const { message } = App.useApp();
+  const [downloadOriginalFiles, setDownloadOriginalFiles] = useState<Response | null>(null);
   const items = [
     {
       key: '1',
@@ -122,48 +123,65 @@ export const ModalProperty = ({
       children: <DataEditProperty token={token} modalType={modalType} selectedProperty={selectedProperty}/>,
     },
   ].filter(Boolean) as { key: string; label: string; children: React.ReactNode }[];
-  console.log("selectedProperty", selectedProperty);
 
 
-  // const handleDownloadOriginalFiles = async () => {
-  //   console.log("selectedProperty.propertyId", selectedProperty.key);
-  //   const response = await getDownloadOriginalFiles(selectedProperty.key as number, token);
-  //   console.log(response);
-  //   if (response.status === 200) {
-  //     message.success("Download Original Files Success");
-  //     setDownloadOriginalFiles(true);
-  //   } else {
-  //     message.error("Download Original Files Failed");
-  //   }
-  // }
 
   const handleDownloadOriginalFiles = async () => {
-    try {
-      const response = await fetch(`/api/proxy/download-original-files?id=${selectedProperty.key}&token=${token}`);
-  
-      if (!response.ok) {
-        throw new Error("Failed to download file");
+    const response = await downloadOriginalFiles?.blob();
+    if (!response) {
+      message.error("Download Original Files Failed");
+      return;
+    }
+    const url = window.URL.createObjectURL(response);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "original.zip");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  useEffect(() => {
+    const fetchDownloadOriginalFiles = async () => {
+      const response = await getDownloadOriginalFiles(selectedProperty?.key ?? 0, token);
+      if (response.status === 200) {
+        setDownloadOriginalFiles(response.data);
+      } else {
+        setDownloadOriginalFiles(null);
       }
-  
-      const blob = await response.blob();
-      const contentDisposition = response.headers.get("Content-Disposition") || "Original.zip";
-  
-      // ดึงชื่อไฟล์จาก Content-Disposition
-      const fileName = contentDisposition.split("filename=")[1]?.replace(/"/g, "") || "download.zip";
-  
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("Download failed:", err);
+    }
+    fetchDownloadOriginalFiles();
+  }, [selectedProperty]);
+
+
+
+  const handleGetSuggestionLink = async () => {
+    try {
+      const response = await getSuggestionLinks(selectedProperty?.key ?? 0, token);
+      if (response.status === 200) {
+        const url = response.data;
+        window.open(url, "_blank", "noopener,noreferrer");
+      } else {
+        message.error("No suggestion link available");
+      }
+    } catch (error) {
+      console.error("Failed to get suggestion link:", error);
+      message.error("Failed to get suggestion link");
     }
   };
   
+  const handleGetLink = async () => {
+    const response = await getGetLink(selectedProperty?.key ?? 0, token);
+    if (response.status === 200) {
+      const url = response.data;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } else {
+      message.error("Get Link Failed");
+    }
+  }
+  
+
 
   return (
 
@@ -183,15 +201,17 @@ export const ModalProperty = ({
         },
       }}
       footer={
-        <div className="flex justify-end gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+        <div className="grid grid-cols-1 gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
           {modalType === "property" && (
             <>
-              <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>{downloadOriginalFiles ? "Download Original File" : "Not have Original File"}</Button>
-              {/* <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>{downloadOriginalFiles ? "Download Original File" : "Not have Original File"}</Button> */}
-              <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
+              {console.log("downloadOriginalFiles", downloadOriginalFiles)}
+              {downloadOriginalFiles?.status === 200 && (
+                <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>Download Original File</Button>
+              )}
+              <Button color="default" variant="solid" size="small" onClick={handleGetSuggestionLink}>Suggest</Button>
             </>
           )}
-          <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Get Link</Button>
+          <Button color="default" variant="solid" size="small" onClick={handleGetLink}>Get Link</Button>
           <Button color="default" variant="outlined" size="small" onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>
       }
