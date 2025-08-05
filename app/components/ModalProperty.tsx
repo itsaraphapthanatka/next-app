@@ -10,7 +10,7 @@ import { FollowupTabs } from "./propertyDetail/FollowupTabs";
 import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
 import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
-import { App } from "antd";
+// import { App } from "antd";
 import { useState } from "react";
 
 type SelectedProperty = {
@@ -52,7 +52,7 @@ export const ModalProperty = ({
   selectedProperty,
   token,
 }: ModalPropertyProps) => {
-  const { message } = App.useApp();
+  // const { message } = App.useApp();
   const [downloadOriginalFiles, setDownloadOriginalFiles] = useState(false);
   const items = [
     {
@@ -140,7 +140,12 @@ export const ModalProperty = ({
   const handleDownloadOriginalFiles = async () => {
     try {
       const blob = await getDownloadOriginalFiles(selectedProperty.key as number, token);
-  
+      console.log("blob", blob);
+      if (blob) {
+        setDownloadOriginalFiles(true);
+      } else {
+        setDownloadOriginalFiles(false);
+      }
       // สร้างลิงก์ดาวน์โหลด
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");

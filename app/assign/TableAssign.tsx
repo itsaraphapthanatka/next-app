@@ -7,7 +7,6 @@ import { getAssignReports } from '@/app/server_actions/assign-reports';
 import { ModalProperty } from '../components/ModalProperty';
 import { getAssignReportsFilter } from '@/app/server_actions/assign-reports-filter';
 import { formatNumberShort } from '@/app/utils/formatNumber';
-import { getPropertyFilter } from '../server_actions/property-filter';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -65,12 +64,7 @@ interface PropertyApiItem {
   // Add other fields if needed
 }
 
-interface GetPropertiesResponse {
-  resultLists?: PropertyApiItem[];
-  allRecord?: number;
-  currentPage?: number;
-  recordPerPage?: number;
-}
+
 
 const MAX_SELECTION = 20;
 

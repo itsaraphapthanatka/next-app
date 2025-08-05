@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, Input, Button, Modal, Form, message, Select} from "antd";
-import { RequestProp } from "@/app/property/RequestProp";
 import { getRevealCount } from "@/app/server_actions/reveal-count";
-import Swal from "sweetalert2";
 import { ModalFilter } from "../components/ModalFilter";
 import { getProjectsName } from "@/app/server_actions/projectsName";
 import TableAssign from "./TableAssign";
@@ -16,13 +14,12 @@ interface AssignSearchFromProps {
 
 export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProps) => {
   const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
-  const [projectName, setProjectName] = useState("");
-  const [addressUnit, setAddressUnit] = useState("");
+  // const [projectName, setProjectN  ame] = useState("");
+  // const [addressUnit, setAddressUnit] = useState("");
   const [revealCount, setRevealCount] = useState(0);
   const maxReveal = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const [messageApi, contextHolder] = message.useMessage();
   console.log("token in AssignSearchFrom : ", token);
   useEffect(() => {
     
@@ -37,10 +34,23 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
     };
   }, [token]);
 
+  // const handleSearch = () => {
+  //   console.log("Search clicked", { projectName });
+  //   const event = new CustomEvent('assignTableReload', {
+  //     detail: { projectName, addressUnit }
+  //   });
+  //   window.dispatchEvent(event);
+  // };
   const handleSearch = () => {
-    console.log("Search clicked", { projectName });
-    const event = new CustomEvent('assignTableReload', {
-      detail: { projectName, addressUnit }
+    const values = form.getFieldsValue();
+    console.log("Search clicked", values);
+    const event = new CustomEvent("assignTableReload", {
+      detail: {
+        projectName: values.projectNameSearch ?? "",
+        addressUnit: values.addressUnitSearch ?? "",
+        page: 1,
+        pageSize: 10,
+      },
     });
     window.dispatchEvent(event);
   };
@@ -91,7 +101,6 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
 
   return (
     <>
-    {contextHolder}
     
     <Card className={`p-6 w-full space-y-4 ${className}`}>
     <Form form={form} layout="vertical">
