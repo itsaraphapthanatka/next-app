@@ -9,6 +9,9 @@ import { FacilityTabs } from "./propertyDetail/FacilityTabs";
 import { FollowupTabs } from "./propertyDetail/FollowupTabs";
 import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
+import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
+import { App } from "antd";
+import { useState } from "react";
 
 type SelectedProperty = {
   id?: number;
@@ -49,6 +52,8 @@ export const ModalProperty = ({
   selectedProperty,
   token,
 }: ModalPropertyProps) => {
+  const { message } = App.useApp();
+  const [downloadOriginalFiles, setDownloadOriginalFiles] = useState(false);
   const items = [
     {
       key: '1',
@@ -117,7 +122,42 @@ export const ModalProperty = ({
       children: <DataEditProperty token={token} modalType={modalType} selectedProperty={selectedProperty}/>,
     },
   ].filter(Boolean) as { key: string; label: string; children: React.ReactNode }[];
+  console.log("selectedProperty", selectedProperty);
+
+
+  // const handleDownloadOriginalFiles = async () => {
+  //   console.log("selectedProperty.propertyId", selectedProperty.key);
+  //   const response = await getDownloadOriginalFiles(selectedProperty.key as number, token);
+  //   console.log(response);
+  //   if (response.status === 200) {
+  //     message.success("Download Original Files Success");
+  //     setDownloadOriginalFiles(true);
+  //   } else {
+  //     message.error("Download Original Files Failed");
+  //   }
+  // }
+
+  const handleDownloadOriginalFiles = async () => {
+    try {
+      const blob = await getDownloadOriginalFiles(selectedProperty.key as number, token);
+  
+      // สร้างลิงก์ดาวน์โหลด
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `property-${selectedProperty.key}.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Download failed:", err.message);
+      }
+    }
+  };
+
   return (
+
     <Modal 
       title="Property Detail" 
       open={isModalOpen} 
@@ -137,7 +177,7 @@ export const ModalProperty = ({
         <div className="flex justify-end gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
           {modalType === "property" && (
             <>
-              <Button color="green" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Not have Original File</Button>
+              <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>{downloadOriginalFiles ? "Download Original File" : "Not have Original File"}</Button>
               <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
             </>
           )}
