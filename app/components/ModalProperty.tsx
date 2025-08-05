@@ -146,7 +146,7 @@ export const ModalProperty = ({
       }
   
       const blob = await response.blob();
-      const contentDisposition = response.headers.get("Content-Disposition") || "attachment; filename=Original.zip";
+      const contentDisposition = response.headers.get("Content-Disposition") || "Original.zip";
   
       // ดึงชื่อไฟล์จาก Content-Disposition
       const fileName = contentDisposition.split("filename=")[1]?.replace(/"/g, "") || "download.zip";
