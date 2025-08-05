@@ -141,19 +141,21 @@ export const ModalProperty = ({
     try {
       const blob = await getDownloadOriginalFiles(selectedProperty.key as number, token);
       console.log("blob", blob);
+
       if (blob) {
         setDownloadOriginalFiles(true);
+                    
       } else {
         setDownloadOriginalFiles(false);
       }
-      // สร้างลิงก์ดาวน์โหลด
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `property-${selectedProperty.key}.zip`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      // // สร้างลิงก์ดาวน์โหลด
+      // const url = window.URL.createObjectURL(blob);
+      // const link = document.createElement("a");
+      // link.href = url;
+      // link.setAttribute("download", `property-${selectedProperty.key}.zip`);
+      // document.body.appendChild(link);
+      // link.click();
+      // link.remove();
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error("Download failed:", err.message);
@@ -183,6 +185,7 @@ export const ModalProperty = ({
           {modalType === "property" && (
             <>
               <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>{downloadOriginalFiles ? "Download Original File" : "Not have Original File"}</Button>
+              {/* <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>{downloadOriginalFiles ? "Download Original File" : "Not have Original File"}</Button> */}
               <Button color="default" variant="solid" size="small" onClick={() => setIsModalOpen(false)}>Suggest</Button>
             </>
           )}
