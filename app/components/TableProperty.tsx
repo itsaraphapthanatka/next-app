@@ -8,6 +8,7 @@ import { getSaleLimit } from "../server_actions/saleLimit";
 import { ModalProperty } from "./ModalProperty";
 import type { TableProps } from "antd/es/table";
 import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
+import { formatNumberShort } from "@/app/utils/formatNumber";
 
 type LoadMode = "default" | "search" | "filter";
 type ColumnsType<T extends object> = TableProps<T>['columns'];
@@ -38,6 +39,7 @@ interface DataType {
   lastUpdate: string;
   selePG?: string;
   vipStatus?: string;
+  projectID?: number;
 }
 
 interface PropertyApiItem {
@@ -70,6 +72,7 @@ interface PropertyApiItem {
   lastUpdate?: string;
   selePG?: string;
   vipStatus?: string;
+  projectID?: number;
   // Add other fields if needed
 }
 
@@ -116,6 +119,8 @@ interface FilterParams {
   bootedProppit?: number;
   vipStatusIds?: string[];
   foreignerOwner?: number;
+  propertyId?: number;
+  projectID?: number;
 }
 
 // const saleLimit = 20;
@@ -247,7 +252,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
             handleDownloadOriginalFiles(record.key);
           }}
         >
-          {text}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -266,7 +271,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
             handleDownloadOriginalFiles(record.key);
           }}
         >
-          {text}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -395,6 +400,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-",
         lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-",
         vipStatus: item.vipStatus ?? "-",
+        propertyId: item.projectID ?? 0,
       }));
 
       setProperties(mapped);
@@ -457,6 +463,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
     lastUpdate: "",
     selePG: "",
     vipStatus: "",
+    projectID: 0,
   };
  
   return (
