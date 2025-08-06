@@ -32,7 +32,6 @@ export default async function RequestContent() {
     return redirect("/");
   }
 
-  const userName = session?.user?.firstName || "User";
   const token = session?.token || "";
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
