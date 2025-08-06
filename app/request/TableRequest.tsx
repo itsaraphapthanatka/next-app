@@ -375,6 +375,7 @@ export const TableRequest = ({token}: {token: string}) => {
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             token={token}
+            downloadOriginalFiles={null}
         />
         </div>
     );

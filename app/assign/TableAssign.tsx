@@ -520,6 +520,7 @@ const MAX_SELECTION = 20;
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         token={token}
+        downloadOriginalFiles={null}
       />
     </div>
   );
