@@ -417,6 +417,7 @@ const MAX_SELECTION = 20;
             setPageSize(pageSize);
           },
         }}
+        
         // rowSelection={{
         //   type: 'checkbox',
         //   columnTitle: <span className="hidden-checkbox-header" />,
