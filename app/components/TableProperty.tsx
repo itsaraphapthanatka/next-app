@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { message, Table } from "antd";
+import { Table } from "antd";
 import { DownCircleOutlined, UpCircleOutlined } from "@ant-design/icons";
 import { getProperties } from "@/app/server_actions/property";
 import { getPropertyFilter } from "@/app/server_actions/property-filter";

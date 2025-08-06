@@ -9,10 +9,8 @@ import { FacilityTabs } from "./propertyDetail/FacilityTabs";
 import { FollowupTabs } from "./propertyDetail/FollowupTabs";
 import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
-import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
 import { getGetLink, getSuggestionLinks } from "@/app/server_actions/suggestion-links";
 import { App } from "antd";
-import { useEffect, useState } from "react";
 
 type SelectedProperty = {
   id?: number;
