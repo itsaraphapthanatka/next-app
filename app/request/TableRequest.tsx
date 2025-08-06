@@ -425,6 +425,7 @@ export const TableRequest = ({token}: {token: string}) => {
     return (
         <div className="mt-4">
         <Table<RequestApiItem>
+            rowKey={(record, index) => `${record.propertyId}-${record.saleRequestId ?? index}`}
             tableLayout="auto"
             loading={loading}
             expandable={defaultExpandable}
