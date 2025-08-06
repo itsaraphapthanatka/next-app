@@ -6,6 +6,7 @@
     import { savePropertyFollowup } from "@/app/server_actions/property";
     import { getPropertyStatuses } from "@/app/server_actions/master";
     import { getEditData, saveEditData } from "@/app/server_actions/data-edits";
+    import { getKeycards } from "@/app/server_actions/master";
   
     type SelectedProperty = {
         key?: number;
@@ -41,6 +42,10 @@
         lastName: string;
         id: number;
       };
+      type Keycard = {
+        id: number;
+        name: string;
+      }
     export const DataEditProperty = ({ token, modalType, selectedProperty }: { token: string, modalType: string, selectedProperty: SelectedProperty  }) => {
         const [loading, setLoading] = useState(false);
         console.log("token in DataEditProperty", token);
@@ -52,6 +57,7 @@
         const [editData, setEditData] = useState<EditData | null>(null);
         const [isSendToApprovalDisabled, setIsSendToApprovalDisabled] = useState(false);
         const [isSaveDisabled, setIsSaveDisabled] = useState(false);
+        const [keycards, setKeycards] = useState<Keycard[]>([]);
         useEffect(() => {
             getPropertyStatuses(token).then((data) => {
                 setPropertyStatuses(data);
@@ -121,6 +127,11 @@
             }
             setLoading(false);
         }
+        useEffect(() => {
+            getKeycards(token).then((response) => {
+                setKeycards(response);
+            });
+        }, [token]);
         return (
             <>
             <Form
@@ -171,7 +182,7 @@
                     />
                 </Form.Item>
                 <Form.Item name="keycardWithId" label="Keycard With" className="text-[12px]"  style={{ marginBottom: "10px" }}>
-                    <Select size="large" options={[{ label: "Pending", value: "pending" }, { label: "Approved", value: "approved" }, { label: "Rejected", value: "rejected" }]} />
+                    <Select size="large" options={keycards.map((keycard) => ({ label: keycard.name, value: keycard.id }))} />
                 </Form.Item>
                 <Form.Item name="keyHolderTelphone" label="Key Holder Telphone" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                     <Input 
