@@ -85,7 +85,7 @@ export const ModalProperty = ({
       label: 'Other',
       children: <OtherTabs selectedProperty={selectedProperty} token={token}/>,
     },
-    modalType === "request"
+    modalType === "request" || modalType === "assign"
       ? {
           key: '5',
           label: 'Contact',

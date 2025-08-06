@@ -89,11 +89,11 @@ const MAX_SELECTION = 20;
       dataIndex: 'no',
       fixed: 'left',
       sorter: (a, b) => a.no - b.no,
-      width: 50,
+      width: 35,
       render: (_text, _record, index) => {
         const actualIndex = (page - 1) * pageSize + index + 1;
         return (
-          <div className='text-center'>
+          <div>
             {actualIndex}
           </div>
         );
@@ -108,7 +108,7 @@ const MAX_SELECTION = 20;
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
-            setModalType("property");
+            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
@@ -127,7 +127,7 @@ const MAX_SELECTION = 20;
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
-            setModalType("property");
+            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
@@ -146,7 +146,7 @@ const MAX_SELECTION = 20;
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
-            setModalType("property");
+            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
@@ -165,7 +165,7 @@ const MAX_SELECTION = 20;
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
-            setModalType("property");
+            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
@@ -183,7 +183,7 @@ const MAX_SELECTION = 20;
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
-            setModalType("property");
+            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
@@ -201,7 +201,7 @@ const MAX_SELECTION = 20;
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
-            setModalType("property");
+            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
@@ -417,24 +417,24 @@ const MAX_SELECTION = 20;
             setPageSize(pageSize);
           },
         }}
-        rowSelection={{
-          type: 'checkbox',
-          columnTitle: <span className="hidden-checkbox-header" />,
-          selectedRowKeys,
-          onChange: (newSelectedKeys) => {
-            let limitedKeys = newSelectedKeys;
+        // rowSelection={{
+        //   type: 'checkbox',
+        //   columnTitle: <span className="hidden-checkbox-header" />,
+        //   selectedRowKeys,
+        //   onChange: (newSelectedKeys) => {
+        //     let limitedKeys = newSelectedKeys;
 
-            if (newSelectedKeys.length > MAX_SELECTION) {
-              limitedKeys = newSelectedKeys.slice(0, MAX_SELECTION);
-            }
+        //     if (newSelectedKeys.length > MAX_SELECTION) {
+        //       limitedKeys = newSelectedKeys.slice(0, MAX_SELECTION);
+        //     }
 
-            setSelectedRowKeys(limitedKeys);
-            onSelectionChange(limitedKeys.map(key => Number(key)));
-          },
-          getCheckboxProps: (record) => ({
-            disabled: selectedRowKeys.length >= MAX_SELECTION && !selectedRowKeys.includes(record.key),
-          }),
-        }}
+        //     setSelectedRowKeys(limitedKeys);
+        //     onSelectionChange(limitedKeys.map(key => Number(key)));
+        //   },
+        //   getCheckboxProps: (record) => ({
+        //     disabled: selectedRowKeys.length >= MAX_SELECTION && !selectedRowKeys.includes(record.key),
+        //   }),
+        // }}
       />
 
       <ModalProperty
