@@ -89,11 +89,14 @@ const MAX_SELECTION = 20;
       fixed: 'left',
       sorter: (a, b) => a.no - b.no,
       width: 50,
-      render: (text) => (
-        <div className="text-center">
-          {text}
-        </div>
-      ),
+      render: (_text, _record, index) => {
+        const actualIndex = (page - 1) * pageSize + index + 1;
+        return (
+          <div className='text-center'>
+            {actualIndex}
+          </div>
+        );
+      }
     },
     {
       title: 'Project',
@@ -101,7 +104,7 @@ const MAX_SELECTION = 20;
       sorter: (a, b) => a.projectName.localeCompare(b.projectName),
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");

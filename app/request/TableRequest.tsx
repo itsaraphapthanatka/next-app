@@ -71,11 +71,14 @@ export const TableRequest = ({token}: {token: string}) => {
             align: 'center',
             sorter: (a, b) => (a.no) - (b.no),
             width: 50,
-            render: (text) => (
-                <div className="text-center">
-                    {text}
-                </div>
-            ),
+            render: (_text, _record, index) => {
+                const actualIndex = (page - 1) * pageSize + index + 1;
+                return (
+                  <div className='text-center'>
+                    {actualIndex}
+                  </div>
+                );
+              }
         },
         {
             title: 'Project',
@@ -83,7 +86,7 @@ export const TableRequest = ({token}: {token: string}) => {
             sorter: (a, b) => a.projectName.localeCompare(b.projectName),
             render: (text, record) => (
                 <div
-                    style={{ cursor: 'pointer', color: '#1677ff' }}
+                    style={{ cursor: 'pointer'}}
                     onClick={() => {
                         setSelectedRequest(record);
                         setModalType("request");
