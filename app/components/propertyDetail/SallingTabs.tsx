@@ -38,7 +38,11 @@ export const SallingTabs = ({ selectedProperty, token }: { selectedProperty: Sel
             const detail = response.selling;
             setPropertySelling(detail);
             console.log("detail in SallingTabs", propertySelling);
-            form.setFieldsValue(detail);
+            form.setFieldsValue({
+                ...detail,
+                sellingPrice: detail.sellingPrice != null ? Number(detail.sellingPrice).toLocaleString() : "",
+                sellingPricePerSQM: detail.sellingPricePerSQM != null ? Number(detail.sellingPricePerSQM).toLocaleString() : "",
+            });
         });
     }, [selectedProperty.key, token]);
     return (

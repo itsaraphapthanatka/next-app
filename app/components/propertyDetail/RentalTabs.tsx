@@ -64,9 +64,16 @@ export const RentalTabs = ({ selectedProperty, token }: { selectedProperty: Sele
             console.log("response rental", response.rental);
             const detail = response.rental;
             setPropertyRental(detail);
-            form.setFieldsValue(detail);
+            form.setFieldsValue({
+                rentalPrice: detail.rentalPrice != null ? Number(detail.rentalPrice).toLocaleString() : "",
+                rentalPerSQM: detail.rentalPerSQM != null ? Number(detail.rentalPerSQM).toLocaleString() : "",
+                rentalRateBottom: detail.rentalRateBottom != null ? Number(detail.rentalRateBottom).toLocaleString() : "",
+                rentalCommission: detail.rentalCommission != null ? Number(detail.rentalCommission).toLocaleString() : "",
+                contractDurations: detail.contractDurations,
+            });
         });
     }, [selectedProperty.key, token]);
+    
     return (
         <>
         <Form form={form}
