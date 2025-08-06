@@ -222,13 +222,12 @@ export const TableRequest = ({token}: {token: string}) => {
     ];
 
     const handleToggleExpand = (record: RequestApiItem) => {
-        setExpandedRowKeys((prevKeys) => {
-          if (prevKeys.includes(record.key)) {
-            return prevKeys.filter((key) => key !== record.key); // ยุบ
-          } else {
-            return [...prevKeys, record.key]; // ขยาย
-          }
-        });
+        const key = rowKeyFunc(record);
+        setExpandedRowKeys((prevKeys) =>
+          prevKeys.includes(key)
+            ? prevKeys.filter((k) => k !== key)
+            : [...prevKeys, key]
+        );
       };
 
     useEffect(() => {
@@ -422,10 +421,11 @@ export const TableRequest = ({token}: {token: string}) => {
         },
     };
 
+    const rowKeyFunc = (record: RequestApiItem) => record.propertyId?.toString() ?? `unknown-${Math.random()}`;
     return (
         <div className="mt-4">
         <Table<RequestApiItem>
-            rowKey={(record, index) => `${record.propertyId}-${record.saleRequestId ?? index}`}
+            rowKey={rowKeyFunc}
             tableLayout="auto"
             loading={loading}
             expandable={defaultExpandable}
