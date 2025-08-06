@@ -414,7 +414,6 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         }}
         rowSelection={{
           type: 'checkbox',
-          // fixed: 'left',
           columnTitle: <span className="hidden-checkbox-header" />,
           selectedRowKeys,
           onChange: (newSelectedKeys) => {

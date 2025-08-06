@@ -185,7 +185,7 @@
                 <TextArea rows={4} />
                 </Form.Item>
                 <div className="flex w-full">
-                    <Button block loading={loading} variant="solid" htmlType="submit" onClick={handleSendToApproval} disabled={isSendToApprovalDisabled} style={{ backgroundColor: isSendToApprovalDisabled ? "#ccc" : "#52c41a", color: isSendToApprovalDisabled ? "#000" : "#fff" }} >Send To Approval</Button>
+                    <Button block loading={loading} variant="solid" htmlType="submit" onClick={handleSendToApproval} disabled={isSendToApprovalDisabled} style={{ backgroundColor: isSendToApprovalDisabled ? "#ccc" : "#52c41a", color: isSendToApprovalDisabled ? "#000" : "#fff" }} >Send To Approve</Button>
                 </div>
             </Form>
             </>
