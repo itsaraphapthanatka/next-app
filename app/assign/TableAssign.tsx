@@ -66,10 +66,10 @@ interface PropertyApiItem {
 
 
 
-const MAX_SELECTION = 20;
+// const MAX_SELECTION = 20;
 
-  const TableAssign: React.FC<{ token: string, onSelectionChange: (selectedIds: number[]) => void }> = ({ token, onSelectionChange }) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const TableAssign: React.FC<{ token: string }> = ({ token }) => {
+  // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
@@ -417,7 +417,7 @@ const MAX_SELECTION = 20;
             setPageSize(pageSize);
           },
         }}
-        
+
         // rowSelection={{
         //   type: 'checkbox',
         //   columnTitle: <span className="hidden-checkbox-header" />,

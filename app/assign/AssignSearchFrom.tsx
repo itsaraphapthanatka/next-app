@@ -171,7 +171,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         </div>
       </Modal>
       
-      <TableAssign token={token} onSelectionChange={handleSelectionCount} />
+      <TableAssign token={token} />
     </Card>
     </>
   );
