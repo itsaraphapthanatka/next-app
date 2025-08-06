@@ -187,7 +187,7 @@ const MAX_SELECTION = 20;
             setIsModalOpen(true);
           }}
         >
-          {text}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -205,7 +205,7 @@ const MAX_SELECTION = 20;
             setIsModalOpen(true);
           }}
         >
-          {text}
+          {formatNumberShort(text)}
         </div>
       ),
     },

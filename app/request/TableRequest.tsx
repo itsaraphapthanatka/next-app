@@ -5,6 +5,7 @@ import { Table, TableProps } from 'antd';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 import { ModalProperty } from "../components/ModalProperty";
 import { getRequestReports } from "@/app/server_actions/request-reports";
+import { formatNumberShort } from "@/app/utils/formatNumber";
 
 interface RequestApiItem {
     id: number;
@@ -167,7 +168,7 @@ export const TableRequest = ({token}: {token: string}) => {
                         setIsModalOpen(true);
                     }}
                     >
-                    {text}
+                    {formatNumberShort(text)}
                 </div>
             ),
         },
@@ -185,7 +186,7 @@ export const TableRequest = ({token}: {token: string}) => {
                         setIsModalOpen(true);
                     }}
                     >
-                    {text}
+                    {formatNumberShort(text)}
                 </div>
             ),
         },
