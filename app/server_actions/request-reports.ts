@@ -2,8 +2,8 @@ import axios from "axios";
 
 export const getRequestReports = async ({
   token,
-  sortType = "Project",
-  orderBy = "ASC",
+  sortType = "RequestDate",
+  orderBy = "DESC",
   currentPage = 1,
   size = 50,
   saleRequestStatus = "",
