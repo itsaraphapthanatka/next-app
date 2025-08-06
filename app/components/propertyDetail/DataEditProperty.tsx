@@ -64,7 +64,11 @@
             });
             getEditData(token,selectedProperty.key as number).then((data) => {
                 setEditData(data);
-                formDataEdit.setFieldsValue(data);
+                formDataEdit.setFieldsValue({
+                    ...data,
+                    rentalPrice: data.rentalPrice != null ? Number(data.rentalPrice).toLocaleString() : "",
+                    sellingPrice: data.sellingPrice != null ? Number(data.sellingPrice).toLocaleString() : "",
+                });
                 console.log("editData in DataEditProperty", data);
             });
         }, [token]);
@@ -86,7 +90,7 @@
                 message.success("Follow-up saved successfully");
                 getEditData(token,selectedProperty.key as number).then((data) => {
                     setEditData(data);
-                    formDataEdit.setFieldsValue(data);
+                    formDataEdit.setFieldsValue({data});
                     console.log("editData in DataEditProperty", data);
                 }); 
                 setIsSaveDisabled(true);
