@@ -5,7 +5,6 @@ import { Table, TableProps } from 'antd';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 import { ModalProperty } from "../components/ModalProperty";
 import { getRequestReports } from "@/app/server_actions/request-reports";
-import { formatNumberShort } from '@/app/utils/formatNumber';
 
 interface RequestApiItem {
     id: number;
@@ -63,6 +62,7 @@ export const TableRequest = ({token}: {token: string}) => {
     const [properties, setProperties] = useState<RequestApiItem[]>([]);
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(50);
+    const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
     const columns: ColumnsType<RequestApiItem> = [
         {
@@ -104,27 +104,70 @@ export const TableRequest = ({token}: {token: string}) => {
             dataIndex: 'size',
             sorter: (a, b) => a.size - b.size,
             width: 70,
+            render: (text, record) => (
+                <div
+                    style={{ cursor: 'pointer'}}
+                    onClick={() => {
+                        setSelectedRequest(record);
+                        setModalType("request");
+                        setIsModalOpen(true);
+                    }}
+                    >
+                    {text}
+                </div>
+            ),
         },
         {
             title: 'Bed',
             dataIndex: 'bedRoom',
             sorter: (a, b) => a.bedRoom - b.bedRoom ,
             width: 70,
+            render: (text, record) => (
+                <div
+                    style={{ cursor: 'pointer'}}
+                    onClick={() => {
+                        setSelectedRequest(record);
+                        setModalType("request");
+                        setIsModalOpen(true);
+                    }}
+                    >
+                    {text}
+                </div>
+            ),
         },
         {
             title: 'Bath',
             dataIndex: 'bathRoom',
             sorter: (a, b) => a.bathRoom - b.bathRoom,
             width: 70,
+            render: (text, record) => (
+                <div
+                    style={{ cursor: 'pointer'}}
+                    onClick={() => {
+                        setSelectedRequest(record);
+                        setModalType("request");
+                        setIsModalOpen(true);
+                    }}
+                    >
+                    {text}
+                </div>
+            ),
         },
         {
             title: 'Rental',
             dataIndex: 'rentalPrice',
             sorter: (a, b) => a.rentalPrice - b.rentalPrice,
             width: 70,
-            render: (text) => (
-                <div className='text-center'>
-                    {formatNumberShort(text)}
+            render: (text, record) => (
+                <div
+                    style={{ cursor: 'pointer'}}
+                    onClick={() => {
+                        setSelectedRequest(record);
+                        setModalType("request");
+                        setIsModalOpen(true);
+                    }}
+                    >
+                    {text}
                 </div>
             ),
         },
@@ -133,9 +176,16 @@ export const TableRequest = ({token}: {token: string}) => {
             dataIndex: 'salePrice',
             sorter: (a, b) => a.salePrice - b.salePrice,
             width: 70,
-            render: (text) => (
-                <div className='text-center'>
-                    {formatNumberShort(text)}
+            render: (text, record) => (
+                <div
+                    style={{ cursor: 'pointer'}}
+                    onClick={() => {
+                        setSelectedRequest(record);
+                        setModalType("request");
+                        setIsModalOpen(true);
+                    }}
+                    >
+                    {text}
                 </div>
             ),
         },
@@ -144,20 +194,41 @@ export const TableRequest = ({token}: {token: string}) => {
             dataIndex: 'status',
             sorter: (a, b) => a.status.localeCompare(b.status),
             width: 100,
+            render: (text, record) => (
+                <div
+                  style={{ cursor: 'pointer'}}
+                  onClick={() => handleToggleExpand(record)}
+                >
+                  {text}
+                </div>
+              ),
         },
         {
             title: 'Approve',
             dataIndex: 'requestStatus',
             sorter: (a, b) => a.requestStatus.localeCompare(b.requestStatus),
             width: 100,
-            render: (text) => (
-                <div className="flex justify-end text-green-500">
-                    {text}
+            render: (text, record) => (
+                <div
+                  style={{ cursor: 'pointer'}}
+                  onClick={() => handleToggleExpand(record)}
+                >
+                  {text}
                 </div>
-            ),
+              ),
         },
         Table.EXPAND_COLUMN,
     ];
+
+    const handleToggleExpand = (record: RequestApiItem) => {
+        setExpandedRowKeys((prevKeys) => {
+          if (prevKeys.includes(record.key)) {
+            return prevKeys.filter((key) => key !== record.key); // ยุบ
+          } else {
+            return [...prevKeys, record.key]; // ขยาย
+          }
+        });
+      };
 
     useEffect(() => {
         setLoading(true);
@@ -344,12 +415,15 @@ export const TableRequest = ({token}: {token: string}) => {
             ) : (
               <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
             ),
+        expandedRowKeys: expandedRowKeys,
+        onExpand: (_expanded, record) => {
+            handleToggleExpand(record);
+        },
     };
 
     return (
         <div className="mt-4">
         <Table<RequestApiItem>
-            rowKey={(record, index) => `${record.propertyId}-${record.saleRequestId ?? index}`}
             tableLayout="auto"
             loading={loading}
             expandable={defaultExpandable}

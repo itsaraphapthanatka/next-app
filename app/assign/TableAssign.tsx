@@ -81,6 +81,7 @@ const MAX_SELECTION = 20;
   const [loadMode, setLoadMode] = useState<string>("default");
   const [searchParams, setSearchParams] = useState<{ projectName: string, addressUnit: string }>({ projectName: "", addressUnit: "" });
   const [filterParams, setFilterParams] = useState<{ projectNameFilter: string, addressUnitFilter: string }>({ projectNameFilter: "", addressUnitFilter: "" });
+  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -121,6 +122,18 @@ const MAX_SELECTION = 20;
       dataIndex: 'address',
       width: 100,
       ellipsis: false,
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+          }}
+        >
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Size',
@@ -128,8 +141,15 @@ const MAX_SELECTION = 20;
       sorter: (a, b) => a.size - b.size,
       width: 50,
       ellipsis: false,
-      render: (text) => (
-        <div className='text-center'>
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+          }}
+        >
           {text}
         </div>
       ),
@@ -140,8 +160,15 @@ const MAX_SELECTION = 20;
       sorter: (a, b) => a.bedRoom - b.bedRoom,
       width: 50,
       ellipsis: false,
-      render: (text) => (
-        <div className='text-center'>
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+          }}
+        >
           {text}
         </div>
       ),
@@ -151,9 +178,16 @@ const MAX_SELECTION = 20;
       dataIndex: 'rentalPrice',
       sorter: (a, b) => a.rentalPrice - b.rentalPrice,
       width: 70,
-      render: (text) => (
-        <div className='text-center'>
-          {formatNumberShort(text)}
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+          }}
+        >
+          {text}
         </div>
       ),
     },
@@ -162,9 +196,16 @@ const MAX_SELECTION = 20;
       dataIndex: 'salePrice',
       sorter: (a, b) => a.salePrice - b.salePrice,
       width: 70,
-      render: (text) => (
-        <div className='text-center'>
-          {formatNumberShort(text)}
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+          }}
+        >
+          {text}
         </div>
       ),
     },
@@ -174,6 +215,14 @@ const MAX_SELECTION = 20;
       sorter: (a, b) => a.status.localeCompare(b.status),
       width: 100,
       ellipsis: false,
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer'}}
+          onClick={() => handleToggleExpand(record)}
+        >
+          {text}
+        </div>
+      ),
     },
   ];
 
@@ -214,9 +263,22 @@ const MAX_SELECTION = 20;
       ) : (
         <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
       ),
+    expandedRowKeys: expandedRowKeys,
+    onExpand: (_expanded, record) => {
+      handleToggleExpand(record);
+    },
   };
 
-  
+  const handleToggleExpand = (record: DataType) => {
+    setExpandedRowKeys((prevKeys) => {
+      if (prevKeys.includes(record.key)) {
+        return prevKeys.filter((key) => key !== record.key); // ยุบ
+      } else {
+        return [...prevKeys, record.key]; // ขยาย
+      }
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
