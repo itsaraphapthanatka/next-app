@@ -186,7 +186,12 @@
                     />
                 </Form.Item>
                 <Form.Item name="keycardWithId" label="Keycard With" className="text-[12px]"  style={{ marginBottom: "10px" }}>
-                    <Select size="large" options={keycards.map((keycard) => ({ label: keycard.name, value: keycard.id }))} />
+                    <Select placeholder="Please select keycard with" size="large">
+                    <Select.Option value={0}>Please select keycard with</Select.Option>
+                    {keycards.map((keycard) => (
+                        <Select.Option key={keycard.id} value={keycard.id}>{keycard.name}</Select.Option>
+                    ))}
+                </Select>
                 </Form.Item>
                 <Form.Item name="keyHolderTelphone" label="Key Holder Telphone" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                     <Input 
