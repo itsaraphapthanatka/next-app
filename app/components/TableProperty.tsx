@@ -161,7 +161,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       sorter: (a, b) => a.project.localeCompare(b.project),
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");
@@ -182,7 +182,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ellipsis: false,
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");
@@ -202,7 +202,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ellipsis: false,
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");
@@ -221,7 +221,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       width: 50,
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");
@@ -240,7 +240,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       width: 70,
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");
@@ -259,7 +259,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       width: 70,
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer', color: '#1677ff' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedProperty(record);
             setModalType("property");
@@ -328,6 +328,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ) : (
         <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
       ),
+      expandedRowKeys: expandedRowKeys,
       onExpand: (_expanded, record) => {
         handleToggleExpand(record);
       },
@@ -464,7 +465,6 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       <Table<DataType>
         tableLayout="auto"
         expandable={defaultExpandable}
-        expandedRowKeys={expandedRowKeys}
         loading={loading}
         // className="custom-table-font"
         size="small"
