@@ -136,6 +136,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [filterParams, setFilterParams] = useState<FilterParams>({});
   const [downloadOriginalFiles, setDownloadOriginalFiles] = useState<Response | null>(null);
+  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
 
   const columns: ColumnsType<DataType> = [
@@ -179,8 +180,16 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       sorter: (a, b) => a.size - b.size,
       width: 50,
       ellipsis: false,
-      render: (text) => (
-        <div className='text-center'>
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer', color: '#1677ff' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+            handleDownloadOriginalFiles(record.key);
+          }}
+        >
           {text}
         </div>
       ),
@@ -191,8 +200,16 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       sorter: (a, b) => a.bed - b.bed,
       width: 50,
       ellipsis: false,
-      render: (text) => (
-        <div className='text-center'>
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer', color: '#1677ff' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+            handleDownloadOriginalFiles(record.key);
+          }}
+        >
           {text}
         </div>
       ),
@@ -202,8 +219,16 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       dataIndex: 'bath',
       sorter: (a, b) => a.bath - b.bath,
       width: 50,
-      render: (text) => (
-        <div className='text-center'>
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer', color: '#1677ff' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+            handleDownloadOriginalFiles(record.key);
+          }}
+        >
           {text}
         </div>
       ),
@@ -213,9 +238,17 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       dataIndex: 'rental',
       sorter: (a, b) => a.rental - b.rental,
       width: 70,
-      render: (text) => (
-        <div className='text-center'>
-          {formatNumberShort(text)}
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer', color: '#1677ff' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+            handleDownloadOriginalFiles(record.key);
+          }}
+        >
+          {text}
         </div>
       ),
     },
@@ -224,9 +257,17 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       dataIndex: 'selling',
       sorter: (a, b) => a.selling - b.selling,
       width: 70,
-      render: (text) => (
-        <div className='text-center'>
-          {formatNumberShort(text)}
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer', color: '#1677ff' }}
+          onClick={() => {
+            setSelectedProperty(record);
+            setModalType("property");
+            setIsModalOpen(true);
+            handleDownloadOriginalFiles(record.key);
+          }}
+        >
+          {text}
         </div>
       ),
     },
@@ -236,6 +277,14 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       sorter: (a, b) => a.status.localeCompare(b.status),
       width: 70,
       ellipsis: false,
+      render: (text, record) => (
+        <div
+          style={{ cursor: 'pointer'}}
+          onClick={() => handleToggleExpand(record)}
+        >
+          {text}
+        </div>
+      ),
     },
     Table.EXPAND_COLUMN,
   ];
@@ -279,12 +328,26 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ) : (
         <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
       ),
+      onExpand: (_expanded, record) => {
+        handleToggleExpand(record);
+      },
   };
 
   const handleDownloadOriginalFiles = async (key: number) => {
     const response = await getDownloadOriginalFiles(key, token);
     setDownloadOriginalFiles(response.data);
   }
+
+  const handleToggleExpand = (record: DataType) => {
+    setExpandedRowKeys((prevKeys) => {
+      if (prevKeys.includes(record.key)) {
+        return prevKeys.filter((key) => key !== record.key); // ยุบ
+      } else {
+        return [...prevKeys, record.key]; // ขยาย
+      }
+    });
+  };
+  
 
   useEffect(() => {
     getSaleLimit(token).then((data) => {
@@ -401,6 +464,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       <Table<DataType>
         tableLayout="auto"
         expandable={defaultExpandable}
+        expandedRowKeys={expandedRowKeys}
         loading={loading}
         // className="custom-table-font"
         size="small"
