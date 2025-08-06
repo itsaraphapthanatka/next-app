@@ -183,7 +183,7 @@ export const ModalProperty = ({
           {modalType === "property" && (
             <>
               {downloadOriginalFiles?.status === 200 && (
-                <Button color="green" variant="solid" size="small" 
+                <Button color="green" variant="solid"
                 onClick={() => {
                   handleDownloadOriginalFiles();
                 }}
@@ -191,11 +191,11 @@ export const ModalProperty = ({
                   {downloadOriginalFiles?.status === 200 ? "Download Original File" : "Not Have Original File"}
                 </Button>
               )}
-              <Button color="default" variant="solid" size="small" onClick={handleGetSuggestionLink}>Suggest</Button>
+              <Button color="default" variant="solid" onClick={handleGetSuggestionLink}>Suggest</Button>
             </>
           )}
-          <Button color="default" variant="solid" size="small" onClick={handleGetLink}>Get Link</Button>
-          <Button color="default" variant="outlined" size="small" onClick={() => setIsModalOpen(false)}>Close</Button>
+          <Button color="default" variant="solid" onClick={handleGetLink}>Get Link</Button>
+          <Button color="default" variant="outlined" onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>
       }
     >
