@@ -48,6 +48,7 @@
       }
     export const DataEditProperty = ({ token, modalType, selectedProperty }: { token: string, modalType: string, selectedProperty: SelectedProperty  }) => {
         const [loading, setLoading] = useState(false);
+        const [approveLoading, setApproveLoading] = useState(false);
         console.log("token in DataEditProperty", token);
         const session = useSession();
         const [formFollowUp] = Form.useForm();
@@ -100,7 +101,7 @@
             setLoading(false);
         }
         const handleSendToApproval = async () => {
-            setLoading(true);
+            setApproveLoading(true);
             const data = {
                 id: editData?.id,
                 propertyId: editData?.propertyId ?? selectedProperty.key as number,
@@ -129,7 +130,7 @@
             } else {
                 message.error("Failed to send data to approval");
             }
-            setLoading(false);
+            setApproveLoading(false);
         }
         useEffect(() => {
             getKeycards(token).then((response) => {
@@ -205,7 +206,7 @@
                 <TextArea rows={4} />
                 </Form.Item>
                 <div className="flex w-full">
-                    <Button block loading={loading} variant="solid" htmlType="submit" onClick={handleSendToApproval} disabled={isSendToApprovalDisabled} style={{ backgroundColor: isSendToApprovalDisabled ? "#ccc" : "#52c41a", color: isSendToApprovalDisabled ? "#000" : "#fff" }} >Send To Approve</Button>
+                    <Button block loading={approveLoading} variant="solid" htmlType="submit" onClick={handleSendToApproval} disabled={isSendToApprovalDisabled} style={{ backgroundColor: isSendToApprovalDisabled ? "#ccc" : "#52c41a", color: isSendToApprovalDisabled ? "#000" : "#fff" }} >Send To Approve</Button>
                 </div>
             </Form>
             </>
