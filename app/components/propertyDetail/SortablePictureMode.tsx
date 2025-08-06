@@ -19,7 +19,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Image } from "antd";
 import { getPropertyPictures } from "@/app/server_actions/property";  
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
   };  
 type PictureItem = {
     id: string;
@@ -75,14 +75,14 @@ const SortableItem = ({ id, guId, url }: PictureItem) => {
 export const SortablePictureMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
   const [items, setItems] = useState<PictureItem[]>([]);
   useEffect(() => {
-    getPropertyPictures(selectedProperty.key as number, token).then((response) => {
+    getPropertyPictures(selectedProperty.propertyId as number, token).then((response) => {
       setItems(response.map((item: SortablePictureItem) => ({
         id: item.guId,
         guId: item.guId,
         url: item.url,
       })));
     });
-  }, [selectedProperty.key, token]);
+  }, [selectedProperty.propertyId, token]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {

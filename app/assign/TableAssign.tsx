@@ -13,7 +13,7 @@ type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
 interface DataType {
   id: number;
-  key: number;
+  // key: number;
   no: number;
   projectName: string,
   address: string,
@@ -64,7 +64,46 @@ interface PropertyApiItem {
   // Add other fields if needed
 }
 
-
+interface FilterParams {
+  projectNameFilter?: string;
+  unitTypeIds?: string[];
+  startSize?: number;
+  toSize?: number;
+  bedRoom?: number;
+  bathRoom?: number;
+  startRentalRate?: number;
+  toRentalRate?: number;  
+  startRentalRatePerSQM?: number;
+  toRentalRatePerSQM?: number;
+  startSellingRate?: number;
+  toSellingRate?: number;
+  startSellingRatePerSQM?: number;
+  toSellingRatePerSQM?: number;
+  decorationIds?: string[];
+  pictureStatusIds?: string[];
+  startFloor?: number;
+  toFloor?: number;
+  propertyStatusIds?: string[];
+  showOnWeb?: number;
+  hotDeal?: number;
+  havePicture?: number;
+  forRentOrSale?: number;
+  railwayStationId?: number;
+  startDistance?: number;
+  toDistance?: number;
+  forwardMKT?: number;
+  petFriendly?: number;
+  privateLift?: number;
+  duplex?: number;
+  penthouse?: number;
+  fixParking?: number;
+  projectTypeIds?: string[];
+  bootedProppit?: number;
+  vipStatusIds?: string[];
+  foreignerOwner?: number;
+  propertyId?: number;
+  projectID?: number;
+}
 
 // const MAX_SELECTION = 20;
 
@@ -80,7 +119,7 @@ interface PropertyApiItem {
   const [modalType, setModalType] = useState<string>("");
   const [loadMode, setLoadMode] = useState<string>("default");
   const [searchParams, setSearchParams] = useState<{ projectName: string, addressUnit: string }>({ projectName: "", addressUnit: "" });
-  const [filterParams, setFilterParams] = useState<{ projectNameFilter: string, addressUnitFilter: string }>({ projectNameFilter: "", addressUnitFilter: "" });
+  const [filterParams, setFilterParams] = useState<FilterParams>({});
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
   const columns: ColumnsType<DataType> = [
@@ -271,10 +310,10 @@ interface PropertyApiItem {
 
   const handleToggleExpand = (record: DataType) => {
     setExpandedRowKeys((prevKeys) => {
-      if (prevKeys.includes(record.key)) {
-        return prevKeys.filter((key) => key !== record.key); // ยุบ
+      if (prevKeys.includes(record.propertyId)) {
+        return prevKeys.filter((key) => key !== record.propertyId); // ยุบ
       } else {
-        return [...prevKeys, record.key]; // ขยาย
+        return [...prevKeys, record.propertyId]; // ขยาย
       }
     });
   };
@@ -294,7 +333,11 @@ interface PropertyApiItem {
           searchParams.addressUnit
           );
       } else if (loadMode === "filter" && filterParams) {
-        data = await getAssignReportsFilter(token, { ...filterParams, page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortType: "Duration", sortType: "Project" });
+        console.log(filterParams);
+        data = await getAssignReportsFilter(
+          token, 
+          { ...filterParams, page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortType: "Duration", sortType: "Project" },
+          );
       } else {
         data = await getAssignReports( 
           token,
@@ -308,7 +351,7 @@ interface PropertyApiItem {
 
       const mapped = items.map((item: PropertyApiItem, index: number) => ({
         id: item.id ?? 0,
-        key: item.propertyId ?? index,
+        // key: item.propertyId ?? index,
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
         projectName: item.projectName ?? "-",
         address: item.address ?? "-",
@@ -352,8 +395,8 @@ interface PropertyApiItem {
       setSearchParams({ projectName: e.detail.projectName ?? "", addressUnit: e.detail.addressUnit ?? "" });
       setLoadMode("search");
     };
-    window.addEventListener("propertyTableSearch", handleTableSearch as EventListener);
-    return () => window.removeEventListener("propertyTableSearch", handleTableSearch as EventListener);
+    window.addEventListener("assignTableSearch", handleTableSearch as EventListener);
+    return () => window.removeEventListener("assignTableSearch", handleTableSearch as EventListener);
   }, []);
 
    // 🎯 Filter Event
@@ -363,13 +406,13 @@ interface PropertyApiItem {
       setFilterParams(e.detail);
       setLoadMode("filter");
     };
-    window.addEventListener("propertyTableReload", handleTableReload as EventListener);
-    return () => window.removeEventListener("propertyTableReload", handleTableReload as EventListener);
+    window.addEventListener("assignTableReload", handleTableReload as EventListener);
+    return () => window.removeEventListener("assignTableReload", handleTableReload as EventListener);
   }, []); 
 
   const emptyDataType: DataType = {
     id: 0,
-    key: 0,
+    // key: 0,  
     no: 0,
     projectName: "",
     address: "",
@@ -397,6 +440,7 @@ interface PropertyApiItem {
   return (
     <div className="mt-4">
       <Table<DataType>
+        rowKey={(record) => record.propertyId.toString()}
         tableLayout="auto"
         expandable={defaultExpandable}
         loading={loading}

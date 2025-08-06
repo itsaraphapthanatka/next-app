@@ -32,7 +32,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
 
   const handleSearch = () => {
     const values = form.getFieldsValue();
-    const event = new CustomEvent("assignTableReload", {
+    const event = new CustomEvent("assignTableSearch", {
       detail: {
         projectName: values.projectNameSearch ?? "",
         addressUnit: values.addressUnitSearch ?? "",
@@ -55,11 +55,50 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
   };
 
   const handleFilterSearch = () => {
+
     const values = form.getFieldsValue();
     const event = new CustomEvent('assignTableReload', {
-      detail: { projectName: values.projectNameFilter ?? "", addressUnit: values.addressUnitFilter ?? ""  , page: 1, pageSize: 10 }
+      detail: { 
+        projectName: values.projectNameFilter ?? "", 
+        unitTypeIds: Array.isArray(values.unitTypeFilter) ? values.unitTypeFilter.map(String) : [],
+        startSize: values.startSize ?? 0,
+        toSize: values.toSize ?? 0,
+        bedRoom: values.bedRoom ?? 0,
+        bathRoom: values.bathRoom ?? 0,
+        startRentalRate: values.startRentalRate ?? 0,
+        toRentalRate: values.toRentalRate ?? 0,
+        startRentalRatePerSQM: values.startRentalRatePerSQM ?? 0,
+        toRentalRatePerSQM: values.toRentalRatePerSQM ?? 0,
+        startSellingRate: values.startSellingRate ?? 0,
+        toSellingRate: values.toSellingRate ?? 0, 
+        startSellingRatePerSQM: values.startSellingRatePerSQM ?? 0,
+        toSellingRatePerSQM: values.toSellingRatePerSQM ?? 0,
+        decorationIds: Array.isArray(values.decorationIds) ? values.decorationIds.map(String) : [],
+        pictureStatusIds: Array.isArray(values.pictureStatusIds) ? values.pictureStatusIds.map(String) : [],
+        startFloor: values.startFloor ?? 0,
+        toFloor: values.toFloor ?? 0,
+        propertyStatusIds: Array.isArray(values.propertyStatusIds) ? values.propertyStatusIds.map(String) : [],
+        showOnWeb: values.showOnWeb ?? 0,
+        hotDeal: values.hotDeal ?? 0,
+        havePicture: values.havePicture ?? 0,
+        forRentOrSale: values.forRentOrSale ?? 0,
+        railwayStationId: values.railwayStationId ?? 0,
+        startDistance: values.startDistance ?? 0,
+        toDistance: values.toDistance ?? 0,
+        forwardMKT: values.forwardMKT ?? 0,
+        petFriendly: values.petFriendly ?? 0,
+        privateLift: values.privateLift ?? 0,
+        duplex: values.duplex ?? 0,
+        penthouse: values.penthouse ?? 0,
+        fixParking: values.fixParking ?? 0,
+        projectTypeIds: Array.isArray(values.projectTypeIds) ? values.projectTypeIds.map(String) : [],
+        bootedProppit: values.bootedProppit ?? 0,
+        vipStatusIds: Array.isArray(values.vipStatusIds) ? values.vipStatusIds.map(String) : [],
+        foreignerOwner: values.foreignerOwner ?? 0,
+      }
     });
     window.dispatchEvent(event);
+    form.resetFields();
     handleClose();
   };
 

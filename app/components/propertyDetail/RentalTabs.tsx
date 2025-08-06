@@ -4,7 +4,7 @@ import { getPropertyById } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
 
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
     rentPGColor?: string;
     rentPGText?: string;
     salePGColor?: string;
@@ -60,7 +60,7 @@ export const RentalTabs = ({ selectedProperty, token }: { selectedProperty: Sele
     const [form] = Form.useForm();
     const [propertyRental, setPropertyRental] = useState<Rental | null>(null);
     useEffect(() => {
-        getPropertyById(selectedProperty.key as number, token).then((response) => {
+        getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
             console.log("response rental", response.rental);
             const detail = response.rental;
             setPropertyRental(detail);
@@ -72,7 +72,7 @@ export const RentalTabs = ({ selectedProperty, token }: { selectedProperty: Sele
                 contractDurations: detail.contractDurations,
             });
         });
-    }, [selectedProperty.key, token]);
+    }, [selectedProperty.propertyId, token]);
     
     return (
         <>

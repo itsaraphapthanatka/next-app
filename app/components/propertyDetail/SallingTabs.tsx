@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getPropertyById } from "@/app/server_actions/property";
 
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
     salePGColor?: string;
     salePGText?: string;
     vipStatusColor?: string;
@@ -34,7 +34,7 @@ export const SallingTabs = ({ selectedProperty, token }: { selectedProperty: Sel
     const [form] = Form.useForm();
     const [propertySelling, setPropertySelling] = useState<Selling | null>(null);
     useEffect(() => {
-        getPropertyById(selectedProperty.key as number, token).then((response) => {
+        getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
             const detail = response.selling;
             setPropertySelling(detail);
             console.log("detail in SallingTabs", propertySelling);
@@ -44,7 +44,7 @@ export const SallingTabs = ({ selectedProperty, token }: { selectedProperty: Sel
                 sellingPricePerSQM: detail.sellingPricePerSQM != null ? Number(detail.sellingPricePerSQM).toLocaleString() : "",
             });
         });
-    }, [selectedProperty.key, token]);
+    }, [selectedProperty.propertyId, token]);
     return (
         <Form form={form}
             layout="vertical"

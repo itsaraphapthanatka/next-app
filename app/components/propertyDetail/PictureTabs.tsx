@@ -6,9 +6,10 @@ import { RcFile } from "antd/es/upload";
 import type { TabsProps } from 'antd';
 import { PicturePreviewMode } from "./PicturePreviewMode";
 import { SortablePictureMode } from "./SortablePictureMode";
+import React, { useState } from "react";
 
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
     picturePGColor?: string;
     picturePGText?: string;
     vipStatusColor?: string;
@@ -16,9 +17,11 @@ type SelectedProperty = {
     project?: string;
     vipStatus?: string;
   };
+
 export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     console.log("selectedProperty in PictureTabs", selectedProperty)
     const [form] = Form.useForm();
+    const [fileList, setFileList] = useState<any[]>([]);
 
     const props: UploadProps = {
         beforeUpload: (file: RcFile) => {
@@ -30,8 +33,10 @@ export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: Sel
           return isPNG || isJPG || Upload.LIST_IGNORE;
         },
         onChange: (info: UploadChangeParam) => {
+          setFileList(info.fileList);
           console.log(info.fileList);
         },
+        fileList: fileList,
       };
 
     const items: TabsProps['items'] = [

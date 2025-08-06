@@ -19,15 +19,15 @@ interface Contact {
     unlink: string;
 }
 type SelectedProperty = {
-    key?: number;
+    propertyId?: number;
   };
 export const ContactTabs = ({ token, selectedProperty }: { token: string, selectedProperty: SelectedProperty }) => {
     const [contacts, setContacts] = useState<Contact[]>([]);
     useEffect(() => {
-        getContacts(token, selectedProperty.key as number).then((data) => {
+        getContacts(token, selectedProperty.propertyId as number).then((data) => {
             setContacts(data ?? []);
         });
-    }, [token, selectedProperty.key]);
+    }, [token, selectedProperty.propertyId]);
     const columns = [
         {
             title: "First Name",
@@ -124,7 +124,7 @@ export const ContactTabs = ({ token, selectedProperty }: { token: string, select
         },
     ];
     return (
-        <div className="w-full">
+        <div className="w-full h-full">
             <Table
                 rowKey="id"
                 columns={columns} 

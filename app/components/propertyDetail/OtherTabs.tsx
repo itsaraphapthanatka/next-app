@@ -6,7 +6,7 @@ import { getPropertyById } from "@/app/server_actions/property";
 import { getEmployees } from "@/app/server_actions/master";
 
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
     otherPGColor?: string;
     otherPGText?: string;
     vipStatusColor?: string;
@@ -68,12 +68,12 @@ export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: Selec
         });
     }, [token]);
     useEffect(() => {
-        getPropertyById(selectedProperty.key as number, token).then((response) => {
+        getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
             const detail = response.other;
             setPropertyOther(detail);
             form.setFieldsValue(detail);
         });
-    }, [selectedProperty.key, token]);
+    }, [selectedProperty.propertyId, token]);
     console.log("propertyOther in OtherTabs", propertyOther)
     return (
         <Form form={form}

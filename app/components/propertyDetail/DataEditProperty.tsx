@@ -9,7 +9,7 @@
     import { getKeycards } from "@/app/server_actions/master";
   
     type SelectedProperty = {
-        key?: number;
+         propertyId?: number;
         saleRequestId?: number;
         saleRequestItemId?: number;
       };
@@ -63,7 +63,7 @@
             getPropertyStatuses(token).then((data) => {
                 setPropertyStatuses(data);
             });
-            getEditData(token,selectedProperty.key as number).then((data) => {
+            getEditData(token,selectedProperty.propertyId as number).then((data) => {
                 setEditData(data);
                 formDataEdit.setFieldsValue({
                     ...data,
@@ -78,18 +78,18 @@
             const followUp = formFollowUp.getFieldValue("followUp");
             const closeJob = modalType === "request" ? formFollowUp.getFieldValue("closeJob") : false;
             const followupData = {
-                id: selectedProperty.key as number,
+                id: selectedProperty.propertyId as number,
                 remark: followUp,
                 closeJob: closeJob ? true : false,
                 followUpType: 0,
-                sourceId: selectedProperty.key as number,
+                sourceId: selectedProperty.propertyId as number,
                 saleRequestItemId: selectedProperty.saleRequestId as number,
                 toSalePropertyId: selectedProperty.saleRequestItemId as number,
             };
             const res = await savePropertyFollowup(followupData, token);
             if (res.status === 200) {
                 message.success("Follow-up saved successfully");
-                getEditData(token,selectedProperty.key as number).then((data) => {
+                getEditData(token,selectedProperty.propertyId as number).then((data) => {
                     setEditData(data);
                     formDataEdit.setFieldsValue({data});
                     console.log("editData in DataEditProperty", data);
@@ -104,7 +104,7 @@
             setApproveLoading(true);
             const data = {
                 id: editData?.id,
-                propertyId: editData?.propertyId ?? selectedProperty.key as number,
+                propertyId: editData?.propertyId ?? selectedProperty.propertyId as number,
                 propertyStatusId: formDataEdit.getFieldValue("propertyStatusId") as number,
                 rentalPrice: formDataEdit.getFieldValue("rentalPrice") as number,
                 availableOn: formDataEdit.getFieldValue("availableOn") as string,

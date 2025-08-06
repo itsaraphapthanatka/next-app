@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 
 type PropertyDetail = {
   id?: number;
-  key?: number;
+  propertyId?: number;
   no?: number;
   project?: string;
   size?: number;
@@ -134,13 +134,13 @@ export const FormProperty = ({
 
   // Fetch Property Detail
   useEffect(() => {
-    if (!selectedProperty.key) return;
-    getPropertyById(selectedProperty.key as number, token).then((response) => {
+    if (!selectedProperty.propertyId) return;
+    getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
       setProperty(response.propertyDetail);
       form.setFieldsValue(response.propertyDetail);
     });
     // eslint-disable-next-line
-  }, [selectedProperty.key, token]);
+  }, [selectedProperty.propertyId, token]);
 
   // Memoize checkbox checked values for performance
   const checkboxChecked = useMemo(
@@ -192,8 +192,8 @@ export const FormProperty = ({
   useEffect(() => {
     // console.log("selectedProperty in FormProperty", selectedProperty);
     console.log("property in FormProperty", property);
-    // if (!selectedProperty.key) return;
-    getPropertyById(selectedProperty.key as number, token).then((response) => {
+    // if (!selectedProperty.propertyId) return;
+    getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
       const detail = response.propertyDetail;
       setProperty(detail);
       form.setFieldsValue({
@@ -207,12 +207,12 @@ export const FormProperty = ({
       });
       console.log("detail:", detail);
     });
-  }, [selectedProperty.key, token]);
+  }, [selectedProperty.propertyId, token]);
   
 
   return (
     <div>
-      <p>Property Detail {property.id}</p>
+      <p>Property ID {selectedProperty.propertyId}</p>
       <Form  initialValues={{
         availableOn: property.availableOn ? dayjs(property.availableOn) : undefined,
         lastedUpdate: property.lastedUpdate ? dayjs(property.lastedUpdate) : undefined,

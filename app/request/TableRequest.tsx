@@ -9,7 +9,7 @@ import { formatNumberShort } from "@/app/utils/formatNumber";
 
 interface RequestApiItem {
     id: number;
-    key: number;
+    key: number | undefined;
     no: number;
     enqRequest: string;
     project: string;
@@ -238,7 +238,7 @@ export const TableRequest = ({token}: {token: string}) => {
           const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
           const mapped: RequestApiItem[] = items.map((item, index) => ({
             id: item.id ?? 0,
-            key: item.propertyId ?? index,
+            key: item.propertyId || undefined,
             no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
             project: item.projectName ?? "-",
             projectName: item.projectName ?? "-",
@@ -293,7 +293,7 @@ export const TableRequest = ({token}: {token: string}) => {
             const mapped: RequestApiItem[] = items.map((item, index) => {
                 return {
                 id: item.id ?? 0,
-                key: item.propertyId ?? index,
+                key: item.propertyId || undefined,
                 no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
                 project: item.projectName ?? "-",
                 projectName: item.projectName ?? "-",
@@ -323,7 +323,8 @@ export const TableRequest = ({token}: {token: string}) => {
                 actionDate: item.actionDate ?? "-",
                 propertyId: item.propertyId ?? 0,
                 saleRequestId: item.saleRequestId ?? 0,
-                toSalePropertyId: item.saleRequestItemId ?? 0,
+                saleRequestItemId: item.saleRequestItemId || undefined,
+                toSalePropertyId: item.saleRequestItemId ||undefined,
                 rentProfitGap: item.rentProfitGap ?? 0,
                 saleProfitGap: item.saleProfitGap ?? 0,
             }});    
@@ -421,9 +422,20 @@ export const TableRequest = ({token}: {token: string}) => {
         },
     };
 
-    const rowKeyFunc = (record: RequestApiItem) => record.propertyId?.toString() ?? `unknown-${Math.random()}`;
+    
+    const rowKeyFunc = (record: RequestApiItem) => {
+        if (record.propertyId && record.saleRequestItemId) {
+            return `${record.propertyId}-${record.saleRequestItemId}`;
+        }
+        if (record.id && record.id !== 0) {
+            return `id-${record.id}`;
+        }
+        // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
+        return `fallback-${record.propertyId || 0}-${record.no}`;
+    };
+    console.log("rowKeyFunc :", rowKeyFunc);
     return (
-        <div className="mt-4">
+        <div className="mt-4 w-full h-full">
         <Table<RequestApiItem>
             rowKey={rowKeyFunc}
             tableLayout="auto"
@@ -449,7 +461,7 @@ export const TableRequest = ({token}: {token: string}) => {
         />
 
         <ModalProperty
-            selectedProperty={selectedRequest ?? emptyDataType}
+            selectedProperty={selectedRequest ? selectedRequest : emptyDataType}
             modalType={modalType}
             text={selectedRequest?.propertyId ? selectedRequest.propertyId.toString() : ""}
             isModalOpen={isModalOpen}

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getKeycards } from "@/app/server_actions/master";
 
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
     keyHolderPGColor?: string;
     keyHolderPGText?: string;
     vipStatusColor?: string;
@@ -36,13 +36,13 @@ export const KeyHolderTabs = ({ selectedProperty, token }: { selectedProperty: S
     const [propertyKeyHolder, setPropertyKeyHolder] = useState<KeyHolder | null>(null);
     const [keycards, setKeycards] = useState<Keycard[]>([]);
     useEffect(() => {
-        getPropertyById(selectedProperty.key as number, token).then((response) => {
+        getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
             const detail = response.keyHolder;
             setPropertyKeyHolder(detail);
             console.log("detail in KeyHolderTabs", propertyKeyHolder);
             form.setFieldsValue(detail);
         });
-    }, [selectedProperty.key, token]);
+    }, [selectedProperty.propertyId, token]);
     useEffect(() => {
         getKeycards(token).then((response) => {
             setKeycards(response);

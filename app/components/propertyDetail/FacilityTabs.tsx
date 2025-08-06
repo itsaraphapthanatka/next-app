@@ -3,7 +3,7 @@ import { getPropertyById } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
 
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
   };
   type Facility = {
     id: number;
@@ -19,7 +19,7 @@ export const FacilityTabs = ({  token, selectedProperty, modalType }: { token: s
     const [propertyFacility, setPropertyFacility] = useState<Facility[]>([]);
     const [form] = Form.useForm();
     useEffect(() => {
-        getPropertyById(selectedProperty.key as number, token).then((response) => {
+        getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
             // กรองเฉพาะ facility ที่ forProperty === true
             console.log("response.facilities in FacilityTabs", response.fafilities);
             const filteredFacilities = (response.fafilities);
@@ -32,7 +32,7 @@ export const FacilityTabs = ({  token, selectedProperty, modalType }: { token: s
             });
             form.setFieldsValue(formValues);
         });
-    }, [selectedProperty.key, token]);
+    }, [selectedProperty.propertyId, token]);
     
 
     return (

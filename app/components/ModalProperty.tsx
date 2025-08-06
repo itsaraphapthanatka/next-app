@@ -14,7 +14,6 @@ import { App } from "antd";
 
 type SelectedProperty = {
   id?: number;
-  key?: number;
   no?: number;
   project?: string;
   size?: number;
@@ -136,7 +135,7 @@ export const ModalProperty = ({
 
   const handleGetSuggestionLink = async () => {
     try {
-      const response = await getSuggestionLinks(selectedProperty?.key ?? 0, token);
+      const response = await getSuggestionLinks(selectedProperty?.propertyId ?? 0, token);
       if (response.status === 200) {
         const url = response.data;
         window.open(url, "_blank", "noopener,noreferrer");
@@ -150,7 +149,7 @@ export const ModalProperty = ({
   };
   
   const handleGetLink = async () => {
-    const response = await getGetLink(selectedProperty?.key ?? 0, token);
+    const response = await getGetLink(selectedProperty?.propertyId ?? 0, token);
     if (response.status === 200) {
       const url = response.data;
       window.open(url, "_blank", "noopener,noreferrer");
@@ -162,7 +161,7 @@ export const ModalProperty = ({
 
 
   return (
-
+    <div className="w-full h-full"> 
     <Modal 
       title="Property Detail" 
       open={isModalOpen} 
@@ -205,5 +204,6 @@ export const ModalProperty = ({
         defaultActiveKey="1"
       />
     </Modal>
+    </div>
   );
 };

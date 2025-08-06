@@ -4,7 +4,7 @@ import TextArea from "antd/es/input/TextArea";
 import { getPropertyFollowup, savePropertyFollowup } from "@/app/server_actions/property";  
 import { App as AntdApp } from "antd";
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
     saleRequestId?: number;
     saleRequestItemId?: number;
   };
@@ -25,11 +25,11 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
-    getPropertyFollowup(selectedProperty.key as number, token).then((response) => {
+    getPropertyFollowup(selectedProperty.propertyId as number, token).then((response) => {
       setPropertyFollowup(response);
       setLoading(false);
     });
-  }, [selectedProperty.key, token]);
+  }, [selectedProperty.propertyId, token]);
   const openCommentDialog = (index: string) => {
     const remarkText = propertyFollowup[parseInt(index)]?.remark || "";
     setSelectedRemark(remarkText);
@@ -44,11 +44,11 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
     const followUp = form.getFieldValue("followUp");
     const closeJob = modalType === "request" ? form.getFieldValue("closeJob") : false;
     const followupData = {
-      id: selectedProperty.key as number,
+      id: selectedProperty.propertyId as number,
       remark: followUp,
       closeJob: closeJob ? true : false,
       followUpType: 0,
-      sourceId: selectedProperty.key as number,
+      sourceId: selectedProperty.propertyId as number,
       saleRequestItemId: selectedProperty.saleRequestId as number,
       toSalePropertyId: selectedProperty.saleRequestItemId as number,
     };
@@ -58,7 +58,7 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
     if (res.status === 200) {
       message.success("Follow-up saved successfully");
       setLoading(true);
-      getPropertyFollowup(selectedProperty.key as number, token).then((data) => {
+      getPropertyFollowup(selectedProperty.propertyId as number, token).then((data) => {
         setPropertyFollowup(data);
         form.resetFields();
         setLoading(false);

@@ -5,7 +5,7 @@ import { getPropertyPictures } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
 import {  App as AntdApp } from "antd";
 type SelectedProperty = {
-    key?: number;
+     propertyId?: number;
   };
 type PicturePreviewModeData = {
     key: string;
@@ -17,10 +17,10 @@ export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProper
     const { message } = AntdApp.useApp();
     const [propertyPictures, setPropertyPictures] = useState<PicturePreviewModeData[]>([]);
     useEffect(() => {
-        getPropertyPictures(selectedProperty.key as number, token).then((response) => {
+        getPropertyPictures(selectedProperty.propertyId as number, token).then((response) => {
             setPropertyPictures(response);
         });
-    }, [selectedProperty.key, token]);
+    }, [selectedProperty.propertyId, token]);
 
     const handleDownload = async (record: PicturePreviewModeData) => {
         try {
