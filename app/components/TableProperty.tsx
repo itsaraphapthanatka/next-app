@@ -6,7 +6,6 @@ import { getProperties } from "@/app/server_actions/property";
 import { getPropertyFilter } from "@/app/server_actions/property-filter";
 import { getSaleLimit } from "../server_actions/saleLimit";
 import { ModalProperty } from "./ModalProperty";
-import { formatNumberShort } from "@/app/utils/formatNumber";
 import type { TableProps } from "antd/es/table";
 import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
 
