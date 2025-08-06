@@ -4,7 +4,7 @@ import { getPropertyById } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
 
 type SelectedProperty = {
-     propertyId?: number;
+    propertyId?: number;
     rentPGColor?: string;
     rentPGText?: string;
     salePGColor?: string;
@@ -76,6 +76,7 @@ export const RentalTabs = ({ selectedProperty, token }: { selectedProperty: Sele
     
     return (
         <>
+        {/* <p>Property ID: {selectedProperty.propertyId}</p> */}
         <Form form={form}
             layout="vertical"
             name="tabsRentalDetail">

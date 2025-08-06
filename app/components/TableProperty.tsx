@@ -400,7 +400,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         availableOn: item.availableOn ? new Date(item.availableOn).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-",
         lastUpdate: item.lastUpdate ? new Date(item.lastUpdate).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-",
         vipStatus: item.vipStatus ?? "-",
-        propertyId: item.projectID ?? 0,
+        propertyId: item.id ?? 0,
       }));
 
       setProperties(mapped);

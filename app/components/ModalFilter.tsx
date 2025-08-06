@@ -5,9 +5,13 @@ import { getPropertyStatuses, getMasstransits, getPropertyTypes, getVipStatuses 
 import {  useEffect, useState } from "react";
 import type { SelectProps } from 'antd';
 import { getProjectsName } from "@/app/server_actions/projectsName";
+import { getEmployees } from "@/app/server_actions/master";
 
-
-
+type Employee = {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
 
 export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, moduleType: string, token: string}) => {
 
@@ -18,6 +22,8 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     const [propertyTypes, setPropertyTypes] = useState<{label: string, value: string}[]>([]);
     const [vipStatuses, setVipStatuses] = useState<{label: string, value: string, color: string}[]>([]);
     const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]);
+
     useEffect(() => {
       const fetchOptions = async () => {
           const unitType = await getUnitType(token);
@@ -80,6 +86,12 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
       };
       fetchVipStatuses();
     }, [token]);
+
+    useEffect(() => {
+      getEmployees(token).then((response) => {
+          setEmployees(response);
+      });
+  }, [token]);
 
     const tagRender: SelectProps['tagRender'] = (props) => {
       const { label, value, closable, onClose } = props;
@@ -553,10 +565,10 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 style={{ marginBottom: "10px" }}
               >
                 <Select placeholder="Assign From" size="large">
-                  <Select.Option value="0">Show all assigner</Select.Option>
-                  <Select.Option value="1">Preechakorn Tanngam</Select.Option>
-                  <Select.Option value="2">Suthinop Pannapayuk</Select.Option>
-                  <Select.Option value="3">Karn Assawaniwest</Select.Option>
+                    <Select.Option value={0}>Show all assigner</Select.Option>
+                    {employees.map((employee) => (
+                        <Select.Option key={employee.id} value={employee.id}>{employee.firstName} {employee.lastName}</Select.Option>
+                    ))}
                 </Select>
               </Form.Item>
             </div>

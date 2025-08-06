@@ -51,6 +51,7 @@ interface AssignReportsFilterParams {
 }
 
 export const getAssignReportsFilter = async (token: string, body: AssignReportsFilterParams) => {
+    console.log("body assign-reports-filter", body);
     const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/users/assign-reports/filter`,
         {

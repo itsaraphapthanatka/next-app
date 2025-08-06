@@ -95,6 +95,8 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         bootedProppit: values.bootedProppit ?? 0,
         vipStatusIds: Array.isArray(values.vipStatusIds) ? values.vipStatusIds.map(String) : [],
         foreignerOwner: values.foreignerOwner ?? 0,
+        revealStatus: values.revealStatus ?? "",
+        assignFrom: values.assignFrom ?? "",
       }
     });
     window.dispatchEvent(event);
@@ -206,7 +208,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         }}
       >
         <div>
-            <ModalFilter form={form} moduleType="property" token={token} />
+            <ModalFilter form={form} moduleType="assign" token={token} />
         </div>
       </Modal>
       

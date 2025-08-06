@@ -103,6 +103,8 @@ interface FilterParams {
   foreignerOwner?: number;
   propertyId?: number;
   projectID?: number;
+  assignFrom?: string;
+  revealStatus?: string;
 }
 
 // const MAX_SELECTION = 20;
@@ -309,13 +311,12 @@ interface FilterParams {
   };
 
   const handleToggleExpand = (record: DataType) => {
-    setExpandedRowKeys((prevKeys) => {
-      if (prevKeys.includes(record.propertyId)) {
-        return prevKeys.filter((key) => key !== record.propertyId); // ยุบ
-      } else {
-        return [...prevKeys, record.propertyId]; // ขยาย
-      }
-    });
+    const key = rowKeyFunc(record);
+    setExpandedRowKeys((prevKeys) =>
+      prevKeys.includes(key)
+        ? prevKeys.filter((k) => k !== key)
+        : [...prevKeys, key]
+    );
   };
 
   useEffect(() => {
@@ -333,7 +334,7 @@ interface FilterParams {
           searchParams.addressUnit
           );
       } else if (loadMode === "filter" && filterParams) {
-        console.log(filterParams);
+        console.log("filterParams", filterParams);
         data = await getAssignReportsFilter(
           token, 
           { ...filterParams, page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortType: "Duration", sortType: "Project" },
@@ -402,6 +403,7 @@ interface FilterParams {
    // 🎯 Filter Event
   useEffect(() => {
     const handleTableReload = (e: CustomEvent) => {
+      console.log("handleTableReloadFilter", e.detail);
       setPage(1); // Reset to first page
       setFilterParams(e.detail);
       setLoadMode("filter");
@@ -437,10 +439,20 @@ interface FilterParams {
     revealStatus: "",
   };
 
+  const rowKeyFunc = (record: DataType) => {
+    if (record.propertyId && record.propertyId) {
+        return `${record.propertyId}-${record.propertyId}`;
+    }
+    if (record.id && record.id !== 0) {
+        return `id-${record.id}`;
+    }
+    // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
+    return `fallback-${record.propertyId || 0}-${record.no}`;
+};
   return (
     <div className="mt-4">
       <Table<DataType>
-        rowKey={(record) => record.propertyId.toString()}
+        rowKey={rowKeyFunc}
         tableLayout="auto"
         expandable={defaultExpandable}
         loading={loading}

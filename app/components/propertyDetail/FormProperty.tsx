@@ -212,7 +212,7 @@ export const FormProperty = ({
 
   return (
     <div>
-      <p>Property ID {selectedProperty.propertyId}</p>
+      {/* <p>Property ID {selectedProperty.propertyId}</p> */}
       <Form  initialValues={{
         availableOn: property.availableOn ? dayjs(property.availableOn) : undefined,
         lastedUpdate: property.lastedUpdate ? dayjs(property.lastedUpdate) : undefined,
