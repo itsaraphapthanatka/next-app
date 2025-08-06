@@ -145,6 +145,14 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       sorter: (a, b) => a.no - b.no,
       width: 45,
       fixed: 'left',
+      render: (_text, _record, index) => {
+        const actualIndex = (page - 1) * pageSize + index + 1;
+        return (
+          <div className='text-center'>
+            {actualIndex}
+          </div>
+        );
+      }
     },
     {
       title: 'Project',
@@ -291,11 +299,11 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       
 
       if (loadMode === "search" && searchParams) {
-        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token, searchParams.projectName, searchParams.addressUnit);
+        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "DESC", assignReportSortBy: "Duration" }, token, searchParams.projectName, searchParams.addressUnit);
       } else if (loadMode === "filter" && filterParams) {
-        data = await getPropertyFilter({ ...filterParams, page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token);
+        data = await getPropertyFilter({ ...filterParams, page: { current: page, size: pageSize }, orderBy: "DESC", assignReportSortBy: "Duration" }, token);
       } else {
-        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortBy: "Duration" }, token);
+        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "DESC", assignReportSortBy: "Duration" }, token);
       }
 
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
