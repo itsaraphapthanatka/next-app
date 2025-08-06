@@ -69,6 +69,7 @@ export const TableRequest = ({token}: {token: string}) => {
             title: 'No.',
             dataIndex: 'no',
             align: 'center',
+            fixed: 'left',
             sorter: (a, b) => (a.no) - (b.no),
             width: 50,
             render: (_text, _record, index) => {
