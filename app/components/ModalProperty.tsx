@@ -44,6 +44,7 @@ interface ModalPropertyProps {
   setIsModalOpen: (open: boolean) => void;
   selectedProperty: SelectedProperty;
   token: string;
+  downloadOriginalFiles: Response | null;
 }
 
 export const ModalProperty = ({
@@ -52,9 +53,9 @@ export const ModalProperty = ({
   setIsModalOpen,
   selectedProperty,
   token,
+  downloadOriginalFiles,
 }: ModalPropertyProps) => {
   const { message } = App.useApp();
-  const [downloadOriginalFiles, setDownloadOriginalFiles] = useState<Response | null>(null);
   const items = [
     {
       key: '1',
@@ -124,37 +125,16 @@ export const ModalProperty = ({
     },
   ].filter(Boolean) as { key: string; label: string; children: React.ReactNode }[];
 
-
-
   const handleDownloadOriginalFiles = async () => {
-    const response = await downloadOriginalFiles?.blob();
-    if (!response) {
-      message.error("Download Original Files Failed");
-      return;
-    }
-    const url = window.URL.createObjectURL(response);
+    const url = downloadOriginalFiles?.url;
     const link = document.createElement("a");
-    link.href = url;
+    link.href = url ?? "";
     link.setAttribute("download", "original.zip");
     document.body.appendChild(link);
     link.click();
     link.remove();
-    window.URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(url ?? "");
   }
-
-  useEffect(() => {
-    const fetchDownloadOriginalFiles = async () => {
-      const response = await getDownloadOriginalFiles(selectedProperty?.key ?? 0, token);
-      if (response.status === 200) {
-        setDownloadOriginalFiles(response.data);
-      } else {
-        setDownloadOriginalFiles(null);
-      }
-    }
-    fetchDownloadOriginalFiles();
-  }, [selectedProperty]);
-
-
 
   const handleGetSuggestionLink = async () => {
     try {
@@ -204,9 +184,14 @@ export const ModalProperty = ({
         <div className="grid grid-cols-1 gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
           {modalType === "property" && (
             <>
-              {console.log("downloadOriginalFiles", downloadOriginalFiles)}
               {downloadOriginalFiles?.status === 200 && (
-                <Button color="green" variant="solid" size="small" onClick={() => handleDownloadOriginalFiles()}>Download Original File</Button>
+                <Button color="green" variant="solid" size="small" 
+                onClick={() => {
+                  handleDownloadOriginalFiles();
+                }}
+                >
+                  {downloadOriginalFiles?.status === 200 ? "Download Original File" : "Not Have Original File"}
+                </Button>
               )}
               <Button color="default" variant="solid" size="small" onClick={handleGetSuggestionLink}>Suggest</Button>
             </>

@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/download-original-files/${id}`;
 
   const response = await fetch(backendUrl, {
-    method: "HEAD",
+    method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,
       "Accept": "application/octet-stream",

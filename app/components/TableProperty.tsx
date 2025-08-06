@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { DownCircleOutlined, UpCircleOutlined } from "@ant-design/icons";
 import { getProperties } from "@/app/server_actions/property";
 import { getPropertyFilter } from "@/app/server_actions/property-filter";
@@ -8,6 +8,7 @@ import { getSaleLimit } from "../server_actions/saleLimit";
 import { ModalProperty } from "./ModalProperty";
 import { formatNumberShort } from "@/app/utils/formatNumber";
 import type { TableProps } from "antd/es/table";
+import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
 
 type LoadMode = "default" | "search" | "filter";
 type ColumnsType<T extends object> = TableProps<T>['columns'];
@@ -134,7 +135,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
   const [loadMode, setLoadMode] = useState<LoadMode>("default"); // 💡 NEW
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [filterParams, setFilterParams] = useState<FilterParams>({});
-
+  const [downloadOriginalFiles, setDownloadOriginalFiles] = useState<Response | null>(null);
 
 
   const columns: ColumnsType<DataType> = [
@@ -156,6 +157,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
             setSelectedProperty(record);
             setModalType("property");
             setIsModalOpen(true);
+            handleDownloadOriginalFiles(record.key);
           }}
         >
           {text}
@@ -270,6 +272,31 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         <DownCircleOutlined onClick={(e) => onExpand(record, e)} />
       ),
   };
+
+  const handleDownloadOriginalFiles = async (key: number) => {
+    const response = await getDownloadOriginalFiles(key, token);
+    console.log("response downloadOriginalFiles table", response.data);
+    setDownloadOriginalFiles(response.data);
+    // if (response.status === 200) {
+    //   // const responseData = await response.data.blob();
+    //   if (!response.data) {
+    //     message.error("Download Original Files Failed");
+    //     return;
+    //   }
+    //   // const url = window.URL.createObjectURL(responseData);
+    //   // const link = document.createElement("a");
+    //   // link.href = url;
+    //   // link.setAttribute("download", "original.zip");
+    //   // document.body.appendChild(link);
+    //   // link.click();
+    //   // link.remove();
+    //   // window.URL.revokeObjectURL(url);
+    //   return;
+    // } else {
+    //   message.error("Download Original Files Failed");
+    // }
+    
+  }
 
   useEffect(() => {
     getSaleLimit(token).then((data) => {
@@ -438,6 +465,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         token={token}
+        downloadOriginalFiles={downloadOriginalFiles}
       />
     </div>
   );
