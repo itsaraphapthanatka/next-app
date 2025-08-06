@@ -275,27 +275,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
 
   const handleDownloadOriginalFiles = async (key: number) => {
     const response = await getDownloadOriginalFiles(key, token);
-    console.log("response downloadOriginalFiles table", response.data);
     setDownloadOriginalFiles(response.data);
-    // if (response.status === 200) {
-    //   // const responseData = await response.data.blob();
-    //   if (!response.data) {
-    //     message.error("Download Original Files Failed");
-    //     return;
-    //   }
-    //   // const url = window.URL.createObjectURL(responseData);
-    //   // const link = document.createElement("a");
-    //   // link.href = url;
-    //   // link.setAttribute("download", "original.zip");
-    //   // document.body.appendChild(link);
-    //   // link.click();
-    //   // link.remove();
-    //   // window.URL.revokeObjectURL(url);
-    //   return;
-    // } else {
-    //   message.error("Download Original Files Failed");
-    // }
-    
   }
 
   useEffect(() => {
@@ -434,7 +414,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         }}
         rowSelection={{
           type: 'checkbox',
-          fixed: 'left',
+          // fixed: 'left',
           columnTitle: <span className="hidden-checkbox-header" />,
           selectedRowKeys,
           onChange: (newSelectedKeys) => {

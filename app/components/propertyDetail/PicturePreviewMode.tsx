@@ -55,39 +55,48 @@ export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProper
             title: 'Filename',
             dataIndex: 'guId',
             key: 'guId',
+            align: 'center',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Preview',
             dataIndex: 'url',
             key: 'url',
+            align: 'center',
             render: (text: string, record: PicturePreviewModeData) => (
                 console.log("Preview: ", text),
                 <Image src={`https://servesystem.s3.ap-southeast-1.amazonaws.com/${record.url}`} width={100} height={100} alt="" />
             ),
+            width: 50,
         },
         {
             title: 'Download',
             dataIndex: 'download',
             key: 'download',
             align: 'center',
+            width: 50,
             render: (_text: string, record: PicturePreviewModeData) => (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
                 <Download
                   className="w-4 h-4 text-warning cursor-pointer"
                   onClick={() => handleDownload(record)}
                 />
+                </div>
               )
+            ,
         }
     ];
 
 
     return (
-        <Image.PreviewGroup
+        <Image.PreviewGroup 
             preview={{
                 onChange: (current, prev) =>
                     console.log(`current index: ${current}, prev index: ${prev}`),
             }}
         >
-            <Table columns={columns} dataSource={propertyPictures} pagination={false} rowKey="guId" />
+            <Table columns={columns} dataSource={propertyPictures} pagination={false} rowKey="guId" scroll={{ x: 300, y: 500 }} size="small" />
         </Image.PreviewGroup>
     );
 }

@@ -90,7 +90,7 @@ export const ModalProperty = ({
     modalType === "request"
       ? {
           key: '5',
-          label: 'Contract',
+          label: 'Contact',
           children: <ContactTabs token={token} selectedProperty={selectedProperty} />,
         }
       : undefined,
