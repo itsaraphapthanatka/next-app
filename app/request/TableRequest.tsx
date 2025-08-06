@@ -55,7 +55,6 @@ type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
 export const TableRequest = ({token}: {token: string}) => {
-    // console.log("TableRequest token",token);
     const [selectedRequest, setSelectedRequest] = useState<RequestApiItem | null>(null);
     const [modalType, setModalType] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,8 +68,14 @@ export const TableRequest = ({token}: {token: string}) => {
         {
             title: 'No.',
             dataIndex: 'no',
+            align: 'center',
             sorter: (a, b) => (a.no) - (b.no),
             width: 50,
+            render: (text) => (
+                <div className="text-center">
+                    {text}
+                </div>
+            ),
         },
         {
             title: 'Project',
@@ -81,7 +86,6 @@ export const TableRequest = ({token}: {token: string}) => {
                     style={{ cursor: 'pointer', color: '#1677ff' }}
                     onClick={() => {
                         setSelectedRequest(record);
-                        console.log("record", selectedRequest);
                         setModalType("request");
                         setIsModalOpen(true);
                     }}
@@ -157,7 +161,6 @@ export const TableRequest = ({token}: {token: string}) => {
           { token, saleRequestStatus: 1 },
         ).then((data: GetPropertiesResponse) => {
           const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-          // console.log("Data", data);    
           const mapped: RequestApiItem[] = items.map((item, index) => ({
             id: item.id ?? 0,
             key: item.propertyId ?? index,
@@ -207,15 +210,11 @@ export const TableRequest = ({token}: {token: string}) => {
 
     useEffect(() => {
         const handleTableReload = (e: CustomEvent) => {
-          console.log("Table reload", e.detail);
-          console.log("e.detail.status",e.detail.status)
-
           setLoading(true);
           getRequestReports(
             { token, saleRequestStatus: e.detail.status },
           ).then((data: GetPropertiesResponse) => {
             const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-            // console.log("Data", data);
             const mapped: RequestApiItem[] = items.map((item, index) => {
                 return {
                 id: item.id ?? 0,
@@ -346,6 +345,7 @@ export const TableRequest = ({token}: {token: string}) => {
     return (
         <div className="mt-4">
         <Table<RequestApiItem>
+            rowKey={(record, index) => `${record.propertyId}-${record.saleRequestId ?? index}`}
             tableLayout="auto"
             loading={loading}
             expandable={defaultExpandable}

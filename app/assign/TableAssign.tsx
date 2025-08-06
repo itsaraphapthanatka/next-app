@@ -86,13 +86,18 @@ const MAX_SELECTION = 20;
     {
       title: 'No.',
       dataIndex: 'no',
+      fixed: 'left',
       sorter: (a, b) => a.no - b.no,
       width: 50,
+      render: (text) => (
+        <div className="text-center">
+          {text}
+        </div>
+      ),
     },
     {
       title: 'Project',
-        dataIndex: 'projectName',
-      fixed: 'left',
+      dataIndex: 'projectName',
       sorter: (a, b) => a.projectName.localeCompare(b.projectName),
       render: (text, record) => (
         <div
@@ -278,7 +283,6 @@ const MAX_SELECTION = 20;
   // 🎯 Search Event
   useEffect(() => {
     const handleTableSearch = (e: CustomEvent) => {
-      console.log("Search Triggered", e.detail);
       setPage(1); // Reset to first page
       setSearchParams({ projectName: e.detail.projectName ?? "", addressUnit: e.detail.addressUnit ?? "" });
       setLoadMode("search");
@@ -290,7 +294,6 @@ const MAX_SELECTION = 20;
    // 🎯 Filter Event
   useEffect(() => {
     const handleTableReload = (e: CustomEvent) => {
-      console.log("Filter Triggered", e.detail);
       setPage(1); // Reset to first page
       setFilterParams(e.detail);
       setLoadMode("filter");
@@ -298,148 +301,6 @@ const MAX_SELECTION = 20;
     window.addEventListener("propertyTableReload", handleTableReload as EventListener);
     return () => window.removeEventListener("propertyTableReload", handleTableReload as EventListener);
   }, []); 
-
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   getAssignReports( 
-  //     token,
-  //     { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-  //     "",
-  //     ""
-  //   ).then((data: GetPropertiesResponse) => {
-  //     const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-  
-  //     const mapped: DataType[] = items.map((item, index) => ({
-  //       id: item.id ?? 0,
-  //       key: item.propertyId ?? index,
-  //       no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-  //       projectName: item.projectName ?? "-",
-  //       address: item.address ?? "-",
-  //       size: item.size ?? 0,
-  //       bedRoom: item.bedRoom ?? 0,
-  //       bathRoom: item.bathRoom ?? 0,
-  //       rentalPrice: item.rentalPrice ?? 0,
-  //       salePrice: item.salePrice ?? 0,
-  //       status: item.status ?? "-",
-  //       invId: item.invId ?? "-",
-  //       tower: item.tower ?? "-",
-  //       floor: item.floor ?? "-",
-  //       unitCode: item.unitCode ?? "-",
-  //       lastedUpdate: item.lastedUpdate ?? "-",
-  //       saleName: item.saleName ?? "-",
-  //       startDate: item.startDate ?? "-",
-  //       toDate: item.toDate ?? "-",
-  //       assignerName: item.assignerName ?? "-",
-  //       displayDuration: item.displayDuration ?? "-",
-  //       toSalePropertyId: item.toSalePropertyId ?? 0,
-  //       propertyId: item.propertyId ?? 0,
-  //       revealStatus: item.revealStatus ?? "-",
-  //     }));
-  
-  //     setProperties(mapped);
-  //     setTotalRecords(data.allRecord ?? 0);
-  //     setPage(data.currentPage ?? 1);
-  //     setPageSize(data.recordPerPage ?? 10);
-  //     setLoading(false);
-  //   });
-  // }, [page, pageSize, token]);
-
-  // useEffect(() => {
-  //   const handleTableReload = (e: CustomEvent) => {
-  //     console.log("Table reload", e.detail);
-  //     console.log("e.detail.projectName",e.detail.projectName)
-  //     console.log("e.detail.addressUnit",e.detail.addressUnit)
-  //     setLoading(true);
-  //       getAssignReportsFilter(
-  //         token,
-  //         { page: { current: page, size: pageSize }, 
-  //          orderBy: 'asc',
-  //         assignReportSortType: 'Duration',
-  //         sortType: 'Project',
-  //         projectName: e.detail.projectName ?? "",
-  //         addressUnit: e.detail.addressUnit ?? [],
-  //         revealStatus: e.detail.revealStatus ?? "",
-  //         assignFrom: e.detail.assignFrom ?? "",
-  //         unitTypeIds: e.detail.unitTypeIds ?? [],
-  //         startSize: e.detail.startSize ?? 0,
-  //         toSize: e.detail.toSize ?? 0,
-  //         bedRoom: e.detail.bedRoom ?? 0,
-  //         bathRoom: e.detail.bathRoom ?? 0,
-  //         startRentalRate: e.detail.startRentalRate ?? 0,
-  //         toRentalRate: e.detail.toRentalRate ?? 0,
-  //         startRentalRatePerSQM: e.detail.startRentalRatePerSQM ?? 0,
-  //         toRentalRatePerSQM: e.detail.toRentalRatePerSQM ?? 0,
-  //         startSellingRate: e.detail.startSellingRate ?? 0,
-  //         toSellingRate: e.detail.toSellingRate ?? 0,
-  //         startSellingRatePerSQM: e.detail.startSellingRatePerSQM ?? 0,
-  //         toSellingRatePerSQM: e.detail.toSellingRatePerSQM ?? 0,
-  //         decorationIds: e.detail.decorationIds ?? [],
-  //         pictureStatusIds: e.detail.pictureStatusIds ?? [],
-  //         startFloor: e.detail.startFloor ?? 0,
-  //         toFloor: e.detail.toFloor ?? 0,
-  //         propertyStatusIds: e.detail.propertyStatusIds ?? [],
-  //         showOnWeb: e.detail.showOnWeb ?? 0,
-  //         hotDeal: e.detail.hotDeal ?? 0,
-  //         havePicture: e.detail.havePicture ?? 0,
-  //         forRentOrSale: e.detail.forRentOrSale ?? 0,
-  //         railwayStationId: e.detail.railwayStationId ?? 0,
-  //         startDistance: e.detail.startDistance ?? 0,
-  //         toDistance: e.detail.toDistance ?? 0,
-  //         forwardMKT: e.detail.forwardMKT ?? 0,
-  //         petFriendly: e.detail.petFriendly ?? 0,
-  //         privateLift: e.detail.privateLift ?? 0,
-  //         duplex: e.detail.duplex ?? 0,
-  //         penthouse: e.detail.penthouse ?? 0,
-  //         fixParking: e.detail.fixParking ?? 0,
-  //         projectTypeIds: e.detail.projectTypeIds ?? [],
-  //         bootedProppit: e.detail.bootedProppit ?? 0,
-  //         vipStatusIds: e.detail.vipStatusIds ?? [],
-  //         foreignerOwner: e.detail.foreignerOwner ?? 0,
-  //       }
-  //     ).then((data: GetPropertiesResponse) => {
-  //       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-  //       console.log("Data", data);
-  //       const mapped: DataType[] = items.map((item, index) => ({
-  //         id: item.id ?? 0,
-  //         key: item.propertyId ?? index,
-  //         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-  //         projectName: item.projectName ?? "-",
-  //         address: item.address ?? "-",
-  //         unitCode: item.unitCode ?? "-",
-  //         invId: item.invId ?? "-",
-  //         floor: item.floor ?? "-",
-  //         tower: item.tower ?? "-",
-  //         size: item.size ?? 0,
-  //         bedRoom: item.bedRoom ?? 0,
-  //         bathRoom: item.bathRoom ?? 0,
-  //         rentalPrice: item.rentalPrice ?? 0,
-  //         salePrice: item.salePrice ?? 0,
-  //         status: item.status ?? "-",
-  //         lastedUpdate: item.lastedUpdate ?? "-",
-  //         saleName: item.saleName ?? "-",
-  //         startDate: item.startDate ?? "-",
-  //         toDate: item.toDate ?? "-",
-  //         assignerName: item.assignerName ?? "-",
-  //         displayDuration: item.displayDuration ?? "-",
-  //         toSalePropertyId: item.toSalePropertyId ?? 0,
-  //         propertyId: item.propertyId ?? 0,
-  //         revealStatus: item.revealStatus ?? "-",
-  //       }));
-  //       setProperties(mapped);
-  //       setTotalRecords(data.allRecord ?? 0);
-  //       setPage(data.currentPage ?? 1);
-  //       setPageSize(data.recordPerPage ?? 10);
-  //       setLoading(false);
-  //     });
-
-      
-  //   };
-  //   window.addEventListener('assignTableReload', handleTableReload as EventListener);
-  //   return () => {
-  //     window.removeEventListener('assignTableReload', handleTableReload as EventListener);
-  //   };
-  // }, [page, pageSize, token]);
 
   const emptyDataType: DataType = {
     id: 0,
@@ -474,7 +335,6 @@ const MAX_SELECTION = 20;
         tableLayout="auto"
         expandable={defaultExpandable}
         loading={loading}
-        // className="custom-table-font"
         size="small"
         columns={columns}
         scroll={{ x: 1000, y: 500 }}
@@ -494,7 +354,6 @@ const MAX_SELECTION = 20;
         }}
         rowSelection={{
           type: 'checkbox',
-          fixed: 'left',
           columnTitle: <span className="hidden-checkbox-header" />,
           selectedRowKeys,
           onChange: (newSelectedKeys) => {

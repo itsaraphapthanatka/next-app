@@ -14,19 +14,15 @@ interface AssignSearchFromProps {
 
 export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProps) => {
   const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
-  // const [projectName, setProjectN  ame] = useState("");
-  // const [addressUnit, setAddressUnit] = useState("");
   const [revealCount, setRevealCount] = useState(0);
   const maxReveal = 20;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  console.log("token in AssignSearchFrom : ", token);
   useEffect(() => {
     
     getRevealCount(token).then((data) => {
       setRevealCount(data);
     });
-    console.log("revealCount in AssignSearchFrom", revealCount);
     window.addEventListener('propertySelectionCount', handleSelectionCount as unknown as EventListener);
   
     return () => {
@@ -34,16 +30,8 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
     };
   }, [token]);
 
-  // const handleSearch = () => {
-  //   console.log("Search clicked", { projectName });
-  //   const event = new CustomEvent('assignTableReload', {
-  //     detail: { projectName, addressUnit }
-  //   });
-  //   window.dispatchEvent(event);
-  // };
   const handleSearch = () => {
     const values = form.getFieldsValue();
-    console.log("Search clicked", values);
     const event = new CustomEvent("assignTableReload", {
       detail: {
         projectName: values.projectNameSearch ?? "",
@@ -56,7 +44,6 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
   };
 
   const handleFilter = () => {
-    console.log("Filter clicked");
     setIsModalOpen(true);
   };
 
@@ -69,7 +56,6 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
 
   const handleFilterSearch = () => {
     const values = form.getFieldsValue();
-    console.log("Filter Search clicked", values);
     const event = new CustomEvent('assignTableReload', {
       detail: { projectName: values.projectNameFilter ?? "", addressUnit: values.addressUnitFilter ?? ""  , page: 1, pageSize: 10 }
     });
@@ -79,11 +65,10 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
 
   const handleResetFilter = () => {
     form.resetFields();
-    console.log("Reset Filter clicked");
   };
 
   const handleProjectNameChange = async (value: string) => {
-    if (value.length < 3) return; // ป้องกันการยิง API ถ้าพิมพ์น้อยเกินไป
+    if (value.length < 3) return;
   
     const result = await getProjectsName(token, value);
   
@@ -174,12 +159,10 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         styles={{
           header: {
             padding: '10px',
-            borderBottom: '1px solid #f0f0f0', // ✅ เส้นใต้ title
+            borderBottom: '1px solid #f0f0f0',
           },
           body: {
             padding: '10px',
-            // maxHeight: '60vh',
-            // overflowY: 'auto',
           },
         }}
       >

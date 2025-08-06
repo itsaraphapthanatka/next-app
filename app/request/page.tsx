@@ -33,9 +33,7 @@ export default async function RequestContent() {
   }
 
   const userName = session?.user?.firstName || "User";
-  console.log(userName);
   const token = session?.token || "";
-  console.log("RequestPage token",token);
   return (
     <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
       <Navbar />

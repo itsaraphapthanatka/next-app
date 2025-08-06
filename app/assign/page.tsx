@@ -31,7 +31,7 @@ export default async function AssignPage() {
             return redirect("/");
         }
         const token = session?.token as string;
-        console.log("token in AssignPage : ", token);
+
         return (
             <div className="bg-gray-100 min-h-screen bg-dashboard-bg font-prompt">
                 <Navbar />

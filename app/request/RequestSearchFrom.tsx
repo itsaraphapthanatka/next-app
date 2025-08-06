@@ -14,9 +14,9 @@ export const RequestSearchFrom = ({token}: {token: string}) => {
     const [statusOptions, setStatusOptions] = useState<SaleRequestStatus[]>([]);
     console.log("RequestSearchFrom token",token);
     const handleSearch = () => {
-        // console.log(status);
+        const statusValue = status === "" ? 1 : status;
         const event = new CustomEvent('requestTableReload', {
-            detail: { status }
+            detail: { status: statusValue }
         });
         window.dispatchEvent(event);
     };
@@ -24,7 +24,6 @@ export const RequestSearchFrom = ({token}: {token: string}) => {
     useEffect(() => {
         const fetchStatuses = async () => {
         const statuses = await getSaleRequestStatuses(token);
-        // console.log("RequestSearchFrom statuses",statuses);
         setStatusOptions(statuses);
         };
         fetchStatuses();
