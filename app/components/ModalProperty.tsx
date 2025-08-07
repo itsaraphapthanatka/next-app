@@ -199,9 +199,10 @@ export const ModalProperty = ({
       }
     >
       {/* <p>{text}</p> */}
-      <Tabs 
+      <Tabs  
         items={items} 
-        defaultActiveKey="1"
+        centered={true}
+        defaultActiveKey={modalType === "request" || modalType === "assign" ? "5" : "1"}
       />
     </Modal>
     </div>
