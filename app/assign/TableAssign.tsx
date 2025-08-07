@@ -473,25 +473,6 @@ interface FilterParams {
             setPageSize(pageSize);
           },
         }}
-
-        // rowSelection={{
-        //   type: 'checkbox',
-        //   columnTitle: <span className="hidden-checkbox-header" />,
-        //   selectedRowKeys,
-        //   onChange: (newSelectedKeys) => {
-        //     let limitedKeys = newSelectedKeys;
-
-        //     if (newSelectedKeys.length > MAX_SELECTION) {
-        //       limitedKeys = newSelectedKeys.slice(0, MAX_SELECTION);
-        //     }
-
-        //     setSelectedRowKeys(limitedKeys);
-        //     onSelectionChange(limitedKeys.map(key => Number(key)));
-        //   },
-        //   getCheckboxProps: (record) => ({
-        //     disabled: selectedRowKeys.length >= MAX_SELECTION && !selectedRowKeys.includes(record.key),
-        //   }),
-        // }}
       />
 
       <ModalProperty

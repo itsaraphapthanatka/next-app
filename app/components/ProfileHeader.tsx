@@ -42,7 +42,7 @@ export function ProfileHeader({ userName = "คุณ, ตัวอย่าง 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div>
-            <h2 className="text-lg font-semibold text-foreground font-prompt">สวัสดี {userName}!</h2>
+            <h2 className="text-lg font-semibold text-black font-prompt">สวัสดี {userName}!</h2>
             <p className="text-sm text-text-greeting font-prompt">{userEmail}</p>
           </div>
         </div>
