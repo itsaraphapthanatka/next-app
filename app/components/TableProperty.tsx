@@ -325,7 +325,6 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       </tr>
       </tbody>
     </table>,
-    fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>
       expanded ? (
         <UpCircleOutlined onClick={(e) => onExpand(record, e)} />

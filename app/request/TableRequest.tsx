@@ -205,7 +205,7 @@ export const TableRequest = ({token}: {token: string}) => {
               ),
         },
         {
-            title: 'Approve',
+            title: 'Action',
             dataIndex: 'requestStatus',
             sorter: (a, b) => a.requestStatus.localeCompare(b.requestStatus),
             width: 100,
@@ -409,7 +409,6 @@ export const TableRequest = ({token}: {token: string}) => {
                 </tbody>
             </table>
         ),
-        fixed: 'right',
         expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
               <UpCircleOutlined onClick={(e) => onExpand(record, e)} />

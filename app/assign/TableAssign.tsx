@@ -297,7 +297,6 @@ interface FilterParams {
         </tr>
       </tbody>
     </table>,
-    fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>
       expanded ? (
         <UpCircleOutlined onClick={(e) => onExpand(record, e)} />
