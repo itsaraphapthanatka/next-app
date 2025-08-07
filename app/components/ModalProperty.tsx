@@ -88,7 +88,7 @@ export const ModalProperty = ({
       ? {
           key: '5',
           label: 'Contact',
-          children: <ContactTabs token={token} selectedProperty={selectedProperty} />,
+          children: <ContactTabs token={token} selectedProperty={selectedProperty} modalType={modalType} />,
         }
       : undefined,
     {
@@ -202,7 +202,7 @@ export const ModalProperty = ({
       <Tabs  
         items={items} 
         centered={true}
-        defaultActiveKey={modalType === "request" || modalType === "assign" ? "5" : "1"}
+        defaultActiveKey={modalType === "assign" ? "5" : "1"}
       />
     </Modal>
     </div>

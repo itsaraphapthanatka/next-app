@@ -26,9 +26,11 @@ type SelectedProperty = {
 export const ContactTabs = ({
   token,
   selectedProperty,
+  modalType,
 }: {
   token: string;
   selectedProperty: SelectedProperty;
+  modalType: string;
 }) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [revealed, setRevealed] = useState<boolean>(false);
@@ -36,9 +38,17 @@ export const ContactTabs = ({
 
   // ✅ Reset contacts + revealed เมื่อ selectedProperty.propertyId เปลี่ยน
   useEffect(() => {
-    setContacts([]);
-    setRevealed(false);
-  }, [selectedProperty.propertyId]);
+    const fetchContacts = async () => {
+        if (modalType === "request") {
+            const data = await getContacts(token, selectedProperty.propertyId as number);
+            setContacts(data ?? []);
+        } else {
+            setContacts([]);
+            setRevealed(false);
+        }
+    };
+    fetchContacts();
+  }, [selectedProperty.propertyId, modalType]);
 
   const handleToggle = async () => {
     setLoadingReveal(true);
