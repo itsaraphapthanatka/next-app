@@ -265,6 +265,7 @@ interface FilterParams {
         </div>
       ),
     },
+    Table.EXPAND_COLUMN,
   ];
 
   const defaultExpandable: ExpandableConfig<DataType> = {
