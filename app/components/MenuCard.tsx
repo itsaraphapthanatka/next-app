@@ -20,7 +20,7 @@ export function MenuCard({ title, icon: Icon, onClick, className = "", href, dis
         <div className="w-10 h-10 bg-secondary/50 rounded-lg flex items-center justify-center">
           <Icon className="w-5 h-5 text-primary" />
         </div>
-        <span className="text-foreground font-prompt font-medium text-base">{title}</span>
+        <span className="text-black font-prompt font-medium text-base">{title}</span>
       </div></a>
     </button>
   );
