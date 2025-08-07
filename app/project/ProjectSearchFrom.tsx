@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Card, Button, Form, Select} from "antd";
 import { getProjectsName } from "@/app/server_actions/projectsName";
 import TableProject from "./TableProject";
@@ -11,7 +11,6 @@ interface ProjectSearchFromProps {
 }
 
 export const ProjectSearchFrom = ({ className = "", token }: ProjectSearchFromProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
 
@@ -31,9 +30,6 @@ export const ProjectSearchFrom = ({ className = "", token }: ProjectSearchFromPr
     window.dispatchEvent(event);
   };
 
-  const handleClose = () => {
-    setIsModalOpen(false);
-  };
 
 
   const handleProjectNameChange = async (value: string) => {
