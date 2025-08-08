@@ -526,7 +526,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         size="small"
         columns={columns}
         scroll={{ x: 800, y: 500 }}
-        onChange={(pagination, filters, sorter: SorterResult<any> | SorterResult<any>[]) => {
+        onChange={(pagination, filters, sorter: SorterResult<DataType> | SorterResult<DataType>[]) => {
           console.log("pagination", pagination);
           console.log("filters", filters);
           console.log("sorter", sorter);

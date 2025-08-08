@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { Form, Input, Select, Checkbox, Col, Row } from "antd";
 
 import TextArea from "antd/es/input/TextArea";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 
 type ProjectDetail = {
   projectId?: number;
@@ -46,15 +46,15 @@ type ProjectDetail = {
   exampleCheckboxGroup?: string[];
 };
 
-type ProjectType = {
-  id: string;
-  name: string;
-};
+// type ProjectType = {
+//   id: string;
+//   name: string;
+// };
 
-type ProjectStatus = {
-  id: string;
-  name: string;
-};
+// type ProjectStatus = {
+//   id: string;
+//   name: string;
+// };
 
 
 const CHECKBOX_GROUPS = [

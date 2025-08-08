@@ -43,6 +43,8 @@ const columns = [
 ];
 export const MassTransitTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
   // const [formMassTransit] = Form.useForm();
+  console.log("selectedProject", selectedProject);
+  console.log("token", token);
   const [empty] = useState<MassTransit[]>([]);
   const [massTransit] = useState<MassTransit[]>([]);
 

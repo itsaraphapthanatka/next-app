@@ -22,6 +22,8 @@ type Tower = {
 };
 
  export const TowerTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
+  console.log("selectedProject", selectedProject);
+  console.log("token", token);
   const [tower] = useState<Tower[]>([]);
   // const [formTower] = Form.useForm();
   const [empty] = useState(true);

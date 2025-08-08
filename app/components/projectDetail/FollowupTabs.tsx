@@ -1,4 +1,4 @@
-import { Table, Modal, Form, Col, Row, Checkbox, Button } from "antd";
+import { Table, Modal, Form, Button } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { getPropertyFollowup, savePropertyFollowup } from "@/app/server_actions/property";    

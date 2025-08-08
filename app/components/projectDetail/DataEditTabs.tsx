@@ -1,4 +1,4 @@
-import { Form, Input, Tabs } from "antd";
+import { Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useSession } from "next-auth/react";
 // import { useEffect, useState } from "react";
@@ -15,6 +15,8 @@ type ProjectDetail = {
 
 export const DataEditTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
 //   const [project, setProject] = useState<ProjectDetail>({});
+  console.log("selectedProject", selectedProject);
+  console.log("token", token);
   const [formDataEdit] = Form.useForm();
   const session = useSession();
   return (

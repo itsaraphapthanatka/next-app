@@ -1,4 +1,4 @@
-import { Button, Form, Table } from "antd";
+import { Button, Table } from "antd";
 import { useState } from "react";
 import { Edit2 } from "lucide-react";
 
@@ -61,6 +61,8 @@ const handleEdit = (record: MonthlyAveragePrice) => {
 };
 
 export const MonthlyAveragePriceTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => { 
+  console.log("selectedProject", selectedProject);
+  console.log("token", token);
   // const [formMassTransit] = Form.useForm();
   const [empty] = useState<MonthlyAveragePrice[]>([]);
   const [monthlyAveragePrice] = useState<MonthlyAveragePrice[]>([]);
