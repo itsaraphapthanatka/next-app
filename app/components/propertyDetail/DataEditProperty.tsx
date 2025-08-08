@@ -147,9 +147,6 @@
                 <Form.Item name="followUp" label="New Follow Up">
                     <TextArea rows={4} />
                 </Form.Item>
-                <div className="flex w-full">
-                    <Button block variant="solid" htmlType="submit" onClick={handleSave} loading={loading} disabled={isSaveDisabled} style={{ backgroundColor: isSaveDisabled ? "#ccc" : "#52c41a", color: isSaveDisabled ? "#000" : "#fff" }}>Save</Button>
-                </div>
                 {modalType === "request" && (
                 <Form.Item name="closeJob" style={{ marginBottom: "10px" }}>
                     <Checkbox.Group style={{ width: '100%' }}>
@@ -161,6 +158,10 @@
                     </Checkbox.Group>
                 </Form.Item>
                 )}
+                <div className="flex w-full">
+                    <Button block variant="solid" htmlType="submit" onClick={handleSave} loading={loading} disabled={isSaveDisabled} style={{ backgroundColor: isSaveDisabled ? "#ccc" : "#52c41a", color: isSaveDisabled ? "#000" : "#fff" }}>Save</Button>
+                </div>
+               
             </Form>
             <Form
                 layout="vertical"
