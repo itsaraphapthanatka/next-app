@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -28,11 +28,11 @@ type PictureItem = {
     url?: string;
     token: string;
 }
-type SortablePictureItem = {
-    id: string;
-    guId: string;
-    url?: string;
-}
+// type SortablePictureItem = {
+//     id: string;
+//     guId: string;
+//     url?: string;
+// }
 const SortableItem = ({ id, guId, url }: PictureItem) => { 
   const {
     attributes,
@@ -75,6 +75,8 @@ const SortableItem = ({ id, guId, url }: PictureItem) => {
 
 export const SortablePictureMode = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
   const [items, setItems] = useState<PictureItem[]>([]);
+  console.log("selectedProject in SortablePictureMode", selectedProject)
+  console.log("token in SortablePictureMode", token)
   // useEffect(() => {
   //   getPropertyPictures(selectedProject.projectId as number, token).then((response) => {
   //     setItems(response.map((item: SortablePictureItem) => ({
