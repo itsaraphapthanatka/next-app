@@ -108,14 +108,14 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
       detail: { 
         projectName: values.projectNameFilter ?? "", 
         unitTypeIds: Array.isArray(values.unitTypeFilter) ? values.unitTypeFilter.map(String) : [],
-        startSize: values.startSize ?? 0,
-        toSize: values.toSize ?? 0,
+        startSize: values.minSize ?? 0,
+        toSize: values.maxSize ?? 0,
         bedRoom: values.bedRoom ?? 0,
         bathRoom: values.bathRoom ?? 0,
-        startRentalRate: values.startRentalRate ?? 0,
-        toRentalRate: values.toRentalRate ?? 0,
-        startRentalRatePerSQM: values.startRentalRatePerSQM ?? 0,
-        toRentalRatePerSQM: values.toRentalRatePerSQM ?? 0,
+        startRentalRate: values.minRentalRateOnWeb ?? 0,
+        toRentalRate: values.maxRentalRateOnWeb ?? 0,
+        startRentalRatePerSQM: values.minRentalRatePerSQM ?? 0,
+        toRentalRatePerSQM: values.maxRentalRatePerSQM ?? 0,
         startSellingRate: values.startSellingRate ?? 0,
         toSellingRate: values.toSellingRate ?? 0, 
         startSellingRatePerSQM: values.startSellingRatePerSQM ?? 0,
@@ -142,8 +142,17 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
         bootedProppit: values.bootedProppit ?? 0,
         vipStatusIds: Array.isArray(values.vipStatusIds) ? values.vipStatusIds.map(String) : [],
         foreignerOwner: values.foreignerOwner ?? 0,
+        minRentalRate: values.minRentalRate ?? 0,
+        maxRentalRate: values.maxRentalRate ?? 0,
+        minRentalRatePerSQM: values.minRentalRatePerSQM ?? 0,
+        maxRentalRatePerSQM: values.maxRentalRatePerSQM ?? 0,
+        minSellingRate: values.minSellingRate ?? 0,
+        maxSellingRate: values.maxSellingRate ?? 0,
+        minSellingRatePerSQM: values.minSellingRatePerSQM ?? 0,
+        maxSellingRatePerSQM: values.maxSellingRatePerSQM ?? 0,
       }
     });
+    console.log("values in handleFilterSearch", values);
     window.dispatchEvent(event);
     form.resetFields();
     handleClose();
