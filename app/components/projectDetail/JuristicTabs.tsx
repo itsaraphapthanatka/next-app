@@ -1,4 +1,4 @@
-import { Form, Input, Tabs } from "antd";
+import { Form, Input } from "antd";
 import { useState } from "react";
 
 type ProjectDetail = {
