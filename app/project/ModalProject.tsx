@@ -100,30 +100,30 @@ export const ModalProject = ({
 
 
 
-  const handleGetSuggestionLink = async () => {
-    try {
-      const response = await getSuggestionLinks(selectedProject?.propertyId ?? 0, token);
-      if (response.status === 200) {
-        const url = response.data;
-        window.open(url, "_blank", "noopener,noreferrer");
-      } else {
-        message.error("No suggestion link available");
-      }
-    } catch (error) {
-      console.error("Failed to get suggestion link:", error);
-      message.error("Failed to get suggestion link");
-    }
-  };
+  // const handleGetSuggestionLink = async () => {
+  //   try {
+  //     const response = await getSuggestionLinks(selectedProject?.propertyId ?? 0, token);
+  //     if (response.status === 200) {
+  //       const url = response.data;
+  //       window.open(url, "_blank", "noopener,noreferrer");
+  //     } else {
+  //       message.error("No suggestion link available");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to get suggestion link:", error);
+  //     message.error("Failed to get suggestion link");
+  //   }
+  // };
   
-  const handleGetLink = async () => {
-    const response = await getGetLink(selectedProject?.propertyId ?? 0, token);
-    if (response.status === 200) {
-      const url = response.data;
-      window.open(url, "_blank", "noopener,noreferrer");
-    } else {
-      message.error("Get Link Failed");
-    }
-  }
+  // const handleGetLink = async () => {
+  //   const response = await getGetLink(selectedProject?.propertyId ?? 0, token);
+  //   if (response.status === 200) {
+  //     const url = response.data;
+  //     window.open(url, "_blank", "noopener,noreferrer");
+  //   } else {
+  //     message.error("Get Link Failed");
+  //   }
+  // }
   
 
 
