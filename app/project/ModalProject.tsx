@@ -9,7 +9,7 @@ import { DataEditTabs } from "../components/projectDetail/DataEditTabs";
 
 import { Button, Modal, Tabs } from "antd";
 // import { getGetLink, getSuggestionLinks } from "@/app/server_actions/suggestion-links";
-import { App } from "antd";
+// import { App } from "antd";
 import { FacilityTabs } from "../components/projectDetail/FacilityTabs";
 
 type SelectedProject = {
