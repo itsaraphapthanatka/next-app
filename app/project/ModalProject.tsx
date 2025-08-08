@@ -8,7 +8,7 @@ import { FollowupTabs } from "../components/projectDetail/FollowupTabs";
 import { DataEditTabs } from "../components/projectDetail/DataEditTabs";    
 
 import { Button, Modal, Tabs } from "antd";
-import { getGetLink, getSuggestionLinks } from "@/app/server_actions/suggestion-links";
+// import { getGetLink, getSuggestionLinks } from "@/app/server_actions/suggestion-links";
 import { App } from "antd";
 import { FacilityTabs } from "../components/projectDetail/FacilityTabs";
 
@@ -48,7 +48,7 @@ export const ModalProject = ({
   selectedProject,
   token,
 }: ModalPropertyProps) => {
-  const { message } = App.useApp();
+  // const { message } = App.useApp();
   const items = [
     {
       key: '1',

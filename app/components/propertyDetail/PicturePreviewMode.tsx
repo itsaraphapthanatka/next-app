@@ -1,11 +1,11 @@
 import { Table, Image } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Download } from "lucide-react";
-// import { getProjectPictures } from "@/app/server_actions/project";
+import { getPropertyPictures } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
 import {  App as AntdApp } from "antd";
-type SelectedProject = {
-    projectId?: number;
+type SelectedProperty = {
+     propertyId?: number;
   };
 type PicturePreviewModeData = {
     key: string;
@@ -13,14 +13,14 @@ type PicturePreviewModeData = {
     url: string;
 };
 
-export const PicturePreviewMode = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
+export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     const { message } = AntdApp.useApp();
     const [propertyPictures, setPropertyPictures] = useState<PicturePreviewModeData[]>([]);
-    // useEffect(() => {
-    //     getProjectPictures(selectedProject.projectId as number, token).then((response) => {
-    //         setPropertyPictures(response);
-    //     });
-    // }, [selectedProject.projectId, token]);
+    useEffect(() => {
+        getPropertyPictures(selectedProperty.propertyId as number, token).then((response) => {
+            setPropertyPictures(response);
+        });
+    }, [selectedProperty.propertyId, token]);
 
     const handleDownload = async (record: PicturePreviewModeData) => {
         try {
