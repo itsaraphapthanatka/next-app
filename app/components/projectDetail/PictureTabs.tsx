@@ -4,14 +4,14 @@ import { UploadProps } from "antd/es/upload";
 import { UploadChangeParam } from "antd/es/upload";
 import { RcFile } from "antd/es/upload";
 import type { TabsProps } from 'antd';
-import { PicturePreviewMode } from "../propertyDetail/PicturePreviewMode";
-import { SortablePictureMode } from "../propertyDetail/SortablePictureMode";
+import { PicturePreviewMode } from "../projectDetail/PicturePreviewMode";
+import { SortablePictureMode } from "../projectDetail/SortablePictureMode";
 import React, { useState } from "react";
 import { UploadFileStatus } from "antd/es/upload/interface";
 
 type SelectedProject = {
     id?: number;
-    projectId?: number;
+    propertyId?: number;
   };
 
   interface UploadPicture {
@@ -22,7 +22,7 @@ type SelectedProject = {
   }
 
 export const PictureTabs = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
-    console.log("selectedProject in PictureTabs", selectedProject)
+    console.log("selectedProperty in PictureTabs", selectedProject)
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState<UploadPicture[]>([]);
 
