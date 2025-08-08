@@ -73,10 +73,10 @@ export const ProjectDetailTabs = ({
   selectedProject: ProjectDetail;
   token: string;
 }) => {
-  const [project, setProject] = useState<ProjectDetail>(selectedProject);
+  const [project] = useState<ProjectDetail>(selectedProject);
   const [formProjectDetail] = Form.useForm();
-  const [projectType, setProjectType] = useState<ProjectType[]>([]);
-  const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
+  // const [projectType, setProjectType] = useState<ProjectType[]>([]);
+  // const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
 //   const [decorations, setDecorations] = useState<Decoration[]>([]);
 
   // Fetch Project Types

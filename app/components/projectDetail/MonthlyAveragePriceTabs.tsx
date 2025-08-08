@@ -1,5 +1,5 @@
 import { Button, Form, Table } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Edit2 } from "lucide-react";
 
 type ProjectDetail = {
@@ -61,9 +61,9 @@ const handleEdit = (record: MonthlyAveragePrice) => {
 };
 
 export const MonthlyAveragePriceTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => { 
-  const [formMassTransit] = Form.useForm();
-  const [empty, setEmpty] = useState<MonthlyAveragePrice[]>([]);
-  const [monthlyAveragePrice, setMonthlyAveragePrice] = useState<MonthlyAveragePrice[]>([]);
+  // const [formMassTransit] = Form.useForm();
+  const [empty] = useState<MonthlyAveragePrice[]>([]);
+  const [monthlyAveragePrice] = useState<MonthlyAveragePrice[]>([]);
 
   return (
     <div>

@@ -1,6 +1,6 @@
-import { Button, Form, Table } from "antd";
+import { Button, Table } from "antd";
 import { Edit2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import { getProjectById } from "@/app/api/project";
 
 type ProjectDetail = {
@@ -22,9 +22,9 @@ type Tower = {
 };
 
  export const TowerTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
-  const [tower, setTower] = useState<Tower[]>([]);
-  const [formTower] = Form.useForm();
-  const [empty, setEmpty] = useState(true);
+  const [tower] = useState<Tower[]>([]);
+  // const [formTower] = Form.useForm();
+  const [empty] = useState(true);
 //   useEffect(() => {
 //     if (!selectedProject.propertyId) return;
 //     getProjectById(selectedProject.propertyId as number, token).then((response) => {

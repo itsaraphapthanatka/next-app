@@ -1,5 +1,5 @@
-import { Form, Table } from "antd";
-import { useEffect, useState } from "react";
+import { Table } from "antd";
+import { useState } from "react";
 
 type ProjectDetail = {
   id?: number;
@@ -42,9 +42,9 @@ const columns = [
   },
 ];
 export const MassTransitTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
-  const [formMassTransit] = Form.useForm();
-  const [empty, setEmpty] = useState<MassTransit[]>([]);
-  const [massTransit, setMassTransit] = useState<MassTransit[]>([]);
+  // const [formMassTransit] = Form.useForm();
+  const [empty] = useState<MassTransit[]>([]);
+  const [massTransit] = useState<MassTransit[]>([]);
 
   return (
     <div>

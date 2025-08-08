@@ -141,16 +141,7 @@ type PropertyBackOfficeSortType =
   | "RentalPG"
   | "SalePG";
 
-  const columnSortMap: Record<string, PropertyBackOfficeSortType> = {
-    project: "Project",
-    size: "Size",
-    bed: "BedRoom",
-    bath: "BathRoom",
-    rental: "RentalPrice",
-    selling: "SellingPrice",
-    status: "Status",
-    no: "UnitCode",
-  };
+
 
 // const saleLimit = 20;
 
@@ -536,6 +527,9 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         columns={columns}
         scroll={{ x: 800, y: 500 }}
         onChange={(pagination, filters, sorter: SorterResult<any> | SorterResult<any>[]) => {
+          console.log("pagination", pagination);
+          console.log("filters", filters);
+          console.log("sorter", sorter);
           const singleSorter = Array.isArray(sorter) ? sorter[0] : sorter;
         
           console.log("sorter", singleSorter);

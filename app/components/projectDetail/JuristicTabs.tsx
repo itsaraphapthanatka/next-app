@@ -1,5 +1,5 @@
 import { Form, Input, Tabs } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type ProjectDetail = {
   id?: number;
@@ -12,7 +12,9 @@ type ProjectDetail = {
 };
 
 export const JuristicTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
-  const [project, setProject] = useState<ProjectDetail>({});
+  console.log("selectedProject", selectedProject);
+  console.log("token", token);
+  const [project] = useState<ProjectDetail>({});
   const [formJuristic] = Form.useForm();
 
   return (
