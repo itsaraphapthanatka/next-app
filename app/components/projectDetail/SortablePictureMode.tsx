@@ -17,9 +17,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Image } from "antd";
-// import { getProjectPictures } from "@/app/server_actions/project";  
-type SelectedProject = {
-    projectId?: number;
+import { getPropertyPictures } from "@/app/server_actions/property";  
+type SelectedProperty = {
+     propertyId?: number;
   };  
 type PictureItem = {
     id: string;
@@ -72,17 +72,17 @@ const SortableItem = ({ id, guId, url }: PictureItem) => {
   );
 };
 
-export const SortablePictureMode = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
+export const SortablePictureMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
   const [items, setItems] = useState<PictureItem[]>([]);
-  // useEffect(() => {
-  //   getProjectPictures(selectedProject.projectId as number, token).then((response) => {
-  //     setItems(response.map((item: SortablePictureItem) => ({
-  //       id: item.guId,
-  //       guId: item.guId,
-  //       url: item.url,
-  //     })));
-  //   });
-  // }, [selectedProject.projectId, token]);
+  useEffect(() => {
+    getPropertyPictures(selectedProperty.propertyId as number, token).then((response) => {
+      setItems(response.map((item: SortablePictureItem) => ({
+        id: item.guId,
+        guId: item.guId,
+        url: item.url,
+      })));
+    });
+  }, [selectedProperty.propertyId, token]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {

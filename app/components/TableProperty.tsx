@@ -9,6 +9,7 @@ import { ModalProperty } from "./ModalProperty";
 import type { TableProps } from "antd/es/table";
 import { getDownloadOriginalFiles } from "@/app/server_actions/download-original-files";
 import { formatNumberShort } from "@/app/utils/formatNumber";
+import { SorterResult } from "antd/es/table/interface"; // 💡 NEW
 
 type LoadMode = "default" | "search" | "filter";
 type ColumnsType<T extends object> = TableProps<T>['columns'];
@@ -123,6 +124,34 @@ interface FilterParams {
   projectID?: number;
 }
 
+type PropertyBackOfficeSortType =
+  | "Project"
+  | "Address"
+  | "UnitCode"
+  | "INVID"
+  | "Tower"
+  | "Floor"
+  | "Size"
+  | "BedRoom"
+  | "BathRoom"
+  | "RentalPrice"
+  | "SellingPrice"
+  | "LastedUpdate"
+  | "Status"
+  | "RentalPG"
+  | "SalePG";
+
+  const columnSortMap: Record<string, PropertyBackOfficeSortType> = {
+    project: "Project",
+    size: "Size",
+    bed: "BedRoom",
+    bath: "BathRoom",
+    rental: "RentalPrice",
+    selling: "SellingPrice",
+    status: "Status",
+    no: "UnitCode",
+  };
+
 // const saleLimit = 20;
 
 const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: number[]) => void }> = ({ token, onSelectionChange }) => {
@@ -141,10 +170,12 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
   const [filterParams, setFilterParams] = useState<FilterParams>({});
   const [downloadOriginalFiles, setDownloadOriginalFiles] = useState<Response | null>(null);
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-
+  const [sortParams, setSortParams] = useState<PropertyBackOfficeSortType>("LastedUpdate");
+  const [orderBy, setOrderBy] = useState<string>("DESC");
 
   const columns: ColumnsType<DataType> = [
-    {
+    { 
+      key: 'no',
       title: 'No.',
       dataIndex: 'no',
       sorter: (a, b) => a.no - b.no,
@@ -160,9 +191,10 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       }
     },
     {
+      key: 'project',
       title: 'Project',
       dataIndex: 'project',
-      sorter: (a, b) => a.project.localeCompare(b.project),
+      sorter: true,
       render: (text, record) => (
         <div
           style={{ cursor: 'pointer' }}
@@ -179,6 +211,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       width: 70,
     },
     {
+      key: 'size',
       title: 'Size',
       dataIndex: 'size',
       sorter: (a, b) => a.size - b.size,
@@ -199,6 +232,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ),
     },
     {
+      key: 'bed',
       title: 'Bed',
       dataIndex: 'bed',
       sorter: (a, b) => a.bed - b.bed,
@@ -219,6 +253,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ),
     },
     {
+      key: 'bath',
       title: 'Bath',
       dataIndex: 'bath',
       sorter: (a, b) => a.bath - b.bath,
@@ -238,6 +273,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ),
     },
     {
+      key: 'rental',
       title: 'Rental',
       dataIndex: 'rental',
       sorter: (a, b) => a.rental - b.rental,
@@ -257,6 +293,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ),
     },
     {
+      key: 'selling',
       title: 'Selling',
       dataIndex: 'selling',
       sorter: (a, b) => a.selling - b.selling,
@@ -276,14 +313,15 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       ),
     },
     {
+      key: 'status',
       title: 'Status',
       dataIndex: 'status',
-      sorter: (a, b) => a.status.localeCompare(b.status),
+      sorter: true,
       width: 70,
       ellipsis: false,
       render: (text, record) => (
         <div
-          style={{ cursor: 'pointer'}}
+          style={{ cursor: 'pointer', color: record.vipStatusColor}}
           onClick={() => handleToggleExpand(record)}
         >
           {text}
@@ -366,11 +404,33 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       
 
       if (loadMode === "search" && searchParams) {
-        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "DESC", assignReportSortBy: "Duration" }, token, searchParams.projectName, searchParams.addressUnit);
+        data = await getProperties({
+          page: { current: page, size: pageSize },
+          sortBy: sortParams || "LastedUpdate",
+          orderBy: orderBy || "DESC",
+          assignReportSortBy: "Duration"}, 
+          token, 
+          searchParams.projectName, 
+          searchParams.addressUnit
+        );
       } else if (loadMode === "filter" && filterParams) {
-        data = await getPropertyFilter({ ...filterParams, page: { current: page, size: pageSize }, orderBy: "DESC", assignReportSortBy: "Duration" }, token);
+        data = await getPropertyFilter({ 
+          ...filterParams,
+           page: { current: page, size: pageSize }, 
+           sortBy: sortParams || "LastedUpdate" , 
+           orderBy: orderBy || "DESC", 
+           assignReportSortBy: "Duration" }, 
+           token
+        );
       } else {
-        data = await getProperties({ page: { current: page, size: pageSize }, orderBy: "DESC", assignReportSortBy: "Duration" }, token);
+
+        data = await getProperties({
+          page: { current: page, size: pageSize },
+          sortBy: sortParams || "LastedUpdate",
+          orderBy: orderBy || "DESC",
+          assignReportSortBy: "Duration"}, 
+          token
+        );
       }
 
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
@@ -410,7 +470,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
     };
 
     fetchData();
-  }, [page, pageSize, loadMode, searchParams, filterParams, token]);
+  }, [page, pageSize, loadMode, searchParams, filterParams, token, sortParams, orderBy]);
 
   // 🎯 Search Event
   useEffect(() => {
@@ -475,6 +535,35 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         size="small"
         columns={columns}
         scroll={{ x: 800, y: 500 }}
+        onChange={(pagination, filters, sorter: SorterResult<any> | SorterResult<any>[]) => {
+          const singleSorter = Array.isArray(sorter) ? sorter[0] : sorter;
+        
+          console.log("sorter", singleSorter);
+          console.log("sorter.field", singleSorter?.field);
+        
+          if (singleSorter && singleSorter.field && singleSorter.order) {
+            const columnSortMap: Record<string, PropertyBackOfficeSortType> = {
+              project: "Project",
+              size: "Size",
+              bed: "BedRoom",
+              bath: "BathRoom",
+              rental: "RentalPrice",
+              selling: "SellingPrice",
+              status: "Status",
+              no: "UnitCode",
+            };
+        
+            const sortField = columnSortMap[singleSorter.field as string] || "LastedUpdate";
+            const sortOrder = singleSorter.order === "ascend" ? "ASC" : "DESC";
+            console.log("sortField", sortField);
+            console.log("sortOrder", sortOrder);
+            setSortParams(sortField);
+            setOrderBy(sortOrder);
+            const event = new CustomEvent('propertyTableSort', { detail: { sortField, sortOrder } });
+            window.dispatchEvent(event);
+          }
+        }}
+        
         dataSource={properties}
         pagination={{
           position: ['bottomCenter'],

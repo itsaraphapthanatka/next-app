@@ -4,7 +4,7 @@ import { DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
 import { getProperties } from '@/app/server_actions/property';
-import { ModalProperty } from '../components/ModalProperty';
+import { ModalProject } from './ModalProject';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -20,34 +20,29 @@ interface ProjectApiItem {
   projectThaiName: string,
   developerBrand: string,
   tower: string,
-  // Add other fields if needed
 }
 
 
 
-// const MAX_SELECTION = 20;
-
   const TableProject: React.FC<{ token: string }> = ({ token }) => {
-  // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<ProjectApiItem[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50); // ตั้ง default เท่ากับ API
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<ProjectApiItem | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectApiItem | null>(null);
   const [loading, setLoading] = useState(false);
-  const [modalType, setModalType] = useState<string>("");
   const [loadMode, setLoadMode] = useState<string>("default");
   const [searchParams, setSearchParams] = useState<{ projectName: string }>({ projectName: "" });
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
   const columns: ColumnsType<ProjectApiItem> = [
     {
-      title: 'ID.',
+      title: 'ID',
       dataIndex: 'no',
       fixed: 'left',
       sorter: (a, b) => a.no - b.no,
-      width: 35,
+      width: 45,
       render: (_text, _record, index) => {
         const actualIndex = (page - 1) * pageSize + index + 1;
         return (
@@ -65,24 +60,22 @@ interface ProjectApiItem {
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            setSelectedProperty(record);
-            setModalType("assign");
+              setSelectedProject(record);
             setIsModalOpen(true);
           }}
         >
           {text}
         </div>
       ),
-      width: 150,
+      width: 120,
     },
     {
       title: 'TotalRoom',
-      dataIndex: 'totalRoom',
+      dataIndex: 'totalRoom', 
       sorter: (a, b) => a.totalRoom - b.totalRoom,
-      width: 70,
+      width: 80,
     },
-    
-
+    Table.EXPAND_COLUMN,
   ];
 
   const defaultExpandable: ExpandableConfig<ProjectApiItem> = {
@@ -103,7 +96,6 @@ interface ProjectApiItem {
         </tr>
       </tbody>
     </table>,
-    fixed: 'right',
     expandIcon: ({ expanded, onExpand, record }) =>
       expanded ? (
         <UpCircleOutlined onClick={(e) => onExpand(record, e)} />
@@ -157,7 +149,7 @@ interface ProjectApiItem {
         projectName: item.projectName ?? "-",
         project: item.project ?? "-",
         totalRoom: item.totalRoom ?? 0,
-        projectId: item.projectId ?? 0,
+        projectId: item.id ?? 0,
         projectThaiName: item.projectThaiName ?? "-",
         developerBrand: item.developerBrand ?? "-",
         tower: item.tower ?? "-",
@@ -227,7 +219,7 @@ interface ProjectApiItem {
         loading={loading}
         size="small"
         columns={columns}
-        scroll={{ x: 300, y: 500 }}
+        scroll={{ x: 400, y: 500 }}
         dataSource={properties}
         pagination={{
           position: ['bottomCenter'],
@@ -243,14 +235,12 @@ interface ProjectApiItem {
           },
         }}
     />
-      <ModalProperty
-        selectedProperty={selectedProperty ?? emptyDataType}
-        modalType={modalType}
-        text={selectedProperty?.projectName ?? ""}
+      <ModalProject
+        selectedProject={selectedProject ?? emptyDataType}
+        text={selectedProject?.projectName ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         token={token}
-        downloadOriginalFiles={null}
       />
     </div>
   );

@@ -457,6 +457,7 @@ interface FilterParams {
         expandable={defaultExpandable}
         loading={loading}
         size="small"
+        className="text-center"
         columns={columns}
         scroll={{ x: 1000, y: 500 }}
         dataSource={properties}

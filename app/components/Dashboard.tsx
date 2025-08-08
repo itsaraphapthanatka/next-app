@@ -21,7 +21,7 @@ const menuItems = [
   { title: "Property", icon: Building2, href: "/property" },
   { title: "Request Report", icon: FileText, href: "/request" },
   { title: "Assigned Report", icon: ClipboardList, href: "/assign" },
-  { title: "Project", icon: FolderOpen, href: "/project" ,disabled: true},
+  { title: "Project", icon: FolderOpen, href: "/project" },
   { title: "Dashboard", icon: BarChart3, href: "/dashboard" ,disabled: true},
   { title: "Leads Management", icon: Users, href: "/leads-management" ,disabled: true},
 ];
