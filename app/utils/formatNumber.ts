@@ -14,3 +14,14 @@ export function formatNumberShort(value: number): string {
 function trimTrailingZeros(num: number): string {
   return num.toFixed(2).replace(/\.?0+$/, "").replace(/(\.\d)0$/, "$1");
 }
+
+export function formatNumber(value: number): string {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+export function formatNumberParser(value: string): string {
+  return value.replace(/,/g, "");
+}
+
+
+
+

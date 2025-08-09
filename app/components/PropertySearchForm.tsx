@@ -57,7 +57,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   };
 
   const handleFilter = () => {
-    form.resetFields();
+    // form.resetFields();
     setIsModalOpen(true);
   };
 
@@ -116,45 +116,40 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
         toRentalRate: values.maxRentalRateOnWeb ?? 0,
         startRentalRatePerSQM: values.minRentalRatePerSQM ?? 0,
         toRentalRatePerSQM: values.maxRentalRatePerSQM ?? 0,
-        startSellingRate: values.startSellingRate ?? 0,
-        toSellingRate: values.toSellingRate ?? 0, 
-        startSellingRatePerSQM: values.startSellingRatePerSQM ?? 0,
-        toSellingRatePerSQM: values.toSellingRatePerSQM ?? 0,
+        startSellingRate: values.minSellingRate ?? 0,
+        toSellingRate: values.maxSellingRate ?? 0, 
+        startSellingRatePerSQM: values.minSellingRatePerSQM ?? 0,
+        toSellingRatePerSQM: values.maxSellingRatePerSQM ?? 0,
         decorationIds: Array.isArray(values.decorationIds) ? values.decorationIds.map(String) : [],
         pictureStatusIds: Array.isArray(values.pictureStatusIds) ? values.pictureStatusIds.map(String) : [],
-        startFloor: values.startFloor ?? 0,
-        toFloor: values.toFloor ?? 0,
+        startFloor: values.minFloor ?? 0,
+        toFloor: values.maxFloor ?? 0,
         propertyStatusIds: Array.isArray(values.propertyStatusIds) ? values.propertyStatusIds.map(String) : [],
         showOnWeb: values.showOnWeb ?? 0,
         hotDeal: values.hotDeal ?? 0,
         havePicture: values.havePicture ?? 0,
-        forRentOrSale: values.forRentOrSale ?? 0,
+        forRentOrSale: values.forRentSaleStatus ?? 0,
         railwayStationId: values.railwayStationId ?? 0,
         startDistance: values.startDistance ?? 0,
         toDistance: values.toDistance ?? 0,
         forwardMKT: values.forwardMKT ?? 0,
         petFriendly: values.petFriendly ?? 0,
         privateLift: values.privateLift ?? 0,
-        duplex: values.duplex ?? 0,
+        duplex: values.duplexLoft ?? 0,
         penthouse: values.penthouse ?? 0,
         fixParking: values.fixParking ?? 0,
-        projectTypeIds: Array.isArray(values.projectTypeIds) ? values.projectTypeIds.map(String) : [],
+        projectTypeIds: Array.isArray(values.propertyType) ? values.propertyType.map(String) : [],
         bootedProppit: values.bootedProppit ?? 0,
-        vipStatusIds: Array.isArray(values.vipStatusIds) ? values.vipStatusIds.map(String) : [],
+        vipStatusIds: Array.isArray(values.vipStatus) ? values.vipStatus.map(String) : [],
         foreignerOwner: values.foreignerOwner ?? 0,
-        minRentalRate: values.minRentalRate ?? 0,
-        maxRentalRate: values.maxRentalRate ?? 0,
-        minRentalRatePerSQM: values.minRentalRatePerSQM ?? 0,
-        maxRentalRatePerSQM: values.maxRentalRatePerSQM ?? 0,
-        minSellingRate: values.minSellingRate ?? 0,
-        maxSellingRate: values.maxSellingRate ?? 0,
-        minSellingRatePerSQM: values.minSellingRatePerSQM ?? 0,
-        maxSellingRatePerSQM: values.maxSellingRatePerSQM ?? 0,
+        massTransit: Array.isArray(values.massTransit) ? values.massTransit.map(String) : [],
+        revealStatus: values.revealStatus ?? 0,
+        assignerName: Array.isArray(values.assignFrom) ? values.assignFrom.map(String) : [],
       }
     });
     console.log("values in handleFilterSearch", values);
     window.dispatchEvent(event);
-    form.resetFields();
+    // form.resetFields();
     handleClose();
   };
 

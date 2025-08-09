@@ -1,4 +1,4 @@
-import { Form, Input, Select, Tag } from "antd";
+import { Form, Input, InputNumber, Select, Tag } from "antd";
 import { FormInstance } from "antd/es/form";
 import { getUnitType } from "@/app/server_actions/unittype";
 import { getPropertyStatuses, getMasstransits, getPropertyTypes, getVipStatuses } from "@/app/server_actions/master";
@@ -6,6 +6,7 @@ import {  useEffect, useState } from "react";
 import type { SelectProps } from 'antd';
 import { getProjectsName } from "@/app/server_actions/projectsName";
 import { getEmployees } from "@/app/server_actions/master";
+import { formatNumber, formatNumberParser } from "@/app/utils/formatNumber";
 
 type Employee = {
   id: number;
@@ -166,7 +167,14 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
     
       setProjectsName(options);
     };
+    // const numberFormatter = (value?: string | number) => {
+    //   if (!value && value !== 0) return '';
+    //   return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 1,234,567
+    // };
     
+    // const numberParser = (value?: string) => {
+    //   return value ? value.replace(/,/g, '') : '';
+    // };
 
     return (
         <Form
@@ -176,14 +184,18 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
             initialValues={{
               projectNameFilter: "",
               unitTypeFilter: [],
-              minSize: 0,
-              maxSize: 0,
+              startSize: 0,
+              toSize: 0,
               bedRoom: 0,
               bathRoom: 0,
               minRentalRateOnWeb: 0,
               maxRentalRateOnWeb: 0,
               minRentalRatePerSQM: 0,
               maxRentalRatePerSQM: 0,
+              minSellingRate: 0,
+              maxSellingRate: 0,
+              minSellingRatePerSQM: 0,
+              maxSellingRatePerSQM: 0,
               minFloor: 0,
               maxFloor: 0,
               propertyStatus: [],
@@ -280,20 +292,34 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 <Input placeholder="Bath Room" size="large"/>
               </Form.Item>
             </div>
-            <div className="flex gap-3 w-full">  
+            <div className="flex gap-3 w-full" >  
               <Form.Item
-                label="Min. Rental Rate On  Web"
+                label="Min. Rental Rate On Web"
                 name="minRentalRateOnWeb"
-                style={{ marginBottom: "10px" }}
+                style={{ marginBottom: "10px", flex: 1  }}
+                
               >
-                <Input placeholder="Min. Rental Rate On Web" size="large"/>
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Min. Rental Rate On Web"
+                  size="large"
+                  style={{ width: "100%" }}
+
+                />
               </Form.Item>
               <Form.Item
                 label="Max. Rental Rate On Web"
                 name="maxRentalRateOnWeb"
-                style={{ marginBottom: "10px" }}
+                style={{ marginBottom: "10px", flex: 1   }}
               >
-                <Input placeholder="Max. Rental Rate On Web" size="large"/>
+                <InputNumber 
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Max. Rental Rate On Web" 
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </div>
             <div className="flex gap-3 w-full">  
@@ -302,14 +328,82 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 name="minRentalRatePerSQM"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Min. Rental Rate Per SQM" size="large" value={0}/>
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Min. Rental Rate Per SQM"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
               <Form.Item
                 label="Max. Rental Rate Per SQM"
                 name="maxRentalRatePerSQM"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Max. Rental Rate Per SQM" size="large" value={0}/>
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Max. Rental Rate Per SQM"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Min. Selling Rate On Web"
+                name="minSellingRate"
+                style={{ marginBottom: "10px" }}
+              >
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Min. Selling Rate Per SQM"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Max. Selling Rate On Web"
+                name="maxSellingRate"
+                style={{ marginBottom: "10px" }}
+              >
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Max. Selling Rate Per SQM"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </div>
+            <div className="flex gap-3 w-full">  
+              <Form.Item
+                label="Min. Selling Rate Per SQM"
+                name="minSellingRatePerSQM"
+                style={{ marginBottom: "10px" }}
+              >
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Min. Selling Rate Per SQM"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Max. Selling Rate Per SQM"
+                name="maxSellingRatePerSQM"
+                style={{ marginBottom: "10px" }}
+              >
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Max. Selling Rate Per SQM"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </div>
             <div className="flex gap-3 w-full">  
@@ -318,20 +412,32 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                 name="minFloor"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Min. Floor" size="large" value={0}/>
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Min. Floor"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
               <Form.Item
                 label="Max. Floor"
                 name="maxFloor"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Max. Floor" size="large" />
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Max. Floor"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </div>
             <div className="gap-3 w-full">
               <Form.Item
                 label="Property Status"
-                name="propertyStatus"
+                name="propertyStatusIds"
                 style={{ marginBottom: "10px" }}
               >
                 <Select 
@@ -393,8 +499,8 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
               >
                 <Select placeholder="Show All Status" size="large">
                   <Select.Option value={0}>Show All Status</Select.Option>
-                  <Select.Option value={1}>Yes</Select.Option>
-                  <Select.Option value={2}>No</Select.Option>
+                  <Select.Option value={1}>For Rent</Select.Option>
+                  <Select.Option value={2}>For Sale</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -427,20 +533,44 @@ export const ModalFilter = ({form, moduleType, token}: {form: FormInstance, modu
                  />
               </Form.Item>
             </div>
+            <div hidden className="gap-3 w-full">
+              <Form.Item
+                label="MKT ทำต่อ"
+                name="forwardMKT"
+                style={{ marginBottom: "10px" }}
+              >
+                <Select placeholder="Reveal Status" size="large">
+                  <Select.Option value={0}>Show All Status</Select.Option>
+                  <Select.Option value={1}>ส่ง MKT ทำต่อ</Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
             <div className="gap-3 flex w-full">
               <Form.Item
                 label="Start Distance (Meter)"
                 name="startDistance"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="Start Distance (Meter)" size="large" />
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="Start Distance (Meter)"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
               <Form.Item
                 label="To Distance (Meter)"
                 name="toDistance"
                 style={{ marginBottom: "10px" }}
               >
-                <Input placeholder="To Distance (Meter)" size="large" />
+                <InputNumber
+                  formatter={(value) => formatNumber(value as number)}
+                  parser={(value) => formatNumberParser(value ?? '')}
+                  placeholder="To Distance (Meter)"
+                  size="large"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </div>
             <div className="flex gap-3 w-full">
