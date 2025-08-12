@@ -101,7 +101,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
       }
     });
     window.dispatchEvent(event);
-    form.resetFields();
+    // form.resetFields();
     handleClose();
   };
 
