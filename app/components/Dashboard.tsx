@@ -23,7 +23,7 @@ const menuItems = [
   { title: "Assigned Report", icon: ClipboardList, href: "/assign" },
   { title: "Project", icon: FolderOpen, href: "/project" },
   { title: "Dashboard", icon: BarChart3, href: "/dashboard" ,disabled: true},
-  { title: "Leads Management", icon: Users, href: "/leads-management" ,disabled: true},
+  { title: "Leads Management", icon: Users, href: "/lead-management" },
 ];
 
 export function Dashboard({ session }: DashboardProps) {
