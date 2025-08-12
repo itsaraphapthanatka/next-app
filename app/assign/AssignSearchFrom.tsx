@@ -82,8 +82,8 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
         hotDeal: values.hotDeal ?? 0,
         havePicture: values.havePicture ?? 0,
         forRentOrSale: values.forRentSaleStatus ?? 0,
-        railwayStationId: values.massTransit ?? 0,
-        
+        railwayStationId: 0,
+        massTransit: Array.isArray(values.massTransit) ? values.massTransit.map(String) : [],
         startDistance: values.startDistance ?? 0,
         toDistance: values.toDistance ?? 0,
         forwardMKT: values.forwardMKT ?? 0,
