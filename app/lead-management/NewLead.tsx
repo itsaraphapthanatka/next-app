@@ -36,12 +36,6 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
         window.dispatchEvent(event);
     };
 
-    const handlePropertyTypeChange = (value: string[]) => {
-        const event = new CustomEvent('propertyTypeChange', {
-            detail: { value }
-        });
-        window.dispatchEvent(event);
-    };
 
 
     const handleProjectNameChange = async (value: string) => {
