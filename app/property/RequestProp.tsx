@@ -38,10 +38,9 @@ export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: num
                 <Input value={enqNo} onChange={(e) => setEnqNo(e.target.value)} />  
             </Form.Item>
 
-            <Form.Item label="Selected Properties">
-                {/* <div className="text-sm">{selectedIds.join(", ") || "No selection"}</div> */}
-            </Form.Item>
+           
             <div>
+                <div className="text-sm">Selected Properties :</div>
                 {selectedProperties.map((item, index) => (
                 <span key={item.id}>
                     {item.address && item.address.trim() !== ""
