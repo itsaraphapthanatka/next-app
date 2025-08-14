@@ -468,7 +468,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
   useEffect(() => {
     const handleTableSearch = (e: CustomEvent) => {
       console.log("Search Triggered", e.detail);
-      setPage(1); // Reset to first page
+      // setPage(1); // Reset to first page
       setSearchParams({ projectName: e.detail.projectName ?? "", addressUnit: e.detail.addressUnit ?? "" });
       setLoadMode("search");
     };
@@ -480,7 +480,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
   useEffect(() => {
     const handleTableReload = (e: CustomEvent) => {
       console.log("Filter Triggered", e.detail);
-      setPage(1); // Reset to first page
+      // setPage(1); // Reset to first page
       setFilterParams(e.detail);
       setLoadMode("filter");
     };
