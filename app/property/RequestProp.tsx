@@ -1,11 +1,38 @@
 import { Form, Input } from "antd";
-import { useEffect } from "react"; 
+import { useEffect, useState } from "react"; 
+import { getProperties } from "@/app/server_actions/property";
 
-    export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: number[], setEnqNo: (enqNo: string) => void, enqNo: string }) => {
+interface Property {
+    id: number;
+    address: string;
+    unitCode: string;
+}
+
+export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: number[], setEnqNo: (enqNo: string) => void, enqNo: string }) => {
+
+    const [properties, setProperties] = useState<Property[]>([]);
+    const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
 
     useEffect(() => {
         console.log("selectedIds", selectedIds);
     }, [selectedIds]);
+
+    useEffect(() => {
+        getProperties({
+            page: { current: 0, size: 0 },
+            sortBy: "LastedUpdate",
+            orderBy: "DESC",
+            assignReportSortBy: "Duration"
+        }).then((data) => {
+            setProperties(data.resultLists || []);
+            
+            const selectedProps = (data.resultLists || []).filter((item: Property) =>
+                selectedIds.includes(item.id)
+            );
+            setSelectedProperties(selectedProps);
+        });
+    }, [selectedIds]);
+    
 
     return (
         <Form>  
@@ -14,7 +41,7 @@ import { useEffect } from "react";
             </Form.Item>
 
             <Form.Item label="Selected Properties">
-                <div hidden  className="text-sm">{selectedIds.join(", ") || "No selection"}</div>
+                 [{selectedProperties.map((item) => item.address && item.address.trim() !=="" ? item.address : item.unitCode).join(", ")}]
             </Form.Item>
         </Form>
     );
