@@ -1,5 +1,5 @@
     import { useEffect, useState } from "react";
-    import { Form, Input, Select, Button, Col, Row, Checkbox } from "antd";
+    import { Form, Input, Select, Button, Col, Row, Checkbox, DatePicker } from "antd";
     import TextArea from "antd/es/input/TextArea";
     import { useSession } from "next-auth/react";
     import { App as AntdApp } from "antd";
@@ -178,8 +178,9 @@
                 />
                 </Form.Item>
                 <Form.Item name="availableOn" label="Available On" className="text-[12px]"  style={{ marginBottom: "10px" }}>
-                    <Input 
+                    <DatePicker
                         size="large"
+                        style={{ width: "100%" }}
                     />
                 </Form.Item>
                 <Form.Item name="sellingPrice" label="Selling Price" className="text-[12px]"  style={{ marginBottom: "10px" }}>
