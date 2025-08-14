@@ -10,7 +10,6 @@ interface Property {
 
 export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: number[], setEnqNo: (enqNo: string) => void, enqNo: string }) => {
 
-    const [properties, setProperties] = useState<Property[]>([]);
     const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
 
     useEffect(() => {
@@ -24,7 +23,6 @@ export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: num
             orderBy: "DESC",
             assignReportSortBy: "Duration"
         }).then((data) => {
-            setProperties(data.resultLists || []);
             
             const selectedProps = (data.resultLists || []).filter((item: Property) =>
                 selectedIds.includes(item.id)
