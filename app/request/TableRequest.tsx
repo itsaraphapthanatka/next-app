@@ -87,6 +87,7 @@ export const TableRequest = ({token}: {token: string}) => {
             dataIndex: 'projectName',
             sorter: (a, b) => a.projectName.localeCompare(b.projectName),
             render: (text, record) => (
+                record.requestStatus === "Approve" ? (
                 <div
                     style={{ cursor: 'pointer'}}
                     onClick={() => {
@@ -97,6 +98,11 @@ export const TableRequest = ({token}: {token: string}) => {
                     >
                     {text}
                 </div>
+                ) : (
+                    <div>
+                        {text}
+                    </div>
+                )
             ),
             width: 70,
         },
@@ -106,6 +112,7 @@ export const TableRequest = ({token}: {token: string}) => {
             sorter: (a, b) => a.size - b.size,
             width: 70,
             render: (text, record) => (
+                record.requestStatus === "Approve" ? (
                 <div
                     style={{ cursor: 'pointer'}}
                     onClick={() => {
@@ -116,6 +123,11 @@ export const TableRequest = ({token}: {token: string}) => {
                     >
                     {text}
                 </div>
+                ) : (
+                    <div>
+                        {text}
+                    </div>
+                )
             ),
         },
         {
@@ -124,6 +136,7 @@ export const TableRequest = ({token}: {token: string}) => {
             sorter: (a, b) => a.bedRoom - b.bedRoom ,
             width: 70,
             render: (text, record) => (
+                record.requestStatus === "Approve" ? (
                 <div
                     style={{ cursor: 'pointer'}}
                     onClick={() => {
@@ -134,6 +147,11 @@ export const TableRequest = ({token}: {token: string}) => {
                     >
                     {text}
                 </div>
+                ) : (
+                    <div>
+                        {text}
+                    </div>
+                )
             ),
         },
         {
@@ -142,6 +160,7 @@ export const TableRequest = ({token}: {token: string}) => {
             sorter: (a, b) => a.bathRoom - b.bathRoom,
             width: 70,
             render: (text, record) => (
+                record.requestStatus === "Approve" ? (
                 <div
                     style={{ cursor: 'pointer'}}
                     onClick={() => {
@@ -152,6 +171,11 @@ export const TableRequest = ({token}: {token: string}) => {
                     >
                     {text}
                 </div>
+                ) : (
+                    <div>
+                        {text}
+                    </div>
+                )
             ),
         },
         {
@@ -160,6 +184,7 @@ export const TableRequest = ({token}: {token: string}) => {
             sorter: (a, b) => a.rentalPrice - b.rentalPrice,
             width: 70,
             render: (text, record) => (
+                record.requestStatus === "Approve" ? (
                 <div
                     style={{ cursor: 'pointer'}}
                     onClick={() => {
@@ -170,6 +195,11 @@ export const TableRequest = ({token}: {token: string}) => {
                     >
                     {formatNumberShort(text)}
                 </div>
+                ) : (
+                    <div>
+                        {text}
+                    </div>
+                )
             ),
         },
         {
@@ -178,6 +208,7 @@ export const TableRequest = ({token}: {token: string}) => {
             sorter: (a, b) => a.salePrice - b.salePrice,
             width: 70,
             render: (text, record) => (
+                record.requestStatus === "Approve" ? (
                 <div
                     style={{ cursor: 'pointer'}}
                     onClick={() => {
@@ -188,6 +219,11 @@ export const TableRequest = ({token}: {token: string}) => {
                     >
                     {formatNumberShort(text)}
                 </div>
+                ) : (
+                    <div>
+                        {text}
+                    </div>
+                )
             ),
         },
         {
