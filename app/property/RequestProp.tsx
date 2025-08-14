@@ -39,8 +39,19 @@ export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: num
             </Form.Item>
 
             <Form.Item label="Selected Properties">
-                 [{selectedProperties.map((item) => item.address && item.address.trim() !=="" ? item.address : item.unitCode).join(", ")}]
+                {/* <div className="text-sm">{selectedIds.join(", ") || "No selection"}</div> */}
             </Form.Item>
+            <div>
+                {selectedProperties.map((item, index) => (
+                <span key={item.id}>
+                    {item.address && item.address.trim() !== ""
+                    ? item.address
+                    : <span className="text-orange-500">{item.unitCode}</span>
+                    }
+                    {index < selectedProperties.length - 1 && ", "}
+                </span>
+                ))}
+            </div>
         </Form>
     );
 }
