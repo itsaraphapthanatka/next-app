@@ -7,6 +7,7 @@
     import { getPropertyStatuses } from "@/app/server_actions/master";
     import { getEditData, saveEditData } from "@/app/server_actions/data-edits";
     import { getKeycards } from "@/app/server_actions/master";
+    import dayjs from "dayjs";
   
     type SelectedProperty = {
          propertyId?: number;
@@ -69,6 +70,7 @@
                     ...data,
                     rentalPrice: data.rentalPrice != null ? Number(data.rentalPrice).toLocaleString() : "",
                     sellingPrice: data.sellingPrice != null ? Number(data.sellingPrice).toLocaleString() : "",
+                    availableOn: data.availableOn ? dayjs(data.availableOn) : null
                 });
                 console.log("editData in DataEditProperty", data);
             });
@@ -181,6 +183,7 @@
                     <DatePicker
                         size="large"
                         style={{ width: "100%" }}
+                        value={editData?.availableOn ? dayjs(editData.availableOn) : undefined}
                     />
                 </Form.Item>
                 <Form.Item name="sellingPrice" label="Selling Price" className="text-[12px]"  style={{ marginBottom: "10px" }}>
