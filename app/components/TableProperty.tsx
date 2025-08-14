@@ -181,6 +181,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         );
       }
     },
+    Table.SELECTION_COLUMN,
     {
       key: 'project',
       title: 'Project',
@@ -574,6 +575,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
         }}
         rowSelection={{
           type: 'checkbox',
+          fixed: false, 
           columnTitle: <span className="hidden-checkbox-header" />,
           selectedRowKeys,
           onChange: (newSelectedKeys) => {
