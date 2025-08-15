@@ -406,10 +406,13 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
           searchParams.addressUnit
         );
       } else if (loadMode === "filter" && filterParams) {
+        console.log("filterParams", filterParams);
+        console.log("page loadMode filter", page);
+        console.log("pageSize loadMode filter", pageSize);
         data = await getPropertyFilter({ 
           ...filterParams,
            page: { current: page, size: pageSize }, 
-           sortBy: sortParams || "LastedUpdate" , 
+           sortType: sortParams || "LastedUpdate" , 
            orderBy: orderBy || "DESC", 
            assignReportSortBy: "Duration" }, 
            token
@@ -569,6 +572,8 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
           total: totalRecords,
           current: page,
           onChange: (page, pageSize) => {
+            console.log("page", page);
+            console.log("pageSize", pageSize);
             setPage(page);
             setPageSize(pageSize);
           },

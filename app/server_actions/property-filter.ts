@@ -56,7 +56,7 @@ interface GetPropertiesParams {
   vipStatusIds?: string[];
   foreignerOwner?: number;
   page?: PropertyPageParams;
-  sortBy?: PropertyBackOfficeSortType;
+  sortType?: PropertyBackOfficeSortType;
   orderBy?: string;
   assignReportSortBy?: string;
 }
@@ -69,7 +69,9 @@ interface PropertyPageParams {
 
     export const getPropertyFilter = async (body?: GetPropertiesParams,token?:string) => {
         console.log("body send to server getPropertyFilter",body);
-        console.log("token send to server getPropertyFilter",token);
+        // console.log("token send to server getPropertyFilter",token);
+        console.log("body.page.current send to server getPropertyFilter",body?.page?.current);
+        console.log("body.page.size send to server getPropertyFilter",body?.page?.size);
     const response: AxiosResponse = await axios.post(
     `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/filter`,
     {
