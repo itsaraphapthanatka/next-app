@@ -1,3 +1,4 @@
+import { UploadFile } from "antd";
 import axios, { AxiosResponse } from "axios";
 
 type PropertyBackOfficeSortType =
@@ -83,7 +84,7 @@ export const getPropertyById = async (id: number,token?:string) => {
         }
     );
     return response.data;
-}
+};
 
 export const getPropertyPictures = async (id: number,token?:string) => {
   const response: AxiosResponse = await axios.get(
@@ -111,7 +112,7 @@ export const getPropertyFollowup = async (id: number,token?:string) => {
     }
   );
   return response.data;
-}
+};
 
 export const savePropertyFollowup = async (params?: SavePropertyFollowupParams,token?:string) => {
   console.log('params savePropertyFollowup',params)
@@ -130,4 +131,32 @@ const response: AxiosResponse = await axios.post(
   }
 );
 return response.data;
+};
+
+export const uploadPropertyPictures = async (id: number, token: string, fileList: UploadFile[]) => {
+  const response: AxiosResponse = await axios.post(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/upload-pictures/${id}`,
+    fileList,
+    {
+      headers: {
+        accept: "text/plain",
+        "Authorization": `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const updatePropertySortIndex = async (token: string) => {
+  const response: AxiosResponse = await axios.post(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/update-sortindex`,
+    '',
+    {
+      headers: {
+        accept: "text/plain",
+        "Authorization": `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
 };

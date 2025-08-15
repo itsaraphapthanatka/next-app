@@ -190,9 +190,10 @@ export const ModalProperty = ({
                   {downloadOriginalFiles?.status === 200 ? "Download Original File" : "Not Have Original File"}
                 </Button>
               )}
-              <Button color="default" variant="solid" onClick={handleGetSuggestionLink}>Suggest</Button>
+              
             </>
           )}
+          <Button color="default" variant="solid" onClick={handleGetSuggestionLink}>Suggest</Button>
           <Button color="default" variant="solid" onClick={handleGetLink}>Get Link</Button>
           <Button color="default" variant="outlined" onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>

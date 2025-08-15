@@ -8,6 +8,7 @@ import { PicturePreviewMode } from "./PicturePreviewMode";
 import { SortablePictureMode } from "./SortablePictureMode";
 import React, { useState } from "react";
 import { UploadFileStatus } from "antd/es/upload/interface";
+import { uploadPropertyPictures } from "@/app/server_actions/property";
 
 type SelectedProperty = {
      propertyId?: number;
@@ -47,6 +48,11 @@ export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: Sel
         fileList: fileList,
       };
 
+    const handleUpload = async () => {
+        const response = await uploadPropertyPictures(selectedProperty.propertyId as number, token, fileList);
+        console.log(response);
+    }
+
     const items: TabsProps['items'] = [
     {
         key: '1',
@@ -66,7 +72,7 @@ export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: Sel
             name="tabsPictureDetail">
             <Form.Item name="uploadPicture" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Upload {...props}>
-                    <Button icon={<UploadOutlined />}>Upload png or jpg only</Button>
+                    <Button icon={<UploadOutlined />} onClick={handleUpload}>Upload png or jpg only</Button>
                 </Upload>
             </Form.Item>
             <Divider />
