@@ -74,7 +74,7 @@
                 });
                 console.log("editData in DataEditProperty", data);
             });
-        }, [token]);
+        }, [token, selectedProperty.propertyId]);
         const handleSave = async () => {
             setLoading(true);
             const followUp = formFollowUp.getFieldValue("followUp");
