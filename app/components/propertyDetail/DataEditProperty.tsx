@@ -61,6 +61,10 @@
         const [isSaveDisabled, setIsSaveDisabled] = useState(false);
         const [keycards, setKeycards] = useState<Keycard[]>([]);
         useEffect(() => {
+            setIsSendToApprovalDisabled(false);
+            setIsSaveDisabled(false);
+            console.log("sd", isSaveDisabled);
+            console.log("sat", isSendToApprovalDisabled);
             getPropertyStatuses(token).then((data) => {
                 setPropertyStatuses(data);
             });
