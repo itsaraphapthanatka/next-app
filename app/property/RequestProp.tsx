@@ -1,35 +1,25 @@
 import { Form, Input } from "antd";
 import { useEffect, useState } from "react"; 
-import { getProperties } from "@/app/server_actions/property";
+import { getPropertyById } from "@/app/server_actions/property";
 
 interface Property {
     id: number;
-    address: string;
+    addressNo: string;
     unitCode: string;
 }
 
-export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: number[], setEnqNo: (enqNo: string) => void, enqNo: string }) => {
+export const RequestProp = ({ selectedIds, setEnqNo, enqNo, token }: { selectedIds: number[], setEnqNo: (enqNo: string) => void, enqNo: string, token: string }) => {
 
     const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
-
     useEffect(() => {
-        console.log("selectedIds", selectedIds);
-    }, [selectedIds]);
-
-    useEffect(() => {
-        getProperties({
-            page: { current: 0, size: 0 },
-            sortBy: "LastedUpdate",
-            orderBy: "DESC",
-            assignReportSortBy: "Duration"
-        }).then((data) => {
-            
-            const selectedProps = (data.resultLists || []).filter((item: Property) =>
-                selectedIds.includes(item.id)
-            );
-            setSelectedProperties(selectedProps);
-        });
-    }, [selectedIds]);
+        if (selectedIds.length > 0 && token !== "") {
+            Promise.all(selectedIds.map(id => getPropertyById(id, token)))
+                .then((results) => {
+                    const properties = results.map(data => data.propertyDetail);
+                    setSelectedProperties(properties);
+                });
+        }
+    }, [selectedIds, token]);
     
 
     return (
@@ -41,13 +31,13 @@ export const RequestProp = ({ selectedIds, setEnqNo, enqNo }: { selectedIds: num
            
             <div>
                 <div className="text-sm">Selected Properties :</div>
-                {selectedProperties.map((item, index) => (
-                <span key={item.id}>
-                    {item.address && item.address.trim() !== ""
-                    ? item.address
+                {selectedProperties?.map((item, index) => (
+                <span key={index}>
+                    {item.addressNo && item.addressNo.trim() !== ""
+                    ? item.addressNo
                     : <span className="text-orange-500">{item.unitCode}</span>
                     }
-                    {index < selectedProperties.length - 1 && ", "}
+                    {index < selectedProperties?.length - 1 && ", "}
                 </span>
                 ))}
             </div>

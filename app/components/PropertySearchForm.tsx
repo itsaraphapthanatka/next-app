@@ -278,7 +278,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
           </div>
         }
       >
-        <RequestProp selectedIds={selectedIds} setEnqNo={setEnqNo} enqNo={enqNo} />
+        <RequestProp selectedIds={selectedIds} setEnqNo={setEnqNo} enqNo={enqNo} token={token} />
       </Modal>
       <TableProperty token={token} onSelectionChange={setSelectedIds} />
     </Card>
