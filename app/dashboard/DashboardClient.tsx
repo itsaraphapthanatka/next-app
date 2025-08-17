@@ -9,19 +9,8 @@ import { PropertyReadyForRent } from "./PropertyReadyForRent";
 import { SearchKeyword } from "./SearchKeyword";
 import { ProjectLessThenPicture } from "./ProjectLessThenPicture";
 
-interface SessionUser {
-  firstName?: string;
-  [key: string]: unknown;
-}
 
-interface Props {
-  session: {
-    user?: SessionUser;
-    [key: string]: unknown;
-  };
-}
-
-export default function DashboardClient({ session }: Props) {
+export default function DashboardClient() {
   const items = [
     {
       key: "1",
