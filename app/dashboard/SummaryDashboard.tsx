@@ -20,7 +20,7 @@ export function SummaryDashboard() {
     colorField: "type",
     innerRadius: 0.6,
     label: {
-      text: (datum: Datum) => `${datum.percent}%`,
+      text: (datum: Datum) => `${datum.type} ${datum.percent}%`,
       style: {
         fontWeight: "bold",
       },
@@ -60,7 +60,7 @@ export function SummaryDashboard() {
     colorField: "type",
     innerRadius: 0.6,
     label: {
-      text: (datum: Datum) => `${datum.percent}%`,
+      text: (datum: Datum) => `${datum.type} ${datum.percent}%`,
       style: {
         fontWeight: "bold",
       },
@@ -97,7 +97,7 @@ export function SummaryDashboard() {
     colorField: "type",
     innerRadius: 0.6,
     label: {
-      text: (datum: Datum) => `${datum.percent}%`,
+      text: (datum: Datum) => `${datum.type} ${datum.percent}%`,
       style: {
         fontWeight: "bold", 
       },
