@@ -22,7 +22,7 @@ const menuItems = [
   { title: "Request Report", icon: FileText, href: "/request" },
   { title: "Assigned Report", icon: ClipboardList, href: "/assign" },
   { title: "Project", icon: FolderOpen, href: "/project" },
-  { title: "Dashboard", icon: BarChart3, href: "/dashboard" ,disabled: true},
+  { title: "Dashboard", icon: BarChart3, href: "/dashboard" },
   { title: "Leads Management", icon: Users, href: "/lead-management" },
 ];
 
@@ -59,9 +59,9 @@ export function Dashboard({ session }: DashboardProps) {
               key={index}
               title={item.title}
               icon={item.icon}
-              onClick={() => handleMenuClick(item.title, item.disabled ?? false)}
+              onClick={() => handleMenuClick(item.title, false)}
               href={item.href}
-              disabled={item.disabled}
+              disabled={false}
             />
           ))}
 
