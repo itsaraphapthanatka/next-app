@@ -2,9 +2,6 @@
 import { Navbar } from "../components/navbar";
 import DashboardClient from "./DashboardClient";    
 
-
-
-
 export default async function DashboardPage() {
 
 
