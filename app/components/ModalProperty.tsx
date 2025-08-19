@@ -11,6 +11,8 @@ import { DataEditProperty } from "./propertyDetail/DataEditProperty";
 import { ContactTabs } from "./propertyDetail/ContactTabs";
 import { getGetLink, getSuggestionLinks } from "@/app/server_actions/suggestion-links";
 import { App } from "antd";
+import { getRevealCount } from "../server_actions/reveal-count";
+import { useState } from "react";
 
 type SelectedProperty = {
   id?: number;
@@ -53,6 +55,7 @@ export const ModalProperty = ({
   downloadOriginalFiles,
 }: ModalPropertyProps) => {
   const { message } = App.useApp();
+  const [revealCount, setRevealCount] = useState(0);
   const items = [
     {
       key: '1',
@@ -158,6 +161,14 @@ export const ModalProperty = ({
     }
   }
   
+  const handleCloseModal = async () => {
+    setIsModalOpen(false);
+    if (modalType === "assign") {
+      const revealCount = await getRevealCount(token);
+      setRevealCount(revealCount);
+      console.log("revealCount", revealCount);
+    }
+  }
 
 
   return (
@@ -165,7 +176,7 @@ export const ModalProperty = ({
     <Modal 
       title="Property Detail" 
       open={isModalOpen} 
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={handleCloseModal}
       width={1000}
       style={{ top: 20 }}
       styles={{
@@ -195,7 +206,7 @@ export const ModalProperty = ({
           )}
           <Button color="default" variant="solid" onClick={handleGetSuggestionLink}>Suggest</Button>
           <Button color="default" variant="solid" onClick={handleGetLink}>Get Link</Button>
-          <Button color="default" variant="outlined" onClick={() => setIsModalOpen(false)}>Close</Button>
+          <Button color="default" variant="outlined" onClick={handleCloseModal}>Close</Button>
         </div>
       }
     >

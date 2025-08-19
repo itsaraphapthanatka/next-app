@@ -179,6 +179,22 @@ export const updatePropertySortIndex = async (
   return response.data;
 };
 
+export const getRevealStatus = async (
+  token: string,
+  id: number,
+) => {
+  const response: AxiosResponse = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/reveal-status/${id}`,
+    {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+
 export const updateRevealStatus = async (
   token: string,
   id: number,

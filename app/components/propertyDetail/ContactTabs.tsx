@@ -1,8 +1,8 @@
-import { Button, Empty, Table } from "antd";
+import { Button, Empty, Table, Typography } from "antd";
 import { getContacts } from "@/app/server_actions/contacts";
 import { useState, useEffect } from "react";
 import { PhoneCall, Smile, Trash } from "lucide-react";
-import { updateRevealStatus } from "@/app/server_actions/property";
+import { getRevealStatus, updateRevealStatus } from "@/app/server_actions/property";
 
 interface Contact {
   id: number;
@@ -41,15 +41,27 @@ export const ContactTabs = ({
   useEffect(() => {
     const fetchContacts = async () => {
         if (modalType === "request") {
-            const data = await getContacts(token, selectedProperty.propertyId as number);
-            setContacts(data ?? []);
+            getContactsData();
         } else {
-            setContacts([]);
-            setRevealed(false);
+            const data = await getRevealStatus(token, selectedProperty.propertyId as number);
+            console.log("data in ContactTabs getRevealStatus", data);
+            if (data === "WaitForReveal") {
+              console.log("data in ContactTabs WairForReveal", data);
+                setRevealed(false);
+                setContacts([]);
+            } else {
+              console.log("data in ContactTabs else", data);
+                getContactsData();
+            }
         }
     };
     fetchContacts();
   }, [selectedProperty.propertyId, modalType]);
+
+  const getContactsData = async () => {
+    const data = await getContacts(token, selectedProperty.propertyId as number);
+    setContacts(data ?? []);
+  }
 
   const handleToggle = async () => {
     setLoadingReveal(true);
@@ -173,6 +185,7 @@ export const ContactTabs = ({
   return (
     <div className="w-full h-full">
       <Table
+        
         rowKey="id"
         columns={columns}
         dataSource={contacts}
@@ -181,7 +194,9 @@ export const ContactTabs = ({
         loading={loadingReveal}
         locale={{
           emptyText: (
-            <Empty description="No Data">
+            <Empty
+            description={false}
+            >
               {!revealed ? toggleButton : null}
             </Empty>
           ),
