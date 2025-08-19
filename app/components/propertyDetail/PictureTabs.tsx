@@ -59,13 +59,19 @@ export const PictureTabs = ({
     setFileList(newFileList);
     console.log("info.fileList in PictureTabs", newFileList);
   
-    if (newFileList.some((file) => file.status === "done" || file.status === "uploading")) {
+    if (newFileList.some((file) => file.status === "uploading")) {
       try {
         const response = await uploadPropertyPictures(
           selectedProperty.propertyId as number,
           token,
           newFileList
         );
+        if (response.status === 200) {
+          setFileList(newFileList.filter((file) => file.status !== "uploading"));
+          message.success("Upload success!");
+        } else {
+          message.error("Upload failed!");
+        }
         console.log("response in PictureTabs", response);
       } catch (error) {
         message.error("Upload failed!");

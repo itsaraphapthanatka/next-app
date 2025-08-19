@@ -158,7 +158,8 @@ export const uploadPropertyPictures = async (id: number, token: string, fileList
       },
     }
   );
-  return response.data;
+  const data = response.data;
+  return  {data: data, status: response.status };
 };
 
 export const updatePropertySortIndex = async (
