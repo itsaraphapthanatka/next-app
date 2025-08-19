@@ -17,7 +17,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Image } from "antd";
-import { getPropertyPictures } from "@/app/server_actions/property";  
+import { App as AntdApp } from "antd";
+import { getPropertyPictures, updatePropertySortIndex } from "@/app/server_actions/property"; 
+
 type SelectedProperty = {
      propertyId?: number;
   };  
@@ -31,6 +33,9 @@ type SortablePictureItem = {
     id: string;
     guId: string;
     url?: string;
+}
+type ItemsId = {
+    id: string;
 }
 const SortableItem = ({ id, guId, url }: PictureItem) => { 
   const {
@@ -72,15 +77,18 @@ const SortableItem = ({ id, guId, url }: PictureItem) => {
   );
 };
 
-export const SortablePictureMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
+export const SortablePictureMode = ({ selectedProperty, token, onSorted }: { selectedProperty: SelectedProperty, token: string, onSorted: () => void }) => {
   const [items, setItems] = useState<PictureItem[]>([]);
+  const [itemsId, setItemsId] = useState<ItemsId[]>([]);
+  const { message } = AntdApp.useApp();
   useEffect(() => {
     getPropertyPictures(selectedProperty.propertyId as number, token).then((response) => {
       setItems(response.map((item: SortablePictureItem) => ({
-        id: item.guId,
+        id: item.id,
         guId: item.guId,
         url: item.url,
       })));
+      setItemsId(response.map((item: SortablePictureItem) => ({id: item.id})));
     });
   }, [selectedProperty.propertyId, token]);
   const sensors = useSensors(
@@ -97,14 +105,40 @@ export const SortablePictureMode = ({ selectedProperty, token }: { selectedPrope
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-      setItems((items) => arrayMove(items, oldIndex, newIndex));
-    }
+    if (!over || active.id === over.id) return;
+  
+    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const newIndex = items.findIndex((item) => item.id === over.id);
+  
+    const newItems = arrayMove(items, oldIndex, newIndex);
+    const newItemsId = arrayMove(itemsId, oldIndex, newIndex);
+  
+    setItems(newItems);
+    setItemsId(newItemsId);
+  
+    // ส่งค่าใหม่ไปเลย ไม่ต้องพึ่ง state
+    await handleUpdateSortIndex(newItemsId);
   };
+  
+  
+
+const handleUpdateSortIndex = async (newItemsId: ItemsId[]) => {
+  try {
+    console.log("newItemsId in handleUpdateSortIndex client",newItemsId);
+    const response = await updatePropertySortIndex(token, newItemsId); 
+    console.log("response", response);
+
+    message.success("อัพเดตลำดับภาพสำเร็จ");
+    onSorted();
+    
+  } catch (error) {
+    console.error("update failed:", error);
+    message.error("อัพเดตลำดับภาพไม่สำเร็จ");
+  }
+};
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

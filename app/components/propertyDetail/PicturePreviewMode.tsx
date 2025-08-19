@@ -16,9 +16,12 @@ type PicturePreviewModeData = {
 export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
     const { message } = AntdApp.useApp();
     const [propertyPictures, setPropertyPictures] = useState<PicturePreviewModeData[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
+
         getPropertyPictures(selectedProperty.propertyId as number, token).then((response) => {
             setPropertyPictures(response);
+            setIsLoading(false);
         });
     }, [selectedProperty.propertyId, token]);
 
@@ -96,7 +99,7 @@ export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProper
                     console.log(`current index: ${current}, prev index: ${prev}`),
             }}
         >
-            <Table columns={columns} dataSource={propertyPictures} pagination={false} rowKey="guId" scroll={{ x: 300, y: 500 }} size="small" />
+            <Table columns={columns} dataSource={propertyPictures} pagination={false} rowKey="guId" scroll={{ x: 300, y: 500 }} size="small" loading={isLoading} />
         </Image.PreviewGroup>
     );
 }

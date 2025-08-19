@@ -31,6 +31,7 @@ export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: Sel
     console.log("selectedProperty in PictureTabs", selectedProperty)
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState<UploadPicture[]>([]);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const props: UploadProps = {
         beforeUpload: (file: RcFile) => {
@@ -57,12 +58,24 @@ export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: Sel
     {
         key: '1',
         label: 'Preview Mode',
-        children: <PicturePreviewMode selectedProperty={selectedProperty} token={token}/>,
+        children: (
+            <PicturePreviewMode
+              key={refreshKey} // 🔥 re-render ทุกครั้ง refreshKey เปลี่ยน
+              selectedProperty={selectedProperty}
+              token={token}
+            />
+          ),
     },
     {
         key: '2',
         label: 'Sortable Mode',
-        children: <SortablePictureMode selectedProperty={selectedProperty} token={token}/>,
+        children: <SortablePictureMode
+        selectedProperty={selectedProperty}
+        token={token}
+        onSorted={() => {
+          setRefreshKey(prev => prev + 1); // 🔥 trigger reload Preview
+        }}
+      />,
     },
     ];
       

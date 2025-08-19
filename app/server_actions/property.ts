@@ -42,6 +42,20 @@ interface SavePropertyFollowupParams {
   closeJob: boolean;
 }
 
+export const getPropertySortIndex = async (idList: string[],token?:string) => {
+  const response: AxiosResponse = await axios.get(
+    `https://api.serve.co.th/properties/update-sortindex?idList=${idList}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
 export const getProperties = async (params?: GetPropertiesParams,token?:string,projectName?:string,addressUnit?:string) => {
     console.log('projectName',projectName)
     console.log('addressUnit',addressUnit)
@@ -147,16 +161,38 @@ export const uploadPropertyPictures = async (id: number, token: string, fileList
   return response.data;
 };
 
-export const updatePropertySortIndex = async (token: string) => {
+// export const updatePropertySortIndex = async (token: string,newItemsId: string[]) => {
+//   const response: AxiosResponse = await axios.post(
+//     `/api/proxy/sortPicture`,
+//     { idList: newItemsId },
+//     {
+//       headers: {
+//         accept: "text/plain",
+//         "Authorization": `Bearer ${token}`,
+//         "Access-Control-Allow-Origin": "*",
+//       },
+//     }
+//   );
+//   return response.data;
+// };
+
+export const updatePropertySortIndex = async (
+  token: string,
+  newItemsId: {"id": string}[]
+) => {
+
+  console.log("newItemsId in updatePropertySortIndex server",newItemsId);
   const response: AxiosResponse = await axios.post(
-    `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/update-sortindex`,
-    '',
+    `/api/proxy/sortPicture`,
+    newItemsId,
     {
       headers: {
-        accept: "text/plain",
         "Authorization": `Bearer ${token}`,
       },
     }
   );
   return response.data;
 };
+
+
+
