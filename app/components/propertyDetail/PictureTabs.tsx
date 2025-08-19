@@ -7,6 +7,7 @@ import { SortablePictureMode } from "./SortablePictureMode";
 import React, { useState } from "react";
 import { UploadFileStatus } from "antd/es/upload/interface";
 import { uploadPropertyPictures } from "@/app/server_actions/property";
+import { App as AntdApp } from "antd";
 
 type SelectedProperty = {
   propertyId?: number;
@@ -23,6 +24,7 @@ interface UploadPicture {
   name: string;
   status: UploadFileStatus;
   url?: string;
+  propertyId?: number;
 }
 
 export const PictureTabs = ({
@@ -32,27 +34,32 @@ export const PictureTabs = ({
   selectedProperty: SelectedProperty;
   token: string;
 }) => {
+  const { message } = AntdApp.useApp();
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadPicture[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // ✅ move beforeUpload out so <Upload> can use it
   const beforeUpload = (file: RcFile) => {
-    console.log("file in beforeUpload", file);
     const isPNG = file.type === "image/png";
     const isJPG = file.type === "image/jpeg";
     if (!isPNG && !isJPG) {
       message.error(`${file.name} is not a PNG or JPG file`);
+      return Upload.LIST_IGNORE;
     }
-    return isPNG || isJPG || Upload.LIST_IGNORE;
+    return isPNG || isJPG;
   };
 
   const handleUpload = async (info: UploadChangeParam) => {
-    const newFileList = info.fileList as UploadPicture[];
+    const newFileList = (info.fileList as UploadPicture[]).map((file) => ({
+      ...file,
+      propertyId: selectedProperty.propertyId,
+    }));
+  
     setFileList(newFileList);
-    console.log("info.fileList in PictureTabs", info.fileList);
-
-    if (info.file.status === "done" || info.file.status === "uploading") {
+    console.log("info.fileList in PictureTabs", newFileList);
+  
+    if (newFileList.some((file) => file.status === "done" || file.status === "uploading")) {
       try {
         const response = await uploadPropertyPictures(
           selectedProperty.propertyId as number,
@@ -66,6 +73,7 @@ export const PictureTabs = ({
       }
     }
   };
+  
 
   const items: TabsProps["items"] = [
     {
