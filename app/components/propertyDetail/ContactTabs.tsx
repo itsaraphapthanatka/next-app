@@ -1,4 +1,4 @@
-import { Button, Empty, Table, Typography } from "antd";
+import { Button, Empty, Table } from "antd";
 import { getContacts } from "@/app/server_actions/contacts";
 import { useState, useEffect } from "react";
 import { PhoneCall, Smile, Trash } from "lucide-react";

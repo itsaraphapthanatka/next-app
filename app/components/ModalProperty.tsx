@@ -164,9 +164,9 @@ export const ModalProperty = ({
   const handleCloseModal = async () => {
     setIsModalOpen(false);
     if (modalType === "assign") {
-      const revealCount = await getRevealCount(token);
-      setRevealCount(revealCount);
-      console.log("revealCount", revealCount);
+      const count = await getRevealCount(token);
+      setRevealCount(count);
+      console.log("count", revealCount);
     }
   }
 
