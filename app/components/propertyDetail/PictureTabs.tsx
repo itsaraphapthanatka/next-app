@@ -1,4 +1,4 @@
-import { Form, Divider, Upload, Button, message, Tabs } from "antd";
+import { Form, Divider, Upload, Button, Tabs } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { UploadChangeParam, RcFile } from "antd/es/upload";
 import type { TabsProps } from "antd";
