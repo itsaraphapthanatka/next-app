@@ -68,7 +68,6 @@ export const PicturePreviewMode = ({ selectedProperty, token }: { selectedProper
             key: 'url',
             align: 'center',
             render: (text: string, record: PicturePreviewModeData) => (
-                console.log("Preview: ", text),
                 <Image src={`https://servesystem.s3.ap-southeast-1.amazonaws.com/${record.url}`} width={100} height={100} alt="" />
             ),
             width: 50,

@@ -1,9 +1,7 @@
 import { Form, Divider, Upload, Button, message, Tabs } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { UploadProps } from "antd/es/upload";
-import { UploadChangeParam } from "antd/es/upload";
-import { RcFile } from "antd/es/upload";
-import type { TabsProps } from 'antd';
+import { UploadChangeParam, RcFile } from "antd/es/upload";
+import type { TabsProps } from "antd";
 import { PicturePreviewMode } from "./PicturePreviewMode";
 import { SortablePictureMode } from "./SortablePictureMode";
 import React, { useState } from "react";
@@ -11,85 +9,108 @@ import { UploadFileStatus } from "antd/es/upload/interface";
 import { uploadPropertyPictures } from "@/app/server_actions/property";
 
 type SelectedProperty = {
-     propertyId?: number;
-    picturePGColor?: string;
-    picturePGText?: string;
-    vipStatusColor?: string;
-    invid?: string;
-    project?: string;
-    vipStatus?: string;
+  propertyId?: number;
+  picturePGColor?: string;
+  picturePGText?: string;
+  vipStatusColor?: string;
+  invid?: string;
+  project?: string;
+  vipStatus?: string;
+};
+
+interface UploadPicture {
+  uid: string;
+  name: string;
+  status: UploadFileStatus;
+  url?: string;
+}
+
+export const PictureTabs = ({
+  selectedProperty,
+  token,
+}: {
+  selectedProperty: SelectedProperty;
+  token: string;
+}) => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<UploadPicture[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // ✅ move beforeUpload out so <Upload> can use it
+  const beforeUpload = (file: RcFile) => {
+    console.log("file in beforeUpload", file);
+    const isPNG = file.type === "image/png";
+    const isJPG = file.type === "image/jpeg";
+    if (!isPNG && !isJPG) {
+      message.error(`${file.name} is not a PNG or JPG file`);
+    }
+    return isPNG || isJPG || Upload.LIST_IGNORE;
   };
 
-  interface UploadPicture {
-    uid: string;
-    name: string;
-    status: UploadFileStatus;
-    url: string;
-  }
+  const handleUpload = async (info: UploadChangeParam) => {
+    const newFileList = info.fileList as UploadPicture[];
+    setFileList(newFileList);
+    console.log("info.fileList in PictureTabs", info.fileList);
 
-export const PictureTabs = ({ selectedProperty, token }: { selectedProperty: SelectedProperty, token: string }) => {
-    console.log("selectedProperty in PictureTabs", selectedProperty)
-    const [form] = Form.useForm();
-    const [fileList, setFileList] = useState<UploadPicture[]>([]);
-    const [refreshKey, setRefreshKey] = useState(0);
-
-    const props: UploadProps = {
-        beforeUpload: (file: RcFile) => {
-          const isPNG = file.type === 'image/png';
-          const isJPG = file.type === 'image/jpeg';
-          if (!isPNG && !isJPG) {
-            message.error(`${file.name} is not a png or jpg file`);
-          }
-          return isPNG || isJPG || Upload.LIST_IGNORE;
-        },
-        onChange: (info: UploadChangeParam) => {
-          setFileList(info.fileList as UploadPicture[]);
-          console.log(info.fileList);
-        },
-        fileList: fileList,
-      };
-
-    const handleUpload = async () => {
-        const response = await uploadPropertyPictures(selectedProperty.propertyId as number, token, fileList);
-        console.log(response);
+    if (info.file.status === "done" || info.file.status === "uploading") {
+      try {
+        const response = await uploadPropertyPictures(
+          selectedProperty.propertyId as number,
+          token,
+          newFileList
+        );
+        console.log("response in PictureTabs", response);
+      } catch (error) {
+        message.error("Upload failed!");
+        console.error(error);
+      }
     }
+  };
 
-    const items: TabsProps['items'] = [
+  const items: TabsProps["items"] = [
     {
-        key: '1',
-        label: 'Preview Mode',
-        children: (
-            <PicturePreviewMode
-              key={refreshKey} // 🔥 re-render ทุกครั้ง refreshKey เปลี่ยน
-              selectedProperty={selectedProperty}
-              token={token}
-            />
-          ),
+      key: "1",
+      label: "Preview Mode",
+      children: (
+        <PicturePreviewMode
+          key={refreshKey} // 🔥 re-render when refreshKey changes
+          selectedProperty={selectedProperty}
+          token={token}
+        />
+      ),
     },
     {
-        key: '2',
-        label: 'Sortable Mode',
-        children: <SortablePictureMode
-        selectedProperty={selectedProperty}
-        token={token}
-        onSorted={() => {
-          setRefreshKey(prev => prev + 1); // 🔥 trigger reload Preview
-        }}
-      />,
+      key: "2",
+      label: "Sortable Mode",
+      children: (
+        <SortablePictureMode
+          selectedProperty={selectedProperty}
+          token={token}
+          onSorted={() => {
+            setRefreshKey((prev) => prev + 1); // 🔥 refresh Preview after sorting
+          }}
+        />
+      ),
     },
-    ];
-      
-    return (
-        <Form form={form}
-            layout="vertical"
-            name="tabsPictureDetail">
-            <Form.Item name="uploadPicture" className="text-[12px]"  style={{ marginBottom: "10px" }}>
-                <Upload {...props}>
-                    <Button icon={<UploadOutlined />} onClick={handleUpload}>Upload png or jpg only</Button>
-                </Upload>
-            </Form.Item>
-            <Divider />
-            <Tabs items={items} />
-        </Form>
-    )
-}
+  ];
+
+  return (
+    <Form form={form} layout="vertical" name="tabsPictureDetail">
+      <Form.Item
+        name="uploadPicture"
+        className="text-[12px]"
+        style={{ marginBottom: "10px" }}
+      >
+        <Upload
+          fileList={fileList}
+          beforeUpload={beforeUpload}
+          onChange={handleUpload}
+        >
+          <Button icon={<UploadOutlined />}>Upload PNG or JPG only</Button>
+        </Upload>
+      </Form.Item>
+      <Divider />
+      <Tabs items={items} />
+    </Form>
+  );
+};
