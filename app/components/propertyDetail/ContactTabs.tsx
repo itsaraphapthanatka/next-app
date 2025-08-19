@@ -2,6 +2,7 @@ import { Button, Empty, Table } from "antd";
 import { getContacts } from "@/app/server_actions/contacts";
 import { useState, useEffect } from "react";
 import { PhoneCall, Smile, Trash } from "lucide-react";
+import { updateRevealStatus } from "@/app/server_actions/property";
 
 interface Contact {
   id: number;
@@ -53,6 +54,7 @@ export const ContactTabs = ({
   const handleToggle = async () => {
     setLoadingReveal(true);
     const data = await getContacts(token, selectedProperty.propertyId as number);
+    await updateRevealStatus(token, selectedProperty.propertyId as number);     
     setContacts(data ?? []);
     setRevealed(true);
     setLoadingReveal(false);

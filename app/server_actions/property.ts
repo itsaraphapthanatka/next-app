@@ -161,21 +161,6 @@ export const uploadPropertyPictures = async (id: number, token: string, fileList
   return response.data;
 };
 
-// export const updatePropertySortIndex = async (token: string,newItemsId: string[]) => {
-//   const response: AxiosResponse = await axios.post(
-//     `/api/proxy/sortPicture`,
-//     { idList: newItemsId },
-//     {
-//       headers: {
-//         accept: "text/plain",
-//         "Authorization": `Bearer ${token}`,
-//         "Access-Control-Allow-Origin": "*",
-//       },
-//     }
-//   );
-//   return response.data;
-// };
-
 export const updatePropertySortIndex = async (
   token: string,
   newItemsId: {"id": string}[]
@@ -185,6 +170,22 @@ export const updatePropertySortIndex = async (
   const response: AxiosResponse = await axios.post(
     `/api/proxy/sortPicture`,
     newItemsId,
+    {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const updateRevealStatus = async (
+  token: string,
+  id: number,
+) => {
+  const response: AxiosResponse = await axios.post(
+    `/api/proxy/reveal-status`,
+    id,
     {
       headers: {
         "Authorization": `Bearer ${token}`,
