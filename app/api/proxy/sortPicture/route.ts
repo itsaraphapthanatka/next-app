@@ -28,11 +28,12 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify(response.data), { status: 200 });
 } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
-      console.error("Axios error:", err.response?.data || err.message);
-      return new Response(
-        JSON.stringify({ error: err.response?.data || err.message }),
-        { status: 500 }
-      );
+        const axiosErr = err as AxiosError;
+        console.error("Axios error:", axiosErr.response?.data || axiosErr.message);
+        return new Response(
+          JSON.stringify({ error: axiosErr.response?.data || axiosErr.message }),
+          { status: 500 }
+        );
     } else if (err instanceof Error) {
       console.error("Error:", err.message);
       return new Response(JSON.stringify({ error: err.message }), { status: 500 });
