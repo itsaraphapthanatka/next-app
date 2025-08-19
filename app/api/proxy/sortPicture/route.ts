@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
+
 
 export async function POST(req: Request) {
   try {
@@ -25,8 +26,19 @@ export async function POST(req: Request) {
 
     console.log("Response from serve.co.th:", response.data);
     return new Response(JSON.stringify(response.data), { status: 200 });
-  } catch (err: any) {
-    console.error("Error in /api/proxy/sortPicture:", err.message);
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+} catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      console.error("Axios error:", err.response?.data || err.message);
+      return new Response(
+        JSON.stringify({ error: err.response?.data || err.message }),
+        { status: 500 }
+      );
+    } else if (err instanceof Error) {
+      console.error("Error:", err.message);
+      return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    } else {
+      console.error("Unknown error:", err);
+      return new Response(JSON.stringify({ error: "Unknown error" }), { status: 500 });
+    }
   }
 }
