@@ -3,29 +3,26 @@ import React, { useEffect, useState } from 'react';
 import { DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
-import { getProperties } from '@/app/server_actions/property';
 import { ModalProject } from './ModalProject';
+import { getProjects } from '../server_actions/project';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
-
 interface ProjectApiItem {
   id?: number;
   no: number;
-  projectName: string,
-  project: string,
-  totalRoom: number,
-  projectId: number,
-  projectThaiName: string,
+  name: string,
+  thaiName: string,
   developerBrand: string,
-  tower: string,
+  towers: number,
+  totalRoom: number,
 }
 
 
 
   const TableProject: React.FC<{ token: string }> = ({ token }) => {
-  const [properties, setProperties] = useState<ProjectApiItem[]>([]);
+  const [projects, setProjects] = useState<ProjectApiItem[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50); // ตั้ง default เท่ากับ API
@@ -54,8 +51,8 @@ interface ProjectApiItem {
     },
     {
       title: 'Name',
-      dataIndex: 'project',
-      sorter: (a, b) => a.project.localeCompare(b.project),
+      dataIndex: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => (
         <div
           style={{ cursor: 'pointer' }}
@@ -84,7 +81,7 @@ interface ProjectApiItem {
       <tbody className='text-xs'>
         <tr className='border-b-2 border-dashed border-gray-200 p-1'>
           <td className='p-1 underline'>Thai Name</td>
-          <td className='p-1 text-right'>{record.projectThaiName}</td>
+          <td className='p-1 text-right'>{record.thaiName}</td>
         </tr>
         <tr className='border-b border-dashed border-gray-200 p-1'>
           <td className='p-1 underline'>Developer Brand</td>
@@ -92,7 +89,7 @@ interface ProjectApiItem {
         </tr>
         <tr className='border-b border-dashed border-gray-200 p-1'>
           <td className='p-1 underline'>Tower</td>
-          <td className='p-1 text-right'>{record.tower}</td>
+          <td className='p-1 text-right'>{record.towers}</td>
         </tr>
       </tbody>
     </table>,
@@ -124,17 +121,17 @@ interface ProjectApiItem {
       
 
       if (loadMode === "search" && searchParams) {
-        data = await getProperties  ( 
-          { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
+        data = await getProjects( 
           token,
-          searchParams.projectName,
-          ""
+          page,
+          pageSize,
+          searchParams.projectName
           );
       } else {
-        data = await getProperties( 
-          { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
+        data = await getProjects( 
           token,
-          "",
+          page,
+          pageSize,
           ""
           );
       }
@@ -146,16 +143,14 @@ interface ProjectApiItem {
         id: item.id ?? 0,
         // key: item.propertyId ?? index,
         no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-        projectName: item.projectName ?? "-",
-        project: item.project ?? "-",
-        totalRoom: item.totalRoom ?? 0,
-        projectId: item.id ?? 0,
-        projectThaiName: item.projectThaiName ?? "-",
+        name: item.name ?? "-",
+        thaiName: item.thaiName ?? "-",
         developerBrand: item.developerBrand ?? "-",
-        tower: item.tower ?? "-",
+        towers: item.towers ?? 0,
+        totalRoom: item.totalRoom ?? 0,
       }));
 
-      setProperties(mapped);
+      setProjects(mapped);
       setTotalRecords(data.allRecord ?? 0);
       setPage(data.currentPage ?? 1);
       setPageSize(data.recordPerPage ?? 10);
@@ -191,24 +186,18 @@ interface ProjectApiItem {
     id: 0,
     // key: 0,  
     no: 0,
-    projectName: "",
-    project: "",
-    totalRoom: 0,
-    projectId: 0,
-    projectThaiName: "",
+    name: "",
+    thaiName: "",
     developerBrand: "",
-    tower: "",
+    towers: 0,
+    totalRoom: 0,
   };
 
   const rowKeyFunc = (record: ProjectApiItem) => {
-    if (record.projectId && record.projectId) {
-        return `${record.projectId}-${record.projectId}`;
-    }
     if (record.id && record.id !== 0) {
         return `id-${record.id}`;
     }
-    // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
-    return `fallback-${record.projectId || 0}-${record.no}`;
+    return `fallback-${record.id || 0}-${record.no}`;
 };
   return (
     <div className="mt-4">
@@ -220,7 +209,7 @@ interface ProjectApiItem {
         size="small"
         columns={columns}
         scroll={{ x: 400, y: 500 }}
-        dataSource={properties}
+        dataSource={projects}
         pagination={{
           position: ['bottomCenter'],
           showTotal: (total) => `Total ${total} items`,
@@ -237,7 +226,7 @@ interface ProjectApiItem {
     />
       <ModalProject
         selectedProject={selectedProject ?? emptyDataType}
-        text={selectedProject?.projectName ?? ""}
+        text={selectedProject?.name ?? ""}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         token={token}
