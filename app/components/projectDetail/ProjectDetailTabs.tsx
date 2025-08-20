@@ -73,6 +73,7 @@ export const ProjectDetailTabs = ({
   selectedProject: ProjectDetail;
   token: string;
 }) => {
+  console.log("selectedProject in ProjectDetailTabs", selectedProject);
   const [project] = useState<ProjectDetail>(selectedProject);
   const [formProjectDetail] = Form.useForm();
   // const [projectType, setProjectType] = useState<ProjectType[]>([]);
@@ -90,15 +91,22 @@ export const ProjectDetailTabs = ({
   }, [token]);
 
 
-//   // Fetch Property Detail
-//   useEffect(() => {
-//     if (!selectedProject.propertyId) return;
-//     getProjectById(selectedProject.propertyId as number, token).then((response) => {
-//       setProject(response.projectDetail);
-//       form.setFieldsValue(response.projectDetail);
-//     });
-//     // eslint-disable-next-line
-//   }, [selectedProject.propertyId, token]);
+  // // Fetch Property Detail
+  // useEffect(() => {
+  //   if (!selectedProject.propertyId) return;
+  //   getProjectById(selectedProject.propertyId as number, token).then((response) => {
+  //     setProject(response.projectDetail);
+  //     form.setFieldsValue(response.projectDetail);
+  //   });
+  //   // eslint-disable-next-line
+  // }, [selectedProject.propertyId, token]);
+
+
+  // Fetch Property Detail
+  useEffect(() => {
+    if (!selectedProject.id) return;
+      formProjectDetail.setFieldsValue(selectedProject);
+  }, [selectedProject]);
 
   // Memoize checkbox checked values for performance
   const checkboxChecked = useMemo(
@@ -132,7 +140,7 @@ export const ProjectDetailTabs = ({
         ))}
       </div>
     ),
-    [project]
+    [project, selectedProject]
   );
 
 //   useEffect(() => {
