@@ -135,7 +135,6 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
           <TextArea rows={6} />
         </Form.Item>
 
-      {modalType === "request" && (
       <Form.Item name="closeJob" style={{ marginBottom: "10px" }}>
           <Checkbox.Group style={{ width: '100%' }}>
               <Row>
@@ -145,7 +144,6 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
               </Row>
           </Checkbox.Group>
       </Form.Item>
-      )}
       <div className="flex w-full mt-2">
           <Button block color="green" variant="solid" onClick={handleSave} loading={loading}>Save</Button>
       </div>
