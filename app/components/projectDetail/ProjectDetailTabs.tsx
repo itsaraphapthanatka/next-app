@@ -9,8 +9,8 @@ import TextArea from "antd/es/input/TextArea";
 type ProjectDetail = {
   projectId?: number;
   developerBrand?: string;
-  projectName?: string;
-  projectThaiName?: string;
+  name?: string;
+  thaiName?: string;
   headline?: string;
   propertyType?: string;
   no?: number;
@@ -164,10 +164,10 @@ export const ProjectDetailTabs = ({
         name="tabsProjectDetail"  
       >
         <Form.Item
-          name="Project ID"
+          name="id"
           label="Project ID"
           className="text-[12px]"
-          initialValue={project.projectId}
+          initialValue={project.id}
           style={{ marginBottom: "10px" }}
         >
           <Input
@@ -176,7 +176,7 @@ export const ProjectDetailTabs = ({
           />
         </Form.Item>
         <Form.Item
-          name="Developer Brand"
+          name="developerBrand"
           label="Developer Brand"
           initialValue={project.developerBrand}
           className="text-[12px]"
@@ -189,9 +189,9 @@ export const ProjectDetailTabs = ({
           />
         </Form.Item>
         <Form.Item
-          name="Name"
+          name="name"
           label="Name"
-          initialValue={project.projectName}
+          initialValue={project.name}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
@@ -201,9 +201,9 @@ export const ProjectDetailTabs = ({
           />
         </Form.Item>
         <Form.Item
-          name="Thai Name"
+          name="thaiName"
           label="Thai Name"
-          initialValue={project.projectThaiName}
+          initialValue={project.thaiName}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >

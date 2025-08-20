@@ -19,10 +19,9 @@ export const ProjectSearchFrom = ({ className = "", token }: ProjectSearchFromPr
   const handleSearch = () => {
     const values = form.getFieldsValue();
 
-    const event = new CustomEvent("propertyTableSearch", {
+    const event = new CustomEvent("projectTableSearch", {
       detail: {
         projectName: values.projectNameSearch ?? "",
-        addressUnit: values.addressUnitSearch ?? "",
         page: 1,
         pageSize: 10,
       },

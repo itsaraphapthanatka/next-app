@@ -167,8 +167,8 @@ interface ProjectApiItem {
       setSearchParams({ projectName: e.detail.projectName ?? "" });
       setLoadMode("search");
     };
-    window.addEventListener("assignTableSearch", handleTableSearch as EventListener);
-    return () => window.removeEventListener("assignTableSearch", handleTableSearch as EventListener);
+    window.addEventListener("projectTableSearch", handleTableSearch as EventListener);
+    return () => window.removeEventListener("projectTableSearch", handleTableSearch as EventListener);
   }, []);
 
    // 🎯 Filter Event
@@ -178,8 +178,8 @@ interface ProjectApiItem {
       setPage(1); // Reset to first page
       setLoadMode("filter");
     };
-    window.addEventListener("assignTableReload", handleTableReload as EventListener);
-    return () => window.removeEventListener("assignTableReload", handleTableReload as EventListener);
+    window.addEventListener("projectTableReload", handleTableReload as EventListener);
+    return () => window.removeEventListener("projectTableReload", handleTableReload as EventListener);
   }, []); 
 
   const emptyDataType: ProjectApiItem = {
