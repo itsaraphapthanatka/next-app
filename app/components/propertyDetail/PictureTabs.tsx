@@ -36,7 +36,7 @@ export const PictureTabs = ({
 }) => {
   const { message } = AntdApp.useApp();
   const [form] = Form.useForm();
-  const [fileList, setFileList] = useState<UploadPicture[]>([]);
+  const [fileList] = useState<UploadPicture[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // ✅ move beforeUpload out so <Upload> can use it
