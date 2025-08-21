@@ -65,7 +65,7 @@ export const PictureTabs = ({
         formData
       );
       if (response.status === 200) {
-        message.success("Upload success!");
+        message.success("Upload " + file.name + " success!");
         setRefreshKey((prev) => prev + 1);
       } else {
         message.error("Upload failed!");
