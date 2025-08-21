@@ -1,6 +1,6 @@
 import { Form, Divider, Upload, Button, Tabs } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { UploadChangeParam, RcFile } from "antd/es/upload";
+import { RcFile, UploadChangeParam   } from "antd/es/upload";
 import type { TabsProps } from "antd";
 import { PicturePreviewMode } from "./PicturePreviewMode";
 import { SortablePictureMode } from "./SortablePictureMode";
@@ -51,34 +51,66 @@ export const PictureTabs = ({
   };
 
   const handleUpload = async (info: UploadChangeParam) => {
-    const newFileList = (info.fileList as UploadPicture[]).map((file) => ({
-      ...file,
-      propertyId: selectedProperty.propertyId,
-    }));
-  
-    setFileList(newFileList);
-    console.log("info.fileList in PictureTabs", newFileList);
-  
-    if (newFileList.some((file) => file.status === "uploading")) {
-      try {
-        const response = await uploadPropertyPictures(
-          selectedProperty.propertyId as number,
-          token,
-          newFileList
-        );
-        if (response.status === 200) {
-          setFileList(newFileList.filter((file) => file.status !== "uploading"));
-          message.success("Upload success!");
-        } else {
-          message.error("Upload failed!");
-        }
-        console.log("response in PictureTabs", response);
-      } catch (error) {
+    const file = info.file;
+    console.log("file in PictureTabs", file)
+    // Prepare FormData to match the curl request
+    const formData = new FormData();
+    formData.append("id", String(selectedProperty.propertyId));
+    // The API expects 'files' as an array, so we append the file as 'files'
+    formData.append("files", file.originFileObj as RcFile);
+
+    try {
+      const response = await uploadPropertyPictures(
+        token,
+        formData
+      );
+      if (response.status === 200) {
+        message.success("Upload success!");
+        setRefreshKey((prev) => prev + 1);
+      } else {
         message.error("Upload failed!");
-        console.error(error);
       }
+      console.log("response in PictureTabs", response);
+    } catch (error) {
+      message.error("Upload failed!");
+      console.error("Upload error in PictureTabs", error);
     }
   };
+  // const handleUpload = async (info: UploadChangeParam) => {
+  //   const file = info.file;
+  //   console.log("file in PictureTabs", file)
+  //   // Prepare FormData to match the curl request
+  //   const formData = new FormData();
+  //   formData.append("id", String(selectedProperty.propertyId));
+  //   // The API expects 'files' as an array, so we append the file as 'files'
+  //   formData.append("files", file.originFileObj as RcFile);
+
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/upload-pictures`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "accept": "text/plain",
+  //           "Authorization": `Bearer ${token}`,
+  //           // Do NOT set Content-Type here; browser will set it with correct boundary for multipart/form-data
+  //         },
+  //         body: formData,
+  //       }
+  //     );
+
+  //     if (response.ok) {
+  //       message.success("Upload success!");
+  //     } else {
+  //       message.error("Upload failed!");
+  //     }
+  //     const data = await response.text();
+  //     console.log("response in PictureTabs", { status: response.status, data });
+  //   } catch (error) {
+  //     message.error("Upload failed!");
+  //     console.error("Upload error in PictureTabs", error);
+  //   }
+  // };
   
 
   const items: TabsProps["items"] = [
@@ -98,6 +130,7 @@ export const PictureTabs = ({
       label: "Sortable Mode",
       children: (
         <SortablePictureMode
+          key={refreshKey}
           selectedProperty={selectedProperty}
           token={token}
           onSorted={() => {

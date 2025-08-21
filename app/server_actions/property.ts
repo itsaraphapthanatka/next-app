@@ -1,4 +1,4 @@
-import { UploadFile } from "antd";
+
 import axios, { AxiosResponse } from "axios";
 
 type PropertyBackOfficeSortType =
@@ -147,14 +147,15 @@ const response: AxiosResponse = await axios.post(
 return response.data;
 };
 
-export const uploadPropertyPictures = async (id: number, token: string, fileList: UploadFile[]) => {
+export const uploadPropertyPictures = async (token: string, file: FormData) => {
   const response: AxiosResponse = await axios.post(
-    `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/upload-pictures/${id}`,
-    fileList,
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/upload-pictures`,
+    file,
     {
       headers: {
         accept: "text/plain",
         "Authorization": `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     }
   );
