@@ -61,7 +61,7 @@ export const ProjectLessThenPicture = () => {
       key: "name",
       render: (text: string, record: Project) => (
         <div
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', color: 'orange' }}
           onClick={() => {
               setSelectedProject(record);
             setIsModalOpen(true);
