@@ -6,6 +6,7 @@ import { Tabs } from "antd";
 
 import { SummaryDashboard } from "./SummaryDashboard";
 import { PropertyReadyForRent } from "./PropertyReadyForRent";
+import { PropertyNotReadyForRent } from "./PropertyNotReadyForRent";
 import { SearchKeyword } from "./SearchKeyword";
 import { ProjectLessThenPicture } from "./ProjectLessThenPicture";
 
@@ -24,11 +25,16 @@ export default function DashboardClient() {
     },
     {
       key: "3",
+      label: "Property Not Ready for rent",
+      children: <PropertyNotReadyForRent />,
+    },
+    {
+      key: "4",
       label: "Search Keyword",
       children: <SearchKeyword />,
     },
     {
-      key: "4",
+      key: "5",
       label: "Project less then picture",
       children: <ProjectLessThenPicture />,
     },

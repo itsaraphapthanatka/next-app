@@ -1,7 +1,6 @@
 "use client";
 
 import { Table } from "antd";
-import { getProjects } from "../server_actions/project";
 import { useEffect, useState } from "react";
 
 interface Project {

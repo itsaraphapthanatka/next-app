@@ -2,7 +2,6 @@
 
 import { Table } from "antd";
 import { useEffect, useState } from "react";
-import { ModalProject } from "../project/ModalProject";
 
 interface Project {
   id: number;
@@ -10,16 +9,9 @@ interface Project {
   propertyCount: number;
 }
 
-type SelectedProject = {
-  id?: number;
-};
-
-export const ProjectLessThenPicture = () => {
+export const PropertyNotReadyForRent = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
@@ -59,17 +51,6 @@ export const ProjectLessThenPicture = () => {
       title: "Project",
       dataIndex: "name",
       key: "name",
-      render: (text: string, record: Project) => (
-        <div
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-              setSelectedProject(record);
-            setIsModalOpen(true);
-          }}
-        >
-          {text}
-        </div>
-      ),
     },
     {
       title: "Properties",
@@ -88,16 +69,8 @@ export const ProjectLessThenPicture = () => {
 
   return (
     <div>
-      <h2>Project Less Then Picture</h2>
+      <h2>Property Not Ready for Rent</h2>
       <Table rowKey={(record) => record.id} columns={columns} dataSource={projects} pagination={false} loading={loading}/>
-
-        <ModalProject
-          selectedProject={selectedProject as SelectedProject}
-          text={selectedProject?.name ?? ""}
-          token={''}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-        />
     </div>
   );
 }
