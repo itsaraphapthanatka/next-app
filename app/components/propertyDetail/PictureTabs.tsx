@@ -150,6 +150,8 @@ export const PictureTabs = ({
       >
         <Upload
           fileList={fileList}
+          maxCount={10}
+          multiple={true}
           beforeUpload={beforeUpload}
           onChange={handleUpload}
         >
