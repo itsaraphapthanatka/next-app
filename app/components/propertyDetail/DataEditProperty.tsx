@@ -92,6 +92,10 @@
                 saleRequestItemId: selectedProperty.saleRequestId as number,
                 toSalePropertyId: selectedProperty.saleRequestItemId as number,
             };
+            if(followUp === "" || followUp === null || followUp === undefined){
+                message.error("Please enter a follow-up");
+                setLoading(false);
+            }else{
             const res = await savePropertyFollowup(followupData, token);
             if (res.status === 200) {
                 message.success("Follow-up saved successfully");
@@ -101,8 +105,9 @@
                     console.log("editData in DataEditProperty", data);
                 }); 
                 setIsSaveDisabled(true);
-            } else {
-                message.error("Failed to save follow-up");
+                } else {
+                    message.error("Failed to save follow-up");
+                }
             }
             setLoading(false);
         }

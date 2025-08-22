@@ -52,20 +52,24 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
       saleRequestItemId: selectedProperty.saleRequestId as number,
       toSalePropertyId: selectedProperty.saleRequestItemId as number,
     };
-    console.log("followupData", followupData);
-    const res = await savePropertyFollowup(followupData, token);
-    console.log("response", res);
-    if (res.status === 200) {
-      message.success("Follow-up saved successfully");
-      setLoading(true);
-      getPropertyFollowup(selectedProperty.propertyId as number, token).then((data) => {
-        setPropertyFollowup(data);
-        form.resetFields();
+    console.log("followUp", followUp);
+    if(followUp === "" || followUp === null || followUp === undefined){
+        message.error("Please enter a follow-up");
         setLoading(false);
-      });
-    } else {
-      message.error("Failed to save follow-up");
-    }
+    }else{
+      const res = await savePropertyFollowup(followupData, token);
+      if (res.status === 200) {
+        message.success("Follow-up saved successfully");
+        setLoading(true);
+        getPropertyFollowup(selectedProperty.propertyId as number, token).then((data) => {
+          setPropertyFollowup(data);
+          form.resetFields();
+          setLoading(false);
+        });
+      } else {
+        message.error("Failed to save follow-up");
+      }
+  }
   };
   const columns = [
     {

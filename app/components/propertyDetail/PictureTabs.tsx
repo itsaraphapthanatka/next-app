@@ -76,41 +76,6 @@ export const PictureTabs = ({
       console.error("Upload error in PictureTabs", error);
     }
   };
-  // const handleUpload = async (info: UploadChangeParam) => {
-  //   const file = info.file;
-  //   console.log("file in PictureTabs", file)
-  //   // Prepare FormData to match the curl request
-  //   const formData = new FormData();
-  //   formData.append("id", String(selectedProperty.propertyId));
-  //   // The API expects 'files' as an array, so we append the file as 'files'
-  //   formData.append("files", file.originFileObj as RcFile);
-
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_API}/properties/upload-pictures`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "accept": "text/plain",
-  //           "Authorization": `Bearer ${token}`,
-  //           // Do NOT set Content-Type here; browser will set it with correct boundary for multipart/form-data
-  //         },
-  //         body: formData,
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       message.success("Upload success!");
-  //     } else {
-  //       message.error("Upload failed!");
-  //     }
-  //     const data = await response.text();
-  //     console.log("response in PictureTabs", { status: response.status, data });
-  //   } catch (error) {
-  //     message.error("Upload failed!");
-  //     console.error("Upload error in PictureTabs", error);
-  //   }
-  // };
   
 
   const items: TabsProps["items"] = [
