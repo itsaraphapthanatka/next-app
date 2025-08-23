@@ -145,8 +145,13 @@ type PropertyBackOfficeSortType =
 
 // const saleLimit = 20;
 
-const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: number[]) => void }> = ({ token, onSelectionChange }) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+const TableProperty: React.FC<{
+   token: string, 
+   onSelectionChange: (selectedIds: number[]) => void,
+   selectedRowKeys: React.Key[],
+   setSelectedRowKeys: (keys: React.Key[]) => void
+   }> = ({ token, onSelectionChange, selectedRowKeys, setSelectedRowKeys }) => {
+  //  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [properties, setProperties] = useState<DataType[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
@@ -474,6 +479,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       // setPage(1); // Reset to first page
       setSearchParams({ projectName: e.detail.projectName ?? "", addressUnit: e.detail.addressUnit ?? "" });
       setLoadMode("search");
+      setSelectedRowKeys([]);
     };
     window.addEventListener("propertyTableSearch", handleTableSearch as EventListener);
     return () => window.removeEventListener("propertyTableSearch", handleTableSearch as EventListener);
@@ -486,6 +492,7 @@ const TableProperty: React.FC<{ token: string, onSelectionChange: (selectedIds: 
       // setPage(1); // Reset to first page
       setFilterParams(e.detail);
       setLoadMode("filter");
+      setSelectedRowKeys([]);
     };
     window.addEventListener("propertyTableReload", handleTableReload as EventListener);
     return () => window.removeEventListener("propertyTableReload", handleTableReload as EventListener);

@@ -26,6 +26,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [enqNo, setEnqNo] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
@@ -89,6 +90,14 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
       timer: 1500
     }).then(() => {
         setIsRequestPropOpen(false);
+        const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
+        window.dispatchEvent(event);
+        setSelectedIds([]);
+        setEnqNo("");
+        setRequestCount(0);
+        getSaleLimit(token).then((data) => {
+          setSaleLimit(data);
+        }); 
       });
     }else{
       Swal.fire({
@@ -280,7 +289,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
       >
         <RequestProp selectedIds={selectedIds} setEnqNo={setEnqNo} enqNo={enqNo} token={token} />
       </Modal>
-      <TableProperty token={token} onSelectionChange={setSelectedIds} />
+      <TableProperty token={token} onSelectionChange={setSelectedIds} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} />
     </Card>
     </>
   );
