@@ -40,6 +40,7 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedRemark("");
+    
   };
   const handleSave = async () => {
     const followUp = form.getFieldValue("followUp");
@@ -66,11 +67,18 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
           setPropertyFollowup(data);
           form.resetFields();
           setLoading(false);
+          if(modalType === "request"){
+            const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
+            window.dispatchEvent(event);
+          }else{
+            const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
+            window.dispatchEvent(event);
+          }
         });
       } else {
         message.error("Failed to save follow-up");
       }
-  }
+    }
   };
   const columns = [
     {
