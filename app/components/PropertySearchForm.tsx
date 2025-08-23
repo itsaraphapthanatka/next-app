@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Input, Button, Modal, Form, message, Select} from "antd";
+import { Card, Input, Button, Modal, Form, Select} from "antd";
 import { RequestProp } from "@/app/property/RequestProp";
 import { getSaleLimit } from "@/app/server_actions/saleLimit";
 import Swal from "sweetalert2";
