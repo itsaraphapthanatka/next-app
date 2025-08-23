@@ -229,7 +229,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
           onClick={handleRequestProp}
           className="w-full"
         >
-          Request Prop. ({requestCount === 0 ? null : requestCount + "/"} {saleLimit})
+          Request Prop. {requestCount === 0 ? "(" + saleLimit + ")" : "(" +requestCount + "/" + saleLimit + ")"} 
         </Button>
         </div>
       </Form>
