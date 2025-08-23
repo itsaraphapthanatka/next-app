@@ -67,8 +67,13 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
           setPropertyFollowup(data);
           form.resetFields();
           setLoading(false);
-          const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
-          window.dispatchEvent(event);
+          if(modalType === "request"){
+            const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
+            window.dispatchEvent(event);
+          }else{
+            const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
+            window.dispatchEvent(event);
+          }
         });
       } else {
         message.error("Failed to save follow-up");
