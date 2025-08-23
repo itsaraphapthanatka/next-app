@@ -7,6 +7,7 @@ type SelectedProperty = {
      propertyId?: number;
     saleRequestId?: number;
     saleRequestItemId?: number;
+    toSalePropertyId?: number;
   };
   type Followup = {
     id: number;
@@ -49,8 +50,8 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
       closeJob: closeJob ? true : false,
       followUpType: 0,
       sourceId: selectedProperty.propertyId as number,
-      saleRequestItemId: selectedProperty.saleRequestId as number,
-      toSalePropertyId: selectedProperty.saleRequestItemId as number,
+      saleRequestItemId: selectedProperty.saleRequestItemId as number,
+      toSalePropertyId: selectedProperty.toSalePropertyId as number,
     };
     console.log("followUp", followUp);
     if(followUp === "" || followUp === null || followUp === undefined){
