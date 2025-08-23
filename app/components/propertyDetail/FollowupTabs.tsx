@@ -31,6 +31,25 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
       setLoading(false);
     });
   }, [selectedProperty.propertyId, token]);
+
+  useEffect(() => {
+    const handleReload = (e: CustomEvent) => {
+      if (e.detail.propertyId === selectedProperty.propertyId) {
+        setLoading(true);
+        getPropertyFollowup(selectedProperty.propertyId as number, token).then((response) => {
+          setPropertyFollowup(response);
+          setLoading(false);
+        });
+      }
+    };
+  
+    window.addEventListener("followupTableReload", handleReload as EventListener);
+  
+    return () => {
+      window.removeEventListener("followupTableReload", handleReload as EventListener);
+    };
+  }, [selectedProperty.propertyId, token]);
+  
   const openCommentDialog = (index: string) => {
     const remarkText = propertyFollowup[parseInt(index)]?.remark || "";
     setSelectedRemark(remarkText);
@@ -67,13 +86,13 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
           setPropertyFollowup(data);
           form.resetFields();
           setLoading(false);
-          if(modalType === "request"){
-            const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
-            window.dispatchEvent(event);
-          }else{
-            const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
-            window.dispatchEvent(event);
-          }
+          // if(modalType === "request"){
+          //   const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
+          //   window.dispatchEvent(event);
+          // }else{
+          //   const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
+          //   window.dispatchEvent(event);
+          // }
         });
       } else {
         message.error("Failed to save follow-up");
@@ -147,7 +166,7 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
         <Form.Item name="followUp" label="New Follow Up" style={{ marginBottom: "10px" }}>
           <TextArea rows={6} />
         </Form.Item>
-
+        {modalType !== "property" && (
       <Form.Item name="closeJob" style={{ marginBottom: "10px" }}>
           <Checkbox.Group style={{ width: '100%' }}>
               <Row>
@@ -157,6 +176,7 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
               </Row>
           </Checkbox.Group>
       </Form.Item>
+      )}
       <div className="flex w-full mt-2">
           <Button block color="green" variant="solid" onClick={handleSave} loading={loading}>Save</Button>
       </div>

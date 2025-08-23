@@ -13,6 +13,7 @@
          propertyId?: number;
         saleRequestId?: number;
         saleRequestItemId?: number;
+        toSalePropertyId?: number;
       };
       type propertyStatus = {
         id: number;
@@ -89,8 +90,8 @@
                 closeJob: closeJob ? true : false,
                 followUpType: 0,
                 sourceId: selectedProperty.propertyId as number,
-                saleRequestItemId: selectedProperty.saleRequestId as number,
-                toSalePropertyId: selectedProperty.saleRequestItemId as number,
+                saleRequestItemId: selectedProperty.saleRequestItemId as number,
+                toSalePropertyId: selectedProperty.toSalePropertyId as number,
             };
             if(followUp === "" || followUp === null || followUp === undefined){
                 message.error("Please enter a follow-up");
@@ -104,6 +105,10 @@
                     formDataEdit.setFieldsValue({data});
                     console.log("editData in DataEditProperty", data);
                 }); 
+                const event = new CustomEvent("followupTableReload", { 
+                    detail: { propertyId: selectedProperty.propertyId } 
+                });
+                window.dispatchEvent(event);
                 setIsSaveDisabled(true);
                 } else {
                     message.error("Failed to save follow-up");
@@ -158,6 +163,7 @@
                 <Form.Item name="followUp" label="New Follow Up">
                     <TextArea rows={4} />
                 </Form.Item>
+                {modalType !== "property" && (
                 <Form.Item name="closeJob" style={{ marginBottom: "10px" }}>
                     <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
@@ -167,6 +173,7 @@
                         </Row>
                     </Checkbox.Group>
                 </Form.Item>
+                )}
                 <div className="flex w-full">
                     <Button block variant="solid" htmlType="submit" onClick={handleSave} loading={loading} disabled={isSaveDisabled} style={{ backgroundColor: isSaveDisabled ? "#ccc" : "#52c41a", color: isSaveDisabled ? "#000" : "#fff" }}>Save</Button>
                 </div>
