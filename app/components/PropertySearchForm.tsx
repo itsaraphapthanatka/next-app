@@ -9,7 +9,7 @@ import { ModalFilter } from "./ModalFilter";
 import { getProjectsName } from "@/app/server_actions/projectsName";
 import TableProperty from "./TableProperty";
 import { createSaleRequest } from "../server_actions/sale-requests";
-
+import { App } from "antd";
 interface PropertySearchFormProps {
   className?: string;
   token: string;
@@ -21,13 +21,12 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [isRequestPropOpen, setIsRequestPropOpen] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
   const [saleLimit, setSaleLimit] = useState(0);
   const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [enqNo, setEnqNo] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
+  const { message } = App.useApp();
   useEffect(() => {
     const handleSelectionCount = (e: CustomEvent) => {
       setRequestCount(Math.min(e.detail, maxRequests));
@@ -64,11 +63,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
 
   const handleRequestProp = () => {
    if(requestCount < 1){
-    messageApi.open({
-      type: 'warning',
-      content: 'Please select item less than 1 item for assign to Sale',
-      duration: 10,
-    });
+    message.warning('Please select item less than 1 item for assign to Sale');
    }else{setIsRequestPropOpen(true);}
   };
 
@@ -99,6 +94,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
           setSaleLimit(data);
         }); 
       });
+      // message.success('บันทึกสำเร็จ');
     }else{
       Swal.fire({
         title: 'บันทึกไม่สำเร็จ',
@@ -183,9 +179,7 @@ export const PropertySearchForm = ({ className = "", token }: PropertySearchForm
   };
 
   return (
-    <>
-    {contextHolder}
-    
+    <>   
     <Card className={`p-6 w-full space-y-4 ${className}`}>
     <Form form={form} layout="vertical">
         <Form.Item name="projectNameSearch" style={{ marginBottom: 10 }}>
