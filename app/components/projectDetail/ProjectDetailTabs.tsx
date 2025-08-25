@@ -18,7 +18,7 @@ type ProjectDetail = {
     updateUser?: string;
     updateDate?: string | null;
     thaiName?: string;
-    errors?: any[];
+    errors?: [];
     haveError?: boolean;
     notHaveError?: boolean;
     returnObjectId?: number;
@@ -54,7 +54,7 @@ type ProjectDetail = {
   place?: string;
   nearlyCondo?: string;
   maximumClass?: number;
-  towers?: any[];
+  towers?: [];
   pictures?: {
     id?: number;
     filename?: string;
@@ -72,7 +72,7 @@ type ProjectDetail = {
     originalURL?: string;
     watermarkURL?: string;
     caption?: string;
-    errors?: any[];
+    errors?: [];
     haveError?: boolean;
     notHaveError?: boolean;
     returnObjectId?: number;
@@ -95,7 +95,7 @@ type ProjectDetail = {
   };
   ddpropertyId?: string;
   canonical?: string;
-  facilities?: any[];
+  facilities?: [];
   vdoList?: string;
   projectType?: {
     id?: number;
@@ -105,7 +105,7 @@ type ProjectDetail = {
     updateUser?: string;
     updateDate?: string | null;
     thaiName?: string;
-    errors?: any[];
+    errors?: [];
     haveError?: boolean;
     notHaveError?: boolean;
     returnObjectId?: number;
@@ -121,7 +121,7 @@ type ProjectDetail = {
   areaId?: number;
   areaShortName?: string;
   areaThaiShortName?: string;
-  vdOs?: any[];
+  vdOs?: [];
   massTransitLineId?: number;
   massTransitLineStationType?: string;
   nearStationId?: number;
