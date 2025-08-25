@@ -27,13 +27,13 @@ type ProjectDetail = {
   name?: string;
   thaiName?: string;
   headline?: string;
-  propertyType?: string;
+  // propertyType is not present in the data, so remove it
   no?: number;
   project?: string;
-  overView?: string;
+  // overView is not present in the data, so remove it
   thaiOverView?: string;
-  area?: number;
-  massTransit?: string;
+  // area is not present in the data, so remove it
+  // massTransit is not present in the data, so remove it
   province?: string;
   district?: string;
   subDistrict?: string;
@@ -179,8 +179,12 @@ export const ProjectDetailTabs = ({
   const [formProjectDetail] = Form.useForm();
   const [project, setProject] = useState<ProjectDetail>(selectedProject);
   const [propertyTypes, setPropertyTypes] = useState<ProjectType[]>([]);
-
-  // const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
+  const [areaId,setAreaId] = useState<ProjectType[]>([]);
+  const [massTransitLineId,setMassTransitLineId] = useState<ProjectType[]>([]);
+  const [provinceId,setProvinceId] = useState<ProjectType[]>([]);
+  const [districtId,setDistrictId] = useState<ProjectType[]>([]);
+  const [subDistrictId,setSubDistrictId] = useState<ProjectType[]>([]);
+// const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
 //   const [decorations, setDecorations] = useState<Decoration[]>([]);
 
   // Fetch Project Types
@@ -339,7 +343,6 @@ export const ProjectDetailTabs = ({
         >
           <Input size="large" />
         </Form.Item>
-        <h1>Project Type {project.projectType?.id}</h1>
         <Form.Item
           name="projectType"
           label="Property Type"
@@ -373,49 +376,79 @@ export const ProjectDetailTabs = ({
           <TextArea size="large" />
         </Form.Item>
         <Form.Item
-          name="area"
+          name="areaId"
           label="area"
-          initialValue={project.area}
+          initialValue={project.areaId}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
-          <Input size="large" />
+          <Select size="large">
+              {areaId.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+          </Select>
         </Form.Item>
         <Form.Item
-          name="massTransit"
+          name="massTransitLineId"
           label="Mass Transit"
-          initialValue={project.massTransit}
+          initialValue={project.massTransitLineId}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
-          <Input size="large" />
+          <Select size="large">
+              {massTransitLineId.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+          </Select>
         </Form.Item>
         <Form.Item
-          name="province"
+          name="provinceId"
           label="Province"
-          initialValue={project.province}
+          initialValue={project.provinceId}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
-          <Input size="large" />
+          <Select size="large">
+              {provinceId.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+          </Select>
         </Form.Item>
         <Form.Item
-          name="district"
+          name="districtId"
           label="District"
-          initialValue={project.district}
+          initialValue={project.districtId}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
-          <Input size="large" />
+          <Select size="large">
+              {districtId.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+          </Select>
         </Form.Item>
         <Form.Item
-          name="subDistrict"
+          name="subDistrictId"
           label="Sub District"
-          initialValue={project.subDistrict}
+          initialValue={project.subDistrictId}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
-          <Input size="large" />
+          <Select size="large">
+              {subDistrictId.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+          </Select>
         </Form.Item>
         <Form.Item
           name="Address"   
