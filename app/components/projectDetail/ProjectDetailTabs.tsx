@@ -179,11 +179,11 @@ export const ProjectDetailTabs = ({
   const [formProjectDetail] = Form.useForm();
   const [project, setProject] = useState<ProjectDetail>(selectedProject);
   const [propertyTypes, setPropertyTypes] = useState<ProjectType[]>([]);
-  const [areaId,setAreaId] = useState<ProjectType[]>([]);
-  const [massTransitLineId,setMassTransitLineId] = useState<ProjectType[]>([]);
-  const [provinceId,setProvinceId] = useState<ProjectType[]>([]);
-  const [districtId,setDistrictId] = useState<ProjectType[]>([]);
-  const [subDistrictId,setSubDistrictId] = useState<ProjectType[]>([]);
+  const [areaId] = useState<ProjectType[]>([]);
+  const [massTransitLineId] = useState<ProjectType[]>([]);
+  const [provinceId] = useState<ProjectType[]>([]);
+  const [districtId] = useState<ProjectType[]>([]);
+  const [subDistrictId] = useState<ProjectType[]>([]);
 // const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
 //   const [decorations, setDecorations] = useState<Decoration[]>([]);
 
