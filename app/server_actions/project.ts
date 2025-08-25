@@ -20,3 +20,14 @@ export const getProjects = async (token: string, page: number, size: number, sea
     );
     return response.data;
 }
+
+export const getProjectById = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/${id}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "accept": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+    return response.data;
+}

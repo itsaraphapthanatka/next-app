@@ -169,11 +169,13 @@ export const ModalProperty = ({
       console.log("count", revealCount);
     }
     if(modalType === "request"){
+      console.log("request");
       const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
       window.dispatchEvent(event);
     }else{
-      const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
-      window.dispatchEvent(event);
+      console.log("property")
+      // const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
+      // window.dispatchEvent(event);
     }
   }
 

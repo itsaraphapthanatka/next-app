@@ -2,19 +2,33 @@
 // import { getDecorations } from "@/app/server_actions/decorations";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Form, Input, Select, Checkbox, Col, Row } from "antd";
-
+import { getPropertyTypes } from "@/app/server_actions/master";
 import TextArea from "antd/es/input/TextArea";
+import { getProjectById } from "@/app/server_actions/project";
+
 // import dayjs from "dayjs";
 
 type ProjectDetail = {
-  projectId?: number;
-  developerBrand?: string;
+  id?: number;
+  developerBrand?: {
+    id?: number;
+    name?: string;
+    createUser?: string;
+    createDate?: string;
+    updateUser?: string;
+    updateDate?: string | null;
+    thaiName?: string;
+    errors?: any[];
+    haveError?: boolean;
+    notHaveError?: boolean;
+    returnObjectId?: number;
+    successMessage?: string;
+  } | string;
   name?: string;
   thaiName?: string;
   headline?: string;
   propertyType?: string;
   no?: number;
-  id?: number;
   project?: string;
   overView?: string;
   thaiOverView?: string;
@@ -24,32 +38,120 @@ type ProjectDetail = {
   district?: string;
   subDistrict?: string;
   address?: string;
-  thaiAddress?: string;
-  latitude?: number;
-  longtitude?: number;
+  latitude?: number | string;
+  longtitude?: number | string;
+  displayGeoLocation?: string;
+  petFriendly?: boolean;
   petLimit?: number;
+  isLeaseHold?: boolean;
   parkingSpace?: number;
-  parkingRemark?: string;
-  finishYear?: number;
-  towers?: number;
-  maximumClass?: number;
+  fixParkingSpace?: boolean;
+  buildYear?: number;
+  towerCount?: number;
   totalRoom?: number;
-  commonAreaFee?: number;
-  signingFund?: number;
+  maintainanceFee?: number;
+  singkingFund?: number;
+  place?: string;
+  nearlyCondo?: string;
+  maximumClass?: number;
+  towers?: any[];
+  pictures?: {
+    id?: number;
+    filename?: string;
+    applicationType?: string;
+    extension?: string;
+    guId?: string;
+    sourceType?: string;
+    sourceId?: number;
+    fileSize?: number;
+    sortIndex?: number;
+    imageHeight?: number;
+    imageWidth?: number;
+    filePath?: string;
+    url?: string;
+    originalURL?: string;
+    watermarkURL?: string;
+    caption?: string;
+    errors?: any[];
+    haveError?: boolean;
+    notHaveError?: boolean;
+    returnObjectId?: number;
+    successMessage?: string;
+  }[];
+  overview?: string;
+  projectView?: number;
+  website?: string;
+  rentRoom?: number;
+  rentMinimum?: number;
+  saleRoom?: number;
+  saleMinimum?: number;
+  seo?: {
+    title?: string;
+    keyword?: string;
+    description?: string;
+    thaiTitle?: string;
+    thaiDescription?: string;
+    thaiKeyword?: string;
+  };
+  ddpropertyId?: string;
+  canonical?: string;
+  facilities?: any[];
+  vdoList?: string;
+  projectType?: {
+    id?: number;
+    name?: string;
+    createUser?: string;
+    createDate?: string;
+    updateUser?: string;
+    updateDate?: string | null;
+    thaiName?: string;
+    errors?: any[];
+    haveError?: boolean;
+    notHaveError?: boolean;
+    returnObjectId?: number;
+    successMessage?: string;
+  };
+  baaniaId?: string;
+  privateLift?: boolean;
+  duplex?: boolean;
+  projectNameForSEO?: string;
+  proppitId?: string;
+  rentMarketPrice?: number;
+  saleMarketPrice?: number;
+  areaId?: number;
+  areaShortName?: string;
+  areaThaiShortName?: string;
+  vdOs?: any[];
+  massTransitLineId?: number;
+  massTransitLineStationType?: string;
+  nearStationId?: number;
+  airTableId?: string;
+  disable?: boolean;
+  subDistrictId?: number;
+  thaiAddress?: string;
+  provinceId?: number;
+  districtId?: number;
+  thaiNearlyCondo?: string;
+  juristicCompanyName?: string;
+  juristicContactName?: string;
+  juristicContactPosition?: string;
+  juristicContactPhoneNumber?: string;
+  parkingRemark?: string;
+  subDistrictName?: string;
+  provinceName?: string;
+  districtName?: string;
+  fullName?: string;
+  seoID?: number | null;
+  finishYear?: number;
   ddPropertyProjectId?: number;
   baaniaProjectId?: number;
-  proppitId?: number;
-  nearlyCondo?: string;
-  thaiNearlyCondo?: string;
-  vdoList?: string;
-  projectStatus?: string;
   exampleCheckboxGroup?: string[];
 };
 
-// type ProjectType = {
-//   id: string;
-//   name: string;
-// };
+type ProjectType = {
+  id: string;
+  name: string;
+};
 
 // type ProjectStatus = {
 //   id: string;
@@ -74,15 +176,19 @@ export const ProjectDetailTabs = ({
   token: string;
 }) => {
   console.log("selectedProject in ProjectDetailTabs", selectedProject);
-  const [project] = useState<ProjectDetail>(selectedProject);
   const [formProjectDetail] = Form.useForm();
-  // const [projectType, setProjectType] = useState<ProjectType[]>([]);
+  const [project, setProject] = useState<ProjectDetail>(selectedProject);
+  const [propertyTypes, setPropertyTypes] = useState<ProjectType[]>([]);
+
   // const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
 //   const [decorations, setDecorations] = useState<Decoration[]>([]);
 
   // Fetch Project Types
   useEffect(() => {
-    // getProjectType(token).then(setProjectType);
+    getPropertyTypes(token).then((response) => {
+      setPropertyTypes(response);
+      console.log("propertyTypes", propertyTypes);
+    });
   }, [token]);
 
   // Fetch Property Status
@@ -91,22 +197,29 @@ export const ProjectDetailTabs = ({
   }, [token]);
 
 
-  // // Fetch Property Detail
-  // useEffect(() => {
-  //   if (!selectedProject.propertyId) return;
-  //   getProjectById(selectedProject.propertyId as number, token).then((response) => {
-  //     setProject(response.projectDetail);
-  //     form.setFieldsValue(response.projectDetail);
-  //   });
-  //   // eslint-disable-next-line
-  // }, [selectedProject.propertyId, token]);
-
-
   // Fetch Property Detail
   useEffect(() => {
     if (!selectedProject.id) return;
-      formProjectDetail.setFieldsValue(selectedProject);
-  }, [selectedProject]);
+    getProjectById(selectedProject.id as number, token).then((response) => {
+      console.log("response.projectDetail", response);
+      setProject(response);
+      formProjectDetail.setFieldsValue({
+        ...response,
+        projectType: response.projectType?.id,
+        developerBrand: response.developerBrand?.id,
+        disable: response.disable ? "true" : "false",
+      });
+      
+    });
+    // eslint-disable-next-line
+  }, [selectedProject.id, token]);
+
+
+  // // Fetch Property Detail
+  // useEffect(() => {
+  //   if (!selectedProject.id) return;
+  //     formProjectDetail.setFieldsValue(selectedProject);
+  // }, [selectedProject]);
 
   // Memoize checkbox checked values for performance
   const checkboxChecked = useMemo(
@@ -226,15 +339,23 @@ export const ProjectDetailTabs = ({
         >
           <Input size="large" />
         </Form.Item>
+        <h1>Project Type {project.projectType?.id}</h1>
         <Form.Item
-          name="Property Type"
+          name="projectType"
           label="Property Type"
-          initialValue={project.propertyType}
+          initialValue={project.projectType?.id} // ✅ ตั้งค่า default
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
-          <Input size="large" />
+          <Select size="large">
+            {propertyTypes.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
+
         <Form.Item
           name="project"
           label="Project Name"
@@ -245,7 +366,7 @@ export const ProjectDetailTabs = ({
           <Input size="large" />
         </Form.Item>
         <Form.Item
-          name="overView"
+          name="overview"
           label="Overview"
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
@@ -405,12 +526,12 @@ export const ProjectDetailTabs = ({
         {renderFormRow([
             {
                 label: "Common Area Fee",
-                name: "commonAreaFee",
+                name: "maintainanceFee",
                 placeholder: "Common Area Fee",
             },
             {
                 label: "Signking Fund.",
-                name: "signingFund",
+                name: "singkingFund",
                 placeholder: "Signking Fund.",
             },
         ])}
@@ -463,18 +584,18 @@ export const ProjectDetailTabs = ({
           <TextArea size="large" />
         </Form.Item>
         <Form.Item
-          name="projectStatus"
+          name="disable"
           label="สถานะการใช้งาน"
-          initialValue={project.projectStatus}
+          initialValue={project.disable}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
           <Select size="large">
-            <Select.Option value="active">ใช้งานปกติ</Select.Option>
-            <Select.Option value="inactive">ยกเลิกการใช้งานชั่วคราว</Select.Option>
+            <Select.Option value="false">ใช้งานปกติ</Select.Option>
+            <Select.Option value="true">ยกเลิกการใช้งานชั่วคราว</Select.Option>
           </Select>
         </Form.Item>
-      </Form>
+        </Form>
     </>
   );
 };
