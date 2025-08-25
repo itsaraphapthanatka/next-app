@@ -355,16 +355,6 @@ export const ProjectDetailTabs = ({
             ))}
           </Select>
         </Form.Item>
-
-        <Form.Item
-          name="project"
-          label="Project Name"
-          initialValue={project.project}
-          className="text-[12px]"
-          style={{ marginBottom: "10px" }}
-        >
-          <Input size="large" />
-        </Form.Item>
         <Form.Item
           name="overview"
           label="Overview"
