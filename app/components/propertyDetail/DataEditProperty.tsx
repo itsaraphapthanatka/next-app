@@ -97,19 +97,23 @@
                 message.error("Please enter a follow-up");
                 setLoading(false);
             }else{
-            const res = await savePropertyFollowup(followupData, token);
-            if (res.status === 200) {
-                message.success("Follow-up saved successfully");
-                getEditData(token,selectedProperty.propertyId as number).then((data) => {
-                    setEditData(data);
-                    formDataEdit.setFieldsValue({data});
-                    console.log("editData in DataEditProperty", data);
-                }); 
-                const event = new CustomEvent("followupTableReload", { 
-                    detail: { propertyId: selectedProperty.propertyId } 
-                });
-                window.dispatchEvent(event);
-                setIsSaveDisabled(true);
+                const res = await savePropertyFollowup(followupData, token);
+                if (res.status === 200) {
+                    message.success("Follow-up saved successfully");
+                    getEditData(token,selectedProperty.propertyId as number).then((data) => {
+                        setEditData(data);
+                        formDataEdit.setFieldsValue({data});
+                        console.log("editData in DataEditProperty", data);
+                    }); 
+                    formFollowUp.setFieldsValue({
+                        followUp: "",
+                        closeJob: false
+                    });
+                    const event = new CustomEvent("followupTableReload", { 
+                        detail: { propertyId: selectedProperty.propertyId } 
+                    });
+                    window.dispatchEvent(event);
+                    setIsSaveDisabled(true);
                 } else {
                     message.error("Failed to save follow-up");
                 }
