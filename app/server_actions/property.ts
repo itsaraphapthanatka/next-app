@@ -60,8 +60,8 @@ export const getProperties = async (params?: GetPropertiesParams,token?:string,p
     console.log('projectName',projectName)
     console.log('addressUnit',addressUnit)
   const response: AxiosResponse = await axios.post(
-      `/api/proxy/property`,
-      // `https://api.serve.co.th/properties/gets`,
+      // `/api/proxy/property`,
+      `https://api.serve.co.th/properties/gets`,
       {
         project: projectName ?? "",
         search: addressUnit ?? "",
