@@ -401,6 +401,7 @@ const TableProperty: React.FC<{
       
 
       if (loadMode === "search" && searchParams) {
+        console.log('searchParams', searchParams);
         data = await getProperties({
           page: { current: page, size: pageSize },
           sortBy: sortParams || "LastedUpdate",
