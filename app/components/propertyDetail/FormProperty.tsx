@@ -198,8 +198,8 @@ export const FormProperty = ({
       setProperty(detail);
       form.setFieldsValue({
         ...detail,
-        rentPG: detail.rentProfitGapText,
-        salePG: detail.sellProfitGapText,
+        rentPG: detail.rentProfitGapText ? detail.rentProfitGapText + " %" : "%",
+        salePG: detail.sellProfitGapText ? detail.sellProfitGapText + " %" : "%",
         vipStatus: detail.vipStatusID ?? detail.vipStatus,
         availableOn: detail.availableOn ? dayjs(detail.availableOn) : undefined,
         lastedUpdate: detail.lastedUpdate ? dayjs(detail.lastedUpdate) : undefined,
@@ -224,16 +224,8 @@ export const FormProperty = ({
         // initialValues={property}
       >
         <Form.Item
-          name="rentProfitGapText"
+          name="rentPG"
           label="Rent Profit gap"
-          initialValue={
-            property.rentProfitGapText
-              ? property.rentProfitGapText + " %"
-              : "%"
-            // selectedProperty.rentProfitGapText
-            //   ? selectedProperty.rentProfitGapText + " %"
-            //   : "%"
-          }
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
@@ -247,13 +239,8 @@ export const FormProperty = ({
           />
         </Form.Item>
         <Form.Item
-          name="sellProfitGapText"
+          name="salePG"
           label="Sale Profit gap"
-          initialValue={
-            property.sellProfitGapText
-              ? property.sellProfitGapText + " %"
-              : "%"
-          }
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
