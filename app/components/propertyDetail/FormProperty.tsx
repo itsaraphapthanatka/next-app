@@ -20,10 +20,10 @@ type PropertyDetail = {
   rental?: number;
   selling?: number;
   status?: string;
-  rentPGColor?: string;
-  rentPGText?: string;
-  salePGColor?: string;
-  salePGText?: string;
+  rentProfitGapColor?: string;
+  rentProfitGapText?: string;
+  sellingProfitGapColor?: string;
+  sellProfitGapText?: string;
   vipStatusColor?: string;
   invid?: string;
   vipStatus?: string;
@@ -190,7 +190,7 @@ export const FormProperty = ({
   );
 
   useEffect(() => {
-    // console.log("selectedProperty in FormProperty", selectedProperty);
+    console.log("selectedProperty in FormProperty", selectedProperty);
     console.log("property in FormProperty", property);
     // if (!selectedProperty.propertyId) return;
     getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
@@ -198,8 +198,8 @@ export const FormProperty = ({
       setProperty(detail);
       form.setFieldsValue({
         ...detail,
-        rentPG: detail.rentProfitGap ? detail.rentProfitGap.toFixed(2) + " %" : "0.00 %",
-        salePG: detail.saleProfitGap ? detail.saleProfitGap.toFixed(2) + " %" : "0.00 %",
+        rentPG: detail.rentProfitGapText,
+        salePG: detail.sellProfitGapText,
         vipStatus: detail.vipStatusID ?? detail.vipStatus,
         availableOn: detail.availableOn ? dayjs(detail.availableOn) : undefined,
         lastedUpdate: detail.lastedUpdate ? dayjs(detail.lastedUpdate) : undefined,
@@ -224,12 +224,15 @@ export const FormProperty = ({
         // initialValues={property}
       >
         <Form.Item
-          name="rentPG"
+          name="rentProfitGapText"
           label="Rent Profit gap"
           initialValue={
-            selectedProperty.rentPGText
-              ? selectedProperty.rentPGText + " %"
+            property.rentProfitGapText
+              ? property.rentProfitGapText + " %"
               : "%"
+            // selectedProperty.rentProfitGapText
+            //   ? selectedProperty.rentProfitGapText + " %"
+            //   : "%"
           }
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
@@ -238,17 +241,17 @@ export const FormProperty = ({
             size="large"
             readOnly
             style={{
-              color: selectedProperty.rentPGColor,
+              color: property.rentProfitGapColor,
               backgroundColor: "#f5f5f5",
             }}
           />
         </Form.Item>
         <Form.Item
-          name="salePG"
+          name="sellProfitGapText"
           label="Sale Profit gap"
           initialValue={
-            selectedProperty.salePGText
-              ? parseFloat(selectedProperty.salePGText).toFixed(2) + " %"
+            property.sellProfitGapText
+              ? property.sellProfitGapText + " %"
               : "%"
           }
           className="text-[12px]"
@@ -258,7 +261,7 @@ export const FormProperty = ({
             size="large"
             readOnly
             style={{
-              color: selectedProperty.salePGColor,
+              color: property.sellingProfitGapColor,
               backgroundColor: "#f5f5f5",
             }}
           />
@@ -266,7 +269,7 @@ export const FormProperty = ({
         <Form.Item
           name="invid"
           label="INVID"
-          initialValue={selectedProperty.invid}
+          initialValue={property.invid}
           className="text-[12px]"
           style={{ marginBottom: "10px" }}
         >
@@ -274,7 +277,7 @@ export const FormProperty = ({
             size="large"
             readOnly
             style={{
-              color: selectedProperty.vipStatusColor,
+              color: property.vipStatusColor,
               backgroundColor: "#f5f5f5",
             }}
           />
@@ -487,7 +490,7 @@ export const FormProperty = ({
         <Form.Item
           label="Example Checkbox Group"
           name="exampleCheckboxGroup"
-          initialValue={selectedProperty.exampleCheckboxGroup}
+          initialValue={property.exampleCheckboxGroup}
           style={{ marginBottom: "10px" }}
         >
           <Checkbox.Group style={{ width: "100%" }}>
