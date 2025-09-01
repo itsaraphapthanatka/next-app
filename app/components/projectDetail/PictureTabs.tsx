@@ -2,24 +2,24 @@ import { Form, Divider, Tabs } from "antd";
 // import { UploadOutlined } from "@ant-design/icons";
 // import { UploadProps } from "antd/es/upload";
 // import { UploadChangeParam } from "antd/es/upload";
-import { RcFile } from "antd/es/upload";
+// import { RcFile } from "antd/es/upload";
 import type { TabsProps } from 'antd';
 import { PicturePreviewMode } from "../projectDetail/PicturePreviewMode";
 import { SortablePictureMode } from "../projectDetail/SortablePictureMode";
 import React, { useState } from "react";
-import { UploadFileStatus } from "antd/es/upload/interface";
+// import { UploadFileStatus } from "antd/es/upload/interface";
 
 type SelectedProject = {
     id?: number;
     propertyId?: number;
   };
 
-  interface UploadPicture {
-    uid: string;
-    name: string;
-    status: UploadFileStatus;
-    url: string;
-  }
+  // interface UploadPicture {
+  //   uid: string;
+  //   name: string;
+  //   status: UploadFileStatus;
+  //   url: string;
+  // }
 
 export const PictureTabs = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
     console.log("selectedProperty in PictureTabs", selectedProject)
