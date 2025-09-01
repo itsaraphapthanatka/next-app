@@ -1,5 +1,5 @@
 "use client";
-import React, {useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -17,22 +17,26 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Image } from "antd";
-// import { getPropertyPictures } from "@/app/server_actions/property";  
+import { App as AntdApp } from "antd";
+import { getProjectPictures, updateProjectSortIndex } from "@/app/server_actions/project"; 
+
 type SelectedProject = {
-    id?: number;
-     projectId?: number;
+     id?: number;
   };  
 type PictureItem = {
     id: string;
     guId: string;
     url?: string;
-    token: string;
+    token?: string;
 }
-// type SortablePictureItem = {
-//     id: string;
-//     guId: string;
-//     url?: string;
-// }
+type SortablePictureItem = {
+    id: string;
+    guId: string;
+    url?: string;
+}
+type ItemsId = {
+    id: string;
+}
 const SortableItem = ({ id, guId, url }: PictureItem) => { 
   const {
     attributes,
@@ -73,19 +77,20 @@ const SortableItem = ({ id, guId, url }: PictureItem) => {
   );
 };
 
-export const SortablePictureMode = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
+export const SortablePictureMode = ({ selectedProject, token, onSorted }: { selectedProject: SelectedProject, token: string, onSorted: () => void }) => {
   const [items, setItems] = useState<PictureItem[]>([]);
-  console.log("selectedProject in SortablePictureMode", selectedProject)
-  console.log("token in SortablePictureMode", token)
-  // useEffect(() => {
-  //   getPropertyPictures(selectedProject.projectId as number, token).then((response) => {
-  //     setItems(response.map((item: SortablePictureItem) => ({
-  //       id: item.guId,
-  //       guId: item.guId,
-  //       url: item.url,
-  //     })));
-  //   });
-  // }, [selectedProject.projectId, token]);
+  const [itemsId, setItemsId] = useState<ItemsId[]>([]);
+  const { message } = AntdApp.useApp();
+  useEffect(() => {
+    getProjectPictures(selectedProject.id as number, token).then((response) => {
+      setItems(response.map((item: SortablePictureItem) => ({
+        id: item.id,
+        guId: item.guId,
+        url: item.url,
+      })));
+      setItemsId(response.map((item: SortablePictureItem) => ({id: item.id})));
+    });
+  }, [selectedProject.id, token]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -100,14 +105,40 @@ export const SortablePictureMode = ({ selectedProject, token }: { selectedProjec
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-      setItems((items) => arrayMove(items, oldIndex, newIndex));
-    }
+    if (!over || active.id === over.id) return;
+  
+    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const newIndex = items.findIndex((item) => item.id === over.id);
+  
+    const newItems = arrayMove(items, oldIndex, newIndex);
+    const newItemsId = arrayMove(itemsId, oldIndex, newIndex);
+  
+    setItems(newItems);
+    setItemsId(newItemsId);
+  
+    // ส่งค่าใหม่ไปเลย ไม่ต้องพึ่ง state
+    await handleUpdateSortIndex(newItemsId);
   };
+  
+  
+
+const handleUpdateSortIndex = async (newItemsId: ItemsId[]) => {
+  try {
+    console.log("newItemsId in handleUpdateSortIndex client",newItemsId);
+    const response = await updateProjectSortIndex(token, newItemsId); 
+    console.log("response", response);
+
+    message.success("อัพเดตลำดับภาพสำเร็จ");
+    onSorted();
+    
+  } catch (error) {
+    console.error("update failed:", error);
+    message.error("อัพเดตลำดับภาพไม่สำเร็จ");
+  }
+};
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

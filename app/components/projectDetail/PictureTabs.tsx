@@ -1,5 +1,5 @@
-import { Form, Divider, Upload, Button, message, Tabs } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Form, Divider, Upload, message, Tabs } from "antd";
+// import { UploadOutlined } from "@ant-design/icons";
 import { UploadProps } from "antd/es/upload";
 import { UploadChangeParam } from "antd/es/upload";
 import { RcFile } from "antd/es/upload";
@@ -25,47 +25,70 @@ export const PictureTabs = ({ selectedProject, token }: { selectedProject: Selec
     console.log("selectedProperty in PictureTabs", selectedProject)
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState<UploadPicture[]>([]);
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    const props: UploadProps = {
-        beforeUpload: (file: RcFile) => {
-          const isPNG = file.type === 'image/png';
-          const isJPG = file.type === 'image/jpeg';
-          if (!isPNG && !isJPG) {
-            message.error(`${file.name} is not a png or jpg file`);
-          }
-          return isPNG || isJPG || Upload.LIST_IGNORE;
-        },
-        onChange: (info: UploadChangeParam) => {
-          setFileList(info.fileList as UploadPicture[]);
-          console.log(info.fileList);
-        },
-        fileList: fileList,
-      };
+    // const props: UploadProps = {
+    //     beforeUpload: (file: RcFile) => {
+    //       const isPNG = file.type === 'image/png';
+    //       const isJPG = file.type === 'image/jpeg';
+    //       if (!isPNG && !isJPG) {
+    //         message.error(`${file.name} is not a png or jpg file`);
+    //       }
+    //       return isPNG || isJPG || Upload.LIST_IGNORE;
+    //     },
+    //     onChange: (info: UploadChangeParam) => {
+    //       setFileList(info.fileList as UploadPicture[]);
+    //       console.log(info.fileList);
+    //     },
+    //     fileList: fileList,
+    // };
 
     const items: TabsProps['items'] = [
     {
         key: '1',
         label: 'Preview Mode',
-        children: <PicturePreviewMode selectedProject={selectedProject} token={token}/>,
+        children: (
+          <PicturePreviewMode
+            key={refreshKey} 
+            selectedProject={selectedProject} 
+            token={token}/>
+        )
     },
     {
         key: '2',
         label: 'Sortable Mode',
-        children: <SortablePictureMode selectedProject={selectedProject} token={token}/>,
+        children: (
+          <SortablePictureMode 
+            key={refreshKey} 
+            selectedProject={selectedProject} 
+            token={token} 
+            onSorted={() => {
+              setRefreshKey((prev) => prev + 1);
+              }}
+          />
+        )
     },
     ];
       
     return (
-        <Form form={form}
-            layout="vertical"
-            name="tabsPictureDetail">
-            <Form.Item name="uploadPicture" className="text-[12px]"  style={{ marginBottom: "10px" }}>
-                <Upload {...props}>
-                    <Button icon={<UploadOutlined />}>Upload png or jpg only</Button>
-                </Upload>
-            </Form.Item>
-            <Divider />
-            <Tabs items={items} />
-        </Form>
-    )
+      <Form form={form} layout="vertical" name="tabsPictureDetail">
+        {/* <Form.Item
+          name="uploadPicture"
+          className="text-[12px]"
+          style={{ marginBottom: "10px" }}
+        >
+          <Upload
+            fileList={fileList}
+            maxCount={10}
+            multiple={true}
+            beforeUpload={props.beforeUpload}
+            onChange={props.onChange}
+          >
+            <Button icon={<UploadOutlined />}>Upload PNG or JPG only</Button>
+          </Upload>
+        </Form.Item> */}
+        <Divider />
+        <Tabs items={items} />
+      </Form>
+    );
 }

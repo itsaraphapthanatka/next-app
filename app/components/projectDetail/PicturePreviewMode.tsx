@@ -1,12 +1,11 @@
 import { Table, Image } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Download } from "lucide-react";
-// import { getProjectPictures } from "@/app/server_actions/project";
-import { useState } from "react";
+import { getProjectPictures } from "@/app/server_actions/project";
+import { useEffect, useState } from "react";
 import {  App as AntdApp } from "antd";
 type SelectedProject = {
     id?: number;
-     projectId?: number;
   };
 type PicturePreviewModeData = {
     key: string;
@@ -18,12 +17,12 @@ export const PicturePreviewMode = ({ selectedProject, token }: { selectedProject
     console.log("selectedProject in PicturePreviewMode", selectedProject)
     console.log("token in PicturePreviewMode", token)
     const { message } = AntdApp.useApp();
-    const [propertyPictures] = useState<PicturePreviewModeData[]>([]);
-    // useEffect(() => {
-    //     getProjectPictures(selectedProject.projectId as number, token).then((response) => {
-    //         setPropertyPictures(response);
-    //     });
-    // }, [selectedProject.projectId, token]);
+    const [projectPictures, setProjectPictures] = useState<PicturePreviewModeData[]>([]);
+    useEffect(() => {
+        getProjectPictures(selectedProject.id as number, token).then((response) => {
+            setProjectPictures(response);
+        });
+    }, [selectedProject.id, token]);
 
     const handleDownload = async (record: PicturePreviewModeData) => {
         try {
@@ -99,7 +98,7 @@ export const PicturePreviewMode = ({ selectedProject, token }: { selectedProject
                     console.log(`current index: ${current}, prev index: ${prev}`),
             }}
         >
-            <Table columns={columns} dataSource={propertyPictures} pagination={false} rowKey="guId" scroll={{ x: 300, y: 500 }} size="small" />
+            <Table columns={columns} dataSource={projectPictures} pagination={false} rowKey="guId" scroll={{ x: 300, y: 500 }} size="small" />
         </Image.PreviewGroup>
     );
 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export const getProjects = async (token: string, page: number, size: number, search?: string) => {
     const response = await axios.post(
@@ -31,3 +31,35 @@ export const getProjectById = async (id: number, token: string) => {
     });
     return response.data;
 }
+
+export const getProjectPictures = async (id: number,token?:string) => {
+    const response: AxiosResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/projects/pictures/${id}`,
+      {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  };
+
+export const updateProjectSortIndex = async (
+    token: string,
+    newItemsId: {"id": string}[]
+  ) => {
+  
+    console.log("newItemsId in updateProjectSortIndex server",newItemsId);
+    const response: AxiosResponse = await axios.post(
+      `/api/proxy/sortProjectPicture`,
+      newItemsId,
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+};
