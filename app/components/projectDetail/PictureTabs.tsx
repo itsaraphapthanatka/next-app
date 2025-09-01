@@ -1,7 +1,7 @@
-import { Form, Divider, Upload, message, Tabs } from "antd";
+import { Form, Divider, Tabs } from "antd";
 // import { UploadOutlined } from "@ant-design/icons";
-import { UploadProps } from "antd/es/upload";
-import { UploadChangeParam } from "antd/es/upload";
+// import { UploadProps } from "antd/es/upload";
+// import { UploadChangeParam } from "antd/es/upload";
 import { RcFile } from "antd/es/upload";
 import type { TabsProps } from 'antd';
 import { PicturePreviewMode } from "../projectDetail/PicturePreviewMode";
@@ -24,7 +24,7 @@ type SelectedProject = {
 export const PictureTabs = ({ selectedProject, token }: { selectedProject: SelectedProject, token: string }) => {
     console.log("selectedProperty in PictureTabs", selectedProject)
     const [form] = Form.useForm();
-    const [fileList, setFileList] = useState<UploadPicture[]>([]);
+    // const [fileList, setFileList] = useState<UploadPicture[]>([]);
     const [refreshKey, setRefreshKey] = useState(0);
 
     // const props: UploadProps = {
