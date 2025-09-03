@@ -164,7 +164,7 @@ export const ModalProperty = ({
   const handleCloseModal = async () => {
     setIsModalOpen(false);
     console.log("modalType", modalType);
-    if (modalType == "assign") {
+    if (modalType === "assign") {
       const count = await getRevealCount(token);
       console.log("count", count);
       setRevealCount(count);
@@ -172,12 +172,12 @@ export const ModalProperty = ({
       const event = new CustomEvent('propertySelectionCount', { detail: { revealCount: count } });
       window.dispatchEvent(event);
       
-    }else if(modalType == "request"){
+    }else if(modalType === "request"){
       console.log("request");
       const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
       window.dispatchEvent(event);
     }else{
-      console.log("property")
+      console.log("propertyx")
       // const event = new CustomEvent('propertyTableSearch', { detail: { projectName: "", addressUnit: "" } });
       // window.dispatchEvent(event);
     }
