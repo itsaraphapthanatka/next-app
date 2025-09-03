@@ -28,7 +28,7 @@ export const AssignSearchFrom = ({ className = "", token }: AssignSearchFromProp
     return () => {
       window.removeEventListener('propertySelectionCount', handleSelectionCount as unknown as EventListener);
     };
-  }, [token]);
+  }, [token, revealCount]);
 
   const handleSearch = () => {
     const values = form.getFieldsValue();

@@ -163,12 +163,16 @@ export const ModalProperty = ({
   
   const handleCloseModal = async () => {
     setIsModalOpen(false);
-    if (modalType === "assign") {
+    console.log("modalType", modalType);
+    if (modalType == "assign") {
       const count = await getRevealCount(token);
+      console.log("count", count);
       setRevealCount(count);
       console.log("count", revealCount);
-    }
-    if(modalType === "request"){
+      const event = new CustomEvent('propertySelectionCount', { detail: { revealCount: count } });
+      window.dispatchEvent(event);
+      
+    }else if(modalType == "request"){
       console.log("request");
       const event = new CustomEvent('requestTableReload', { detail: { status: 1 } });
       window.dispatchEvent(event);
