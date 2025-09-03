@@ -83,7 +83,7 @@
         const handleSave = async () => {
             setLoading(true);
             const followUp = formFollowUp.getFieldValue("followUp");
-            const closeJob = modalType === "request" ? formFollowUp.getFieldValue("closeJob") : false;
+            const closeJob = modalType === "request" || modalType === "assign" ? formFollowUp.getFieldValue("closeJob") : false;
             const followupData = {
                 id: selectedProperty.propertyId as number,
                 remark: followUp,

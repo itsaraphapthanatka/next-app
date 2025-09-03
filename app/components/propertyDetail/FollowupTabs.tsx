@@ -63,7 +63,7 @@ export const FollowupTabs = ({ token, modalType, selectedProperty }: { token: st
   };
   const handleSave = async () => {
     const followUp = form.getFieldValue("followUp");
-    const closeJob = modalType === "request" ? form.getFieldValue("closeJob") : false;
+    const closeJob = modalType === "request" || modalType === "assign" ? form.getFieldValue("closeJob") : false;
     const followupData = {
       id: selectedProperty.propertyId as number,
       remark: followUp,
