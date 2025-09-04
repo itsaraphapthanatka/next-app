@@ -1,69 +1,131 @@
 import { Form, Checkbox, Col, Row } from "antd";
-import { getPropertyById } from "@/app/server_actions/property";
 import { useEffect, useState } from "react";
+import { getFacilitiesById } from "@/app/server_actions/project";
+import { getFacilities } from "@/app/server_actions/master";
 
 type SelectedProject = {
-    id?: number;
-    projectId?: number;
-  };
-  type Facility = {
-    id: number;
-    name: string;
-    icon: string;
-    forProject: boolean;
-    forProperty: boolean;
-  };
+  id?: number;
+  projectId?: number;
+};
 
-export const FacilityTabs = ({  token, selectedProject, modalType }: { token: string, selectedProject: SelectedProject, modalType: string }) => {  
-    console.log("token in FacilityTabs", token);
-    console.log("selectedProject in FacilityTabs", selectedProject);
-    const [propertyFacility, setPropertyFacility] = useState<Facility[]>([]);
-    const [form] = Form.useForm();
-    useEffect(() => {
-        getPropertyById(selectedProject.projectId as number, token).then((response) => {
-            // กรองเฉพาะ facility ที่ forProperty === true
-            console.log("response.facilities in FacilityTabs", response.fafilities);
-            const filteredFacilities = (response.fafilities);
-            setPropertyFacility(filteredFacilities);
-    
-            // ตั้งค่าฟอร์มให้ checkbox ถูกติ๊กตาม facility ที่ได้มา
-            const formValues: Record<string, boolean> = {};
-            filteredFacilities.forEach((facility: Facility) => {
-                formValues[facility.id] = true;
-            });
-            form.setFieldsValue(formValues);
+type Facility = {
+  id: number;
+  name: string;
+  icon?: string;
+  facilityType?: string;
+  forProject?: boolean;
+  forProperty?: boolean;
+};
+
+export const FacilityTabs = ({
+  token,
+  selectedProject,
+}: {
+  token: string;
+  selectedProject: SelectedProject;
+  modalType: string;
+}) => {
+  const [form] = Form.useForm();
+
+  const [allFacilities, setAllFacilities] = useState<Facility[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!token || !selectedProject?.id) return;
+
+    let mounted = true;
+    setLoading(true);
+    // reset ชั่วคราวเวลาสลับโปรเจกต์
+    setAllFacilities([]);
+    setSelectedIds([]);
+    form.resetFields(["facilities"]);
+
+    Promise.all([
+      getFacilities(token), // [{id,name}] ไม่มี icon
+      getFacilitiesById(selectedProject.id as number, token), // Facility[] ของโปรเจกต์ (มี icon)
+    ])
+      .then(([allRes, projectRes]) => {
+        if (!mounted) return;
+
+        // 1) normalize project facilities แล้วทำ map ของ icon เพื่อไปเติมให้ all
+        const projFacilities: Facility[] = (projectRes || []).map((f: any) => {
+          const id = typeof f === "number" ? f : Number(f?.id);
+          const name =
+            typeof f === "number" ? "" : (f?.name ? String(f.name) : "");
+          const icon =
+            typeof f === "number"
+              ? undefined
+              : (f?.icon ? String(f.icon) : undefined);
+          return { id, name, icon };
         });
-    }, [selectedProject.projectId, token]);
-    
 
-    return (
-        <Form form={form} layout="vertical" name="tabsFacilityDetail">
-        <Row>
-          <Col span={24}>
-            <Form.Item name="facilities">
-              <Checkbox.Group style={{ width: "100%" }}>
-                <Row>
-                  {propertyFacility
-                    .filter((facility) =>
-                      modalType === "property" ? facility.forProperty : facility.forProject
-                    )
-                    .map((facility) => (
-                      <Col span={12} key={facility.id}>
-                        <Checkbox value={facility.id}>
-                          {facility.name}
+        const iconById = new Map<number, string>();
+        for (const f of projFacilities) {
+          if (f.icon) iconById.set(f.id, f.icon);
+        }
+
+        // 2) normalize all facilities แล้วเติม icon จาก iconById (ถ้ามี)
+        const all: Facility[] = (allRes || []).map((f: any) => {
+          const id = Number(f?.id);
+          const name = String(f?.name ?? "");
+          const icon = iconById.get(id); // เติมจากโปรเจกต์ถ้ามี
+          return { id, name, icon };
+        });
+
+        setAllFacilities(all);
+
+        // 3) set selections
+        const ids = projFacilities.map((f) => f.id);
+        setSelectedIds(ids);
+        form.setFieldsValue({ facilities: ids });
+      })
+      .finally(() => mounted && setLoading(false));
+
+    return () => {
+      mounted = false;
+    };
+  }, [token, selectedProject?.id]);
+
+  const handleChange = (vals: number[]) => {
+    setSelectedIds(vals);
+    form.setFieldsValue({ facilities: vals });
+  };
+
+  return (
+    <Form form={form} layout="vertical" name="tabsFacilityDetail">
+      <Row>
+        <Col span={24}>
+          <Form.Item name="facilities">
+            <Checkbox.Group
+              style={{ width: "100%" }}
+              value={selectedIds}         // ถ้าจะให้ Form คุมเอง สามารถลบ value+onChange ออกได้
+              onChange={handleChange}
+              disabled={loading}
+            >
+              <Row>
+                {allFacilities.map((facility) => {
+                  const hasIcon = !!facility.icon && facility.icon !== "undefined";
+                  return (
+                    <Col span={8} key={facility.id} style={{ marginBottom: 8 }}>
+                      <Checkbox value={facility.id}>
+                        <span>{facility.name}</span>
+                        {hasIcon && (
                           <i
-                            className={`${facility.icon} icofont-2x ps-2`}
+                            className={`${facility.icon} icofont-2x`}
                             aria-label={facility.name}
+                            style={{ marginLeft: 8, verticalAlign: "middle" }}
                           />
-                        </Checkbox>
-                      </Col>
-                    ))}
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-      
-    )
-}
+                        )}
+                      </Checkbox>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Checkbox.Group>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
+  );
+};

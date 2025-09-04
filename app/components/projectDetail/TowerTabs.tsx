@@ -1,7 +1,8 @@
 import { Button, Table } from "antd";
 import { Edit2 } from "lucide-react";
-import { useState } from "react";
-// import { getProjectById } from "@/app/api/project";
+import { useEffect, useState } from "react";
+import { getTowersById } from "@/app/server_actions/project";
+import { formatNumberParserToNumber } from "@/app/utils/formatNumber";
 
 type ProjectDetail = {
   id?: number;
@@ -15,25 +16,21 @@ type ProjectDetail = {
 
 type Tower = {
   id?: number;
-  no?: number;
   name?: string;
-  room?: number;
-  class?: string;
+  totalRoom?: number;
+  totalClass?: string;
 };
 
  export const TowerTabs = ({ selectedProject, token }: { selectedProject: ProjectDetail, token: string }) => {
   console.log("selectedProject", selectedProject);
-  console.log("token", token);
-  const [tower] = useState<Tower[]>([]);
-  // const [formTower] = Form.useForm();
-  const [empty] = useState(true);
-//   useEffect(() => {
-//     if (!selectedProject.propertyId) return;
-//     getProjectById(selectedProject.propertyId as number, token).then((response) => {
-//       setProject(response.projectDetail);
-//       form.setFieldsValue(response.projectDetail);
-//     });
-//   }, [selectedProject.propertyId, token]);
+  const [tower, setTower] = useState<Tower[]>([]);
+
+  useEffect(() => {
+    getTowersById(selectedProject.id as number, token).then((response) => {
+      console.log("response", response);
+      setTower(response);
+    });
+  }, [selectedProject.id, token]);
 
   const columns = [
 
@@ -44,20 +41,23 @@ type Tower = {
     },
     {
         title: "Room",
-        dataIndex: "room",
-        key: "room",
+        dataIndex: "totalRoom",  
+        key: "totalRoom",
+        render: (value: number) => {
+            return value == null ? "" : formatNumberParserToNumber(value) === "0" ? "" : formatNumberParserToNumber(value);
+        },
     },
     
     {
         title: "Class",
-        dataIndex: "class",
-        key: "class",
+        dataIndex: "totalClass",
+        key: "totalClass",
     },
     {
         title: "Action",
         key: "action",
         render: (text: string, record: Tower) => (
-            <Button type="link" onClick={() => handleEdit(record)}><Edit2 /></Button>
+            <Button type="link" onClick={() => handleEdit(record)}><Edit2 size={10} /></Button>
         ),
     }
   ];
@@ -70,12 +70,12 @@ type Tower = {
     <div>
         <Table 
             columns={columns} 
-            dataSource={empty ? [] : tower} 
+            dataSource={tower} 
             pagination={false}
             rowKey="id"
             size="middle"
             bordered
-            scroll={{ x: 500 }}
+            scroll={{ x: 300 }}
         />
     </div>
   );

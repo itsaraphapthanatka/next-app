@@ -22,6 +22,16 @@ export function formatNumberParser(value: string): string {
   return value.replace(/,/g, "");
 }
 
+export function formatNumberParserToNumber(value: string | number, locale = "en-US") {
+  if (typeof value === "number") {
+    return new Intl.NumberFormat(locale).format(value);
+  }
+  if (typeof value === "string") {
+    return Number(value.replace(/,/g, ""));
+  }
+  return value;
+}
+
 
 
 

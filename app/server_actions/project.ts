@@ -63,3 +63,43 @@ export const updateProjectSortIndex = async (
     );
     return response.data;
 };
+
+export const getFacilitiesById = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/facilities/gets/?id=${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return response.data;
+}
+
+export const getMasstransitsById = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/distances/?id=${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return response.data;
+}
+
+export const getAverageMonthlyByProjectId = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/average-monthly/gets/?id=${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return response.data;
+}
+
+export const getTowersById = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/towers/gets/${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return response.data;
+}

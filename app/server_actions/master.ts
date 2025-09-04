@@ -59,3 +59,63 @@ export const getKeycards= async (token: string) => {
     });
     return response.data;
 }
+
+export const getDeveloperBands = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/developer-bands/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getAreas = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/areas/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}   
+
+export const getProvinces = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/provinces/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getDistricts = async (token: string, provinceId: number) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/district/gets/${provinceId}`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getSubDistricts = async (token: string, districtId: number) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/subdistrict/gets/${districtId}`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getFacilities = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/facilities/projects/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}

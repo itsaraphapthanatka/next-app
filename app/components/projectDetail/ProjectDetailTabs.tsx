@@ -2,8 +2,9 @@
 // import { getDecorations } from "@/app/server_actions/decorations";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Form, Input, Select, Checkbox, Col, Row } from "antd";
-import { getPropertyTypes } from "@/app/server_actions/master";
+import { getDeveloperBands, getAreas,getProvinces, getMasstransits, getPropertyTypes, getSubDistricts } from "@/app/server_actions/master";
 import TextArea from "antd/es/input/TextArea";
+import { getDistricts } from "@/app/server_actions/master";
 import { getProjectById } from "@/app/server_actions/project";
 
 // import dayjs from "dayjs";
@@ -146,18 +147,38 @@ type ProjectDetail = {
   ddPropertyProjectId?: number;
   baaniaProjectId?: number;
   exampleCheckboxGroup?: string[];
+  developerBrandId?: number;
 };
 
-type ProjectType = {
+type Area = {
   id: string;
   name: string;
 };
 
-// type ProjectStatus = {
-//   id: string;
-//   name: string;
-// };
+type DeveloperBand = {
+  id: number;
+  name: string;
+};
 
+type SubDistrict = {
+  id: number;
+  name: string;
+};
+
+type District = {
+  id: number;
+  name: string;
+};  
+
+type Province = {
+  id: number;
+  name: string;
+};
+
+type PropertyType = {
+  id: number;
+  name: string;
+};
 
 const CHECKBOX_GROUPS = [
     { value: "petFriendly", label: "Pet Friendly" },
@@ -178,12 +199,15 @@ export const ProjectDetailTabs = ({
   console.log("selectedProject in ProjectDetailTabs", selectedProject);
   const [formProjectDetail] = Form.useForm();
   const [project, setProject] = useState<ProjectDetail>(selectedProject);
-  const [propertyTypes, setPropertyTypes] = useState<ProjectType[]>([]);
-  const [areaId] = useState<ProjectType[]>([]);
-  const [massTransitLineId] = useState<ProjectType[]>([]);
-  const [provinceId] = useState<ProjectType[]>([]);
-  const [districtId] = useState<ProjectType[]>([]);
-  const [subDistrictId] = useState<ProjectType[]>([]);
+  const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
+  const [areas, setAreas] = useState<Area[]>([]);
+  const [massTransitLines, setMassTransitLines] = useState<PropertyType[]>([]);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [subDistrict, setSubDistricts] = useState<SubDistrict[]>([]);
+  const [developerBands, setDeveloperBands] = useState<DeveloperBand[]>([]);
+  const [projectProvinceId, setProjectProvinceId] = useState<number>(0);
+  const [projectDistrictId, setProjectDistrictId] = useState<number>(0);
 // const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
 //   const [decorations, setDecorations] = useState<Decoration[]>([]);
 
@@ -195,11 +219,62 @@ export const ProjectDetailTabs = ({
     });
   }, [token]);
 
-  // Fetch Property Status
+  // Fetch Developer Bands
   useEffect(() => {
-    // getProjectStatuses(token).then(setProjectStatus);
+    getDeveloperBands(token).then((response) => {
+      setDeveloperBands(response);
+      console.log("developerBands", developerBands);
+    });
   }, [token]);
 
+  // Fetch Areas
+
+  useEffect(() => {
+    getAreas(token).then((response) => {
+      setAreas(response);
+      console.log("areas", areas);
+    });
+  }, [token]);
+
+  // Fetch Mass Transit Lines
+
+  useEffect(() => {
+    getMasstransits(token).then((response) => {
+      setMassTransitLines(response);
+      console.log("massTransitLines", massTransitLines);
+    });
+  }, [token]);
+
+  // Fetch Provinces
+
+  useEffect(() => {
+    getProvinces(token).then((response) => {
+      setProvinces(response);
+      console.log("provinces", provinces);
+    });
+  }, [token]);
+
+  // Fetch Districts
+
+  useEffect(() => {
+    console.log("project.provinceId", projectProvinceId);
+    if (projectProvinceId === 0) return;
+    getDistricts(token, projectProvinceId).then((response) => {
+      setDistricts(response);
+      console.log("districts", districts);
+    });
+  }, [token, projectProvinceId]);
+
+  // Fetch Sub Districts
+
+  useEffect(() => {
+    console.log("project.districtId", projectDistrictId);
+    if (projectDistrictId === 0) return;
+    getSubDistricts(token, projectDistrictId).then((response) => {
+      setSubDistricts(response);
+      console.log("subDistricts", subDistrict);
+    });
+  }, [token, projectDistrictId]);
 
   // Fetch Property Detail
   useEffect(() => {
@@ -213,7 +288,8 @@ export const ProjectDetailTabs = ({
         developerBrand: response.developerBrand?.id,
         disable: response.disable ? "true" : "false",
       });
-      
+      setProjectProvinceId(response.provinceId as number);
+      setProjectDistrictId(response.districtId as number);
     });
     // eslint-disable-next-line
   }, [selectedProject.id, token]);
@@ -260,25 +336,6 @@ export const ProjectDetailTabs = ({
     [project, selectedProject]
   );
 
-//   useEffect(() => {
-//     // console.log("selectedProperty in FormProperty", selectedProperty);
-//     console.log("project in FormProject", project);
-//     // if (!selectedProject.propertyId) return;
-//     getProjectById(selectedProject.propertyId as number, token).then((response) => {
-//       const detail = response.projectDetail;
-//       setProject(detail);
-//       form.setFieldsValue({
-//         ...detail,
-//         rentPG: detail.rentProfitGap ? detail.rentProfitGap.toFixed(2) + " %" : "0.00 %",
-//         salePG: detail.saleProfitGap ? detail.saleProfitGap.toFixed(2) + " %" : "0.00 %",
-//         vipStatus: detail.vipStatusID ?? detail.vipStatus,
-//         availableOn: detail.availableOn ? dayjs(detail.availableOn) : undefined,
-//         lastedUpdate: detail.lastedUpdate ? dayjs(detail.lastedUpdate) : undefined,
-//         hotDealExpiredDate: detail.hotDealExpiredDate ? dayjs(detail.hotDealExpiredDate) : undefined,
-//       });
-//       console.log("detail:", detail);
-//     });
-//   }, [selectedProject.propertyId, token]);
   
 
   return (
@@ -303,15 +360,29 @@ export const ProjectDetailTabs = ({
         <Form.Item
           name="developerBrand"
           label="Developer Brand"
-          initialValue={project.developerBrand}
+          
           className="text-[12px]"
+          initialValue={project.developerBrandId}
+          
           style={{ marginBottom: "10px" }}
         >
-          <Input
+          <Select
             size="large"
-            readOnly
-           
-          />
+            
+            defaultValue={project.developerBrandId}
+            onChange={(value) => {
+              formProjectDetail.setFieldsValue({
+                developerBrandId: value,
+              });
+            }}
+          >
+            {developerBands.map((item: DeveloperBand) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+         
         </Form.Item>
         <Form.Item
           name="name"
@@ -383,7 +454,7 @@ export const ProjectDetailTabs = ({
           style={{ marginBottom: "10px" }}
         >
           <Select size="large">
-              {areaId.map((item) => (
+              {areas.map((item) => (
                   <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>
@@ -398,7 +469,7 @@ export const ProjectDetailTabs = ({
           style={{ marginBottom: "10px" }}
         >
           <Select size="large">
-              {massTransitLineId.map((item) => (
+              {massTransitLines.map((item) => (
                   <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>
@@ -413,7 +484,7 @@ export const ProjectDetailTabs = ({
           style={{ marginBottom: "10px" }}
         >
           <Select size="large">
-              {provinceId.map((item) => (
+              {provinces.map((item) => (
                   <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>
@@ -428,7 +499,7 @@ export const ProjectDetailTabs = ({
           style={{ marginBottom: "10px" }}
         >
           <Select size="large">
-              {districtId.map((item) => (
+              {districts.map((item) => (
                   <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>
@@ -443,7 +514,7 @@ export const ProjectDetailTabs = ({
           style={{ marginBottom: "10px" }}
         >
           <Select size="large">
-              {subDistrictId.map((item) => (
+              {subDistrict.map((item) => (
                   <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>
