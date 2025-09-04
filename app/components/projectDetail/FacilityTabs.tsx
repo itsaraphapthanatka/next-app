@@ -113,7 +113,7 @@ export const FacilityTabs = ({
                 {allFacilities.map((facility) => {
                   const hasIcon = !!facility.icon && facility.icon !== "undefined";
                   return (
-                    <Col span={8} key={facility.id} style={{ marginBottom: 8 }}>
+                    <Col span={12} key={facility.id} style={{ marginBottom: 8 }}>
                       <Checkbox value={facility.id}>
                         <span>{facility.name}</span>
                         {hasIcon && (
