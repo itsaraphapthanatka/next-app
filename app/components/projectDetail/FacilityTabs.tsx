@@ -17,6 +17,12 @@ type Facility = {
   forProperty?: boolean;
 };
 
+type ProjectFacility = {
+  id: number;
+  name: string;
+  icon?: string;
+};
+
 export const FacilityTabs = ({
   token,
   selectedProject,
@@ -49,7 +55,7 @@ export const FacilityTabs = ({
         if (!mounted) return;
 
         // 1) normalize project facilities แล้วทำ map ของ icon เพื่อไปเติมให้ all
-        const projFacilities: Facility[] = (projectRes || []).map((f: any) => {
+        const projFacilities: Facility[] = (projectRes || []).map((f: ProjectFacility) => {
           const id = typeof f === "number" ? f : Number(f?.id);
           const name =
             typeof f === "number" ? "" : (f?.name ? String(f.name) : "");
@@ -66,7 +72,7 @@ export const FacilityTabs = ({
         }
 
         // 2) normalize all facilities แล้วเติม icon จาก iconById (ถ้ามี)
-        const all: Facility[] = (allRes || []).map((f: any) => {
+        const all: Facility[] = (allRes || []).map((f: ProjectFacility) => {
           const id = Number(f?.id);
           const name = String(f?.name ?? "");
           const icon = iconById.get(id); // เติมจากโปรเจกต์ถ้ามี
