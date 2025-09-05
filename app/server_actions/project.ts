@@ -149,8 +149,29 @@ export const getDataEditProject = async (id: number, token: string) => {
       });
     return response.data;
 }
+export interface SaveDataEditProjectParams {
+  id: number;
+  projectId: number;
+  juristicCompanyName: string;
+  juristicContactName: string;
+  juristicContactPosition: string;
+  juristicContactPhoneNumber: string;
+  parkingSpace: string;
+  parkingSpaceRemark: string;
+  maintenanceFee: number;
+  workFlowStatus: string;
+  senderId: number;
+  approverId: number;
+  sendDate: string;
+  approveDate: string;
+  notApproveReason: string;
+  monthlyAverageRentalPrice: number;
+  monthlyAverageSellingPrice: number;
+  displayStatus: string;
+  senderName: string;
+}
 
-export const saveDataEditProject = async (data: any, token: string) => {
+export const saveDataEditProject = async (data: SaveDataEditProjectParams, token: string) => {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/data-edit`, data, {
         headers: {
           "Authorization": `Bearer ${token}`,

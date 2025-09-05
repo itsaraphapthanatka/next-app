@@ -35,6 +35,7 @@ export const DataEditTabs = ({ selectedProject, token }: { selectedProject: Proj
         ...data,
       });
     });
+    console.log("project", project);
   }, [selectedProject.id, token]);
   const handleSave = async () => {
     setLoading(true);
