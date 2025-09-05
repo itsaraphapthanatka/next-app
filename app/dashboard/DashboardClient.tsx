@@ -11,12 +11,12 @@ import { SearchKeyword } from "./SearchKeyword";
 import { ProjectLessThenPicture } from "./ProjectLessThenPicture";
 
 
-export default function DashboardClient() {
+export default function DashboardClient({ token }: { token: string }) {
   const items = [
     {
       key: "1",
       label: "Summary Dashboard",
-      children: <SummaryDashboard />,
+      children: <SummaryDashboard token={token} />,
     },
     {
       key: "2",
