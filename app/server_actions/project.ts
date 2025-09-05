@@ -103,3 +103,59 @@ export const getTowersById = async (id: number, token: string) => {
       });
     return response.data;
 }
+
+export const getFollowUpById = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/follow-by/${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return response.data;
+}
+
+export interface SaveProjectFollowupParams {
+  id: number;
+  remark: string;
+  followUpType: number;
+  closeJob: boolean;
+  saleRequestItemId: number;
+  toSalePropertyId: number;
+}
+
+export const saveProjectFollowup = async (
+  data: SaveProjectFollowupParams,
+  token: string
+) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/projects/follow-by`,
+    data,
+    {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return {data: response.data, status: response.status};
+};
+
+export const getDataEditProject = async (id: number, token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/data-edit/${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return response.data;
+}
+
+export const saveDataEditProject = async (data: any, token: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/projects/data-edit`, data, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    return {data: response.data, status: response.status};
+}

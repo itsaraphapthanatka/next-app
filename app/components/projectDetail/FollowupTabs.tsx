@@ -1,11 +1,11 @@
 import { Table, Modal, Form, Button } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
-import { getPropertyFollowup, savePropertyFollowup } from "@/app/server_actions/property";    
+import { getFollowUpById, saveProjectFollowup } from "@/app/server_actions/project";
 import { App as AntdApp } from "antd";
 type SelectedProject = {
     id?: number;
-     projectId?: number;
+    projectId?: number;
     saleRequestId?: number;
     saleRequestItemId?: number;
   };
@@ -24,13 +24,11 @@ export const FollowupTabs = ({ token, selectedProject }: { token: string, select
   const [selectedRemark, setSelectedRemark] = useState<string>("");
   const [propertyFollowup, setPropertyFollowup] = useState<Followup[]>([]);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    getPropertyFollowup(selectedProject.projectId as number, token).then((response) => {
+    useEffect(() => {
+      getFollowUpById(selectedProject.id as number, token).then((response) => {
       setPropertyFollowup(response);
-      setLoading(false);
     });
-  }, [selectedProject.projectId, token]);
+  }, [selectedProject.id, token]);
   const openCommentDialog = (index: string) => {
     const remarkText = propertyFollowup[parseInt(index)]?.remark || "";
     setSelectedRemark(remarkText);
@@ -45,21 +43,21 @@ export const FollowupTabs = ({ token, selectedProject }: { token: string, select
     const followUp = form.getFieldValue("followUp");
     const closeJob = form.getFieldValue("closeJob") ? form.getFieldValue("closeJob") : false;
     const followupData = {
-      id: selectedProject.projectId as number,
+      id: selectedProject.id as number,
       remark: followUp,
       closeJob: closeJob ? true : false,
-      followUpType: 0,
-      sourceId: selectedProject.projectId as number,
-      saleRequestItemId: selectedProject.saleRequestId as number,
-      toSalePropertyId: selectedProject.saleRequestItemId as number,
+      followUpType: 2,
+      sourceId: selectedProject.id as number,
+      saleRequestItemId: selectedProject.saleRequestId as number || 0,
+      toSalePropertyId: selectedProject.saleRequestItemId as number || 0,
     };
     console.log("followupData", followupData);
-    const res = await savePropertyFollowup(followupData, token);
+    const res = await saveProjectFollowup(followupData, token);
     console.log("response", res);
     if (res.status === 200) {
       message.success("Follow-up saved successfully");
       setLoading(true);
-      getPropertyFollowup(selectedProject.projectId as number, token).then((data) => {
+      getFollowUpById(selectedProject.id as number, token).then((data) => {
         setPropertyFollowup(data);
         form.resetFields();
         setLoading(false);
