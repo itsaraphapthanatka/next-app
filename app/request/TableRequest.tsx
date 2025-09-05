@@ -197,7 +197,7 @@ export const TableRequest = ({token}: {token: string}) => {
                 </div>
                 ) : (
                     <div>
-                        {text}
+                        {formatNumberShort(text)}
                     </div>
                 )
             ),
@@ -221,7 +221,7 @@ export const TableRequest = ({token}: {token: string}) => {
                 </div>
                 ) : (
                     <div>
-                        {text}
+                        {formatNumberShort(text)}
                     </div>
                 )
             ),
