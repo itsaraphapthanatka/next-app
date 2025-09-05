@@ -2,6 +2,7 @@
 
 import { Table } from "antd";
 import { useEffect, useState } from "react";
+import { getDashboardDataPropertyNotReadyForRent } from "@/app/server_actions/dashboard";
 
 interface Project {
   id: number;
@@ -9,29 +10,24 @@ interface Project {
   propertyCount: number;
 }
 
-export const PropertyNotReadyForRent = () => {
+export const PropertyNotReadyForRent = ({ token }: { token: string }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
-      const res = await fetch("/api/proxy/project", {
-        method: "POST",
-        body: JSON.stringify({ page: 1, size: 50 }),
-      });
-      const data = await res.json();
-      setProjects(
-        data.resultLists.map((project: Project) => ({
-          id: project.id,
-          name: project.name,
-          propertyCount: project.propertyCount ?? 0,
-        }))
-      );
+      const res = await getDashboardDataPropertyNotReadyForRent(token);
+      const formatted: Project[] = Object.entries(res).map(([name, count], index) => ({
+        id: index + 1,
+        name,
+        propertyCount: count as number,
+      }));
+      setProjects(formatted);
       setLoading(false);
     };
   
     fetchProjects();
-  }, []);
+  }, [token]);
   
 
   const columns = [

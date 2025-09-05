@@ -3,6 +3,7 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
 import { ModalProject } from "../project/ModalProject";
+import { getDashboardDataProjectLessThenPicture } from "../server_actions/dashboard";
 
 interface Project {
   id: number;
@@ -14,7 +15,7 @@ type SelectedProject = {
   id?: number;
 };
 
-export const ProjectLessThenPicture = () => {
+export const ProjectLessThenPicture = ({ token }: { token: string }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,23 +24,18 @@ export const ProjectLessThenPicture = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
-      const res = await fetch("/api/proxy/project", {
-        method: "POST",
-        body: JSON.stringify({ page: 1, size: 50 }),
-      });
-      const data = await res.json();
-      setProjects(
-        data.resultLists.map((project: Project) => ({
-          id: project.id,
-          name: project.name,
-          propertyCount: project.propertyCount ?? 0,
-        }))
-      );
+      const res = await getDashboardDataProjectLessThenPicture(token);
+      const formatted: Project[] = Object.entries(res).map(([name, count], index) => ({
+        id: index + 1,
+        name,
+        propertyCount: count as number,
+      }));
+      setProjects(formatted);
       setLoading(false);
     };
   
     fetchProjects();
-  }, []);
+  }, [token]);
   
 
   const columns = [
@@ -94,7 +90,7 @@ export const ProjectLessThenPicture = () => {
         <ModalProject
           selectedProject={selectedProject as SelectedProject}
           text={selectedProject?.name ?? ""}
-          token={''}
+          token={token}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
         />

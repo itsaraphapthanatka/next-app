@@ -21,22 +21,22 @@ export default function DashboardClient({ token }: { token: string }) {
     {
       key: "2",
       label: "Property ready for rent",
-      children: <PropertyReadyForRent />,
+      children: <PropertyReadyForRent token={token} />,
     },
     {
       key: "3",
       label: "Property Not Ready for rent",
-      children: <PropertyNotReadyForRent />,
+      children: <PropertyNotReadyForRent token={token} />,
     },
     {
       key: "4",
       label: "Search Keyword",
-      children: <SearchKeyword />,
+      children: <SearchKeyword token={token} />,
     },
     {
       key: "5",
       label: "Project less then picture",
-      children: <ProjectLessThenPicture />,
+      children: <ProjectLessThenPicture token={token} />,
     },
   ];
 
