@@ -138,7 +138,7 @@ export const ContactTabs = ({
             size={16}
             color="green"
             onClick={() => {
-              window.open(`tel:${record.telephone}`, "_blank");
+              window.open(`tel:${record.telephone}`);
             }}
           />
         </div>
