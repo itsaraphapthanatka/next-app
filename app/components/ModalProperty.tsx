@@ -141,6 +141,7 @@ export const ModalProperty = ({
       const response = await getSuggestionLinks(selectedProperty?.propertyId ?? 0, token);
       if (response.status === 200) {
         const url = response.data;
+        
         // window.open(url, "noopener,noreferrer");
         window.location.href = url;
       } else {
@@ -156,6 +157,7 @@ export const ModalProperty = ({
     const response = await getGetLink(selectedProperty?.propertyId ?? 0, token);
     if (response.status === 200) {
       const url = response.data;
+
       window.location.href = url;
       // window.open(url, "noopener,noreferrer", );
     } else {
