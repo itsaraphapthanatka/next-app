@@ -141,7 +141,8 @@ export const ModalProperty = ({
       const response = await getSuggestionLinks(selectedProperty?.propertyId ?? 0, token);
       if (response.status === 200) {
         const url = response.data;
-        window.open(url, "noopener,noreferrer");
+        // window.open(url, "noopener,noreferrer");
+        window.location.href = url;
       } else {
         message.error("No suggestion link available");
       }
@@ -155,7 +156,8 @@ export const ModalProperty = ({
     const response = await getGetLink(selectedProperty?.propertyId ?? 0, token);
     if (response.status === 200) {
       const url = response.data;
-      window.open(url, "noopener,noreferrer");
+      window.location.href = url;
+      // window.open(url, "noopener,noreferrer", );
     } else {
       message.error("Get Link Failed");
     }
