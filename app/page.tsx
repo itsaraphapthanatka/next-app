@@ -3,15 +3,8 @@ import Image from "next/image";
 import { useState, useCallback, memo, useEffect } from "react";
 
 const GOOGLE_LOGIN_URL = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_URL;
+const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
-// Helper to get the correct base URL for callback and redirect
-const getBaseUrl = () => {
-  if (typeof window === "undefined") return "http://localhost:3000";
-  const { hostname, origin } = window.location;
-  return (hostname === "localhost" || hostname === "127.0.0.1")
-    ? "http://localhost:3000"
-    : origin;
-};
 
 const GoogleIcon = memo(function GoogleIcon() {
   return (
@@ -53,7 +46,7 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = useCallback(() => {
     setIsLoading(true);
-    const callbackUrl = encodeURIComponent(`${getBaseUrl()}/auth/callback`);
+    const callbackUrl = encodeURIComponent(`${BACKEND_API}/auth/callback`);
     window.location.href = `${GOOGLE_LOGIN_URL}?callback_url=${callbackUrl}`;
    
   }, []);

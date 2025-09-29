@@ -20,10 +20,18 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
 
   const handleSearch = () => {
     const values = form.getFieldsValue();
-    const event = new CustomEvent("assignTableSearch", {
+    const event = new CustomEvent("leadTableSearch", {
       detail: {
         projectName: values.projectNameSearch ?? "",
         addressUnit: values.addressUnitSearch ?? "",
+        unitTypeId: Array.isArray(values.unitTypeFilter) ? values.unitTypeFilter.map(String) : [""],
+        decorationIds: Array.isArray(values.decorationIds) ? values.decorationIds.map(String) : [""],
+        pictureStatusIds: Array.isArray(values.pictureStatusIds) ? values.pictureStatusIds.map(String) : [""],
+        propertyStatusIds: Array.isArray(values.propertyStatusIds) ? values.propertyStatusIds.map(String) : [""],
+        massTransit: Array.isArray(values.massTransit) ? values.massTransit.map(String) : [""],
+        projectTypeIds: Array.isArray(values.propertyType) ? values.propertyType.map(String) : [""],
+        vipStatusIds: Array.isArray(values.vipStatus) ? values.vipStatus.map(String) : [""],
+        ids: Array.isArray(values.ids) ? values.ids.map(String) : [""],
         page: 1,
         pageSize: 10,
       },
@@ -45,26 +53,29 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
   const handleFilterSearch = () => {
 
     const values = form.getFieldsValue();
-    const event = new CustomEvent('assignTableReload', {
+    const event = new CustomEvent('leadTableReload', {
       detail: { 
         projectName: values.projectNameFilter ?? "", 
-        unitTypeIds: Array.isArray(values.unitTypeFilter) ? values.unitTypeFilter.map(String) : [],
-        startSize: values.minSize ?? 0,
-        toSize: values.maxSize ?? 0,
+        addressUnit: values.addressUnitFilter ?? "",
+        startDate: values.startDate ?? "",
+        toDate: values.toDate ?? "",
+        parentObjectId: values.parentObjectId ?? 0,
+        startSize: values.startSize ?? 0,
+        toSize: values.toSize ?? 0,
         bedRoom: values.bedRoom ?? 0,
         bathRoom: values.bathRoom ?? 0,
-        startRentalRate: values.minRentalRateOnWeb ?? 0,
-        toRentalRate: values.maxRentalRateOnWeb ?? 0,
-        startRentalRatePerSQM: values.minRentalRatePerSQM ?? 0,
-        toRentalRatePerSQM: values.maxRentalRatePerSQM ?? 0,
-        startSellingRate: values.minSellingRate ?? 0,
-        toSellingRate: values.maxSellingRate ?? 0, 
-        startSellingRatePerSQM: values.minSellingRatePerSQM ?? 0,
-        toSellingRatePerSQM: values.maxSellingRatePerSQM ?? 0,
+        startRentalRate: values.startRentalRate ?? 0,
+        toRentalRate: values.toRentalRate ?? 0,
+        startRentalRatePerSQM: values.startRentalRatePerSQM ?? 0,
+        toRentalRatePerSQM: values.toRentalRatePerSQM ?? 0,
+        startSellingRate: values.startSellingRate ?? 0,
+        toSellingRate: values.toSellingRate ?? 0, 
+        startSellingRatePerSQM: values.startSellingRatePerSQM ?? 0,
+        toSellingRatePerSQM: values.toSellingRatePerSQM ?? 0,
         decorationIds: Array.isArray(values.decorationIds) ? values.decorationIds.map(String) : [],
         pictureStatusIds: Array.isArray(values.pictureStatusIds) ? values.pictureStatusIds.map(String) : [],
-        startFloor: values.minFloor ?? 0,
-        toFloor: values.maxFloor ?? 0,
+        startFloor: values.startFloor ?? 0,
+        toFloor: values.toFloor ?? 0,
         propertyStatusIds: Array.isArray(values.propertyStatusIds) ? values.propertyStatusIds.map(String) : [],
         showOnWeb: values.showOnWeb ?? 0,
         hotDeal: values.hotDeal ?? 0,

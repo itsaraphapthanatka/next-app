@@ -3,108 +3,93 @@ import React, { useEffect, useState } from 'react';
 import { DownCircleOutlined, UpCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
-import { getAssignReports } from '@/app/server_actions/assign-reports';
+import { getLeads } from '@/app/server_actions/lead';
 import { ModalProperty } from '../components/ModalProperty';
-import { getAssignReportsFilter } from '@/app/server_actions/assign-reports-filter';
+import { formatNumberShort } from '../utils/formatNumber';
+import { DateTime } from 'next-auth/providers/kakao';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
 
 interface DataType {
   id: number;
-  // key: number;
   no: number;
-  projectName: string,
-  address: string,
-  unitCode: string,
-  invId: string,
-  floor: number,
-  tower: string,
-  size: number,
-  bedRoom: number,
-  bathRoom: number,
-  rentalPrice: number,
-  salePrice: number,
-  lastedUpdate: string,
-  status: string,
-  saleName: string,
-  startDate: string,
-  toDate: string,
-  assignerName: string,
-  displayDuration: string,
-  toSalePropertyId: number,
-  propertyId: number,
-  revealStatus: string
-}
-
-interface PropertyApiItem {
-  id?: number;
-  projectName: string,
-  address: string,
-  unitCode: string,
-  invId: string,
-  floor: number,
-  tower: string,
-  size: number,
-  bedRoom: number,
-  bathRoom: number,
-  rentalPrice: number,
-  salePrice: number,
-  lastedUpdate: string,
-  status: string,
-  saleName: string,
-  startDate: string,
-  toDate: string,
-  assignerName: string,
-  displayDuration: string,
-  toSalePropertyId: number,
-  propertyId: number,
-  revealStatus: string
-  // Add other fields if needed
+  projectName: string;
+  address: string;
+  unitCode: string;
+  invId: string;
+  floor: number;
+  tower: string;
+  size: number;
+  bedRoom: number;
+  bathRoom: number;
+  rentalPrice: number;
+  salePrice: number;
+  lastedUpdate: string;
+  status: string;
+  saleName: string;
+  startDate: string;
+  toDate: string;
+  assignerName: string;
+  displayDuration: string;
+  toSalePropertyId: number;
+  propertyId: number;
+  revealStatus: string;
+  unitTypeId: string[];
+  leadNumber: string;
+  leadDate: string;
+  budget: number;
 }
 
 interface FilterParams {
-  projectNameFilter?: string;
-  unitTypeIds?: string[];
-  startSize?: number;
-  toSize?: number;
-  bedRoom?: number;
-  bathRoom?: number;
-  startRentalRate?: number;
-  toRentalRate?: number;  
-  startRentalRatePerSQM?: number;
-  toRentalRatePerSQM?: number;
-  startSellingRate?: number;
-  toSellingRate?: number;
-  startSellingRatePerSQM?: number;
-  toSellingRatePerSQM?: number;
-  decorationIds?: string[];
-  pictureStatusIds?: string[];
-  startFloor?: number;
-  toFloor?: number;
-  propertyStatusIds?: string[];
-  showOnWeb?: number;
-  hotDeal?: number;
-  havePicture?: number;
-  forRentOrSale?: number;
-  railwayStationId?: number;
-  startDistance?: number;
-  toDistance?: number;
-  forwardMKT?: number;
-  petFriendly?: number;
-  privateLift?: number;
-  duplex?: number;
-  penthouse?: number;
-  fixParking?: number;
-  projectTypeIds?: string[];
-  bootedProppit?: number;
-  vipStatusIds?: string[];
-  foreignerOwner?: number;
-  propertyId?: number;
-  projectID?: number;
-  assignFrom?: string;
-  revealStatus?: string;
+  startDate: DateTime;
+  toDate: DateTime;
+  parentObjectId: number;
+
+  unitTypeId: string[];
+  favoriteMode: boolean;
+  projectName: string;
+  addressUnit: string;
+  startSize: number;
+  toSize: number;
+  bedRoom: number;
+  bathRoom: number;
+  startRentalRate: number;
+  toRentalRate: number;
+  startRentalRatePerSQM: number;
+  toRentalRatePerSQM: number;
+  startSellingRate: number;
+  toSellingRate: number;
+  startSellingRatePerSQM: number;
+  toSellingRatePerSQM: number;
+  decorationIds: string[];
+  pictureStatusIds: string[];
+  startFloor: number;
+  toFloor: number;
+  propertyStatusIds: string[];
+  showOnWeb: number;
+  hotDeal: number;
+  havePicture: number;
+  forRentOrSale: number;
+  railwayStationId: number;
+  startDistance: number;
+  toDistance: number;
+  forwardMKT: number;
+  petFriendly: number;
+  privateLift: number;
+  duplex: number;
+  penthouse: number;
+  fixParking: number;
+  projectTypeIds: string[];
+  bootedProppit: number;
+  vipStatusIds: string[];
+  foreignerOwner: number;
+  propertyId: number;
+  projectID: number;
+  assignFrom: string;
+  revealStatus: string;
 }
+
 
 // const MAX_SELECTION = 20;
 
@@ -119,12 +104,15 @@ interface FilterParams {
   const [loading, setLoading] = useState(false);
   const [modalType, setModalType] = useState<string>("");
   const [loadMode, setLoadMode] = useState<string>("default");
-  const [searchParams, setSearchParams] = useState<{ projectName: string, addressUnit: string }>({ projectName: "", addressUnit: "" });
-  const [filterParams, setFilterParams] = useState<FilterParams>({});
+  const [searchParams, setSearchParams] = useState<{ projectName: string, addressUnit: string, startDate: DateTime, toDate: DateTime, parentObjectId: number, startSize: number, toSize: number, bedRoom: number, bathRoom: number, startRentalRate: number, toRentalRate: number, startRentalRatePerSQM: number, toRentalRatePerSQM: number, startSellingRate: number, toSellingRate: number, startSellingRatePerSQM: number, toSellingRatePerSQM: number, decorationIds: string[], pictureStatusIds: string[], startFloor: number, toFloor: number, propertyStatusIds: string[], showOnWeb: number, hotDeal: number, havePicture: number, forRentOrSale: number, railwayStationId: number, startDistance: number, toDistance: number, forwardMKT: number, petFriendly: number, privateLift: number, duplex: number, penthouse: number, fixParking: number, projectTypeIds: string[], bootedProppit: number, vipStatusIds: string[], foreignerOwner: number, propertyId: number, projectID: number, assignFrom: string, revealStatus: string, propertyFilter: string[], favoriteMode: boolean }>(); 
+  const [filterParams, setFilterParams] = useState<FilterParams>();
+   
+
+
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
   const columns: ColumnsType<DataType> = [
-    {
+    { 
       title: 'No.',
       dataIndex: 'no',
       fixed: 'left',
@@ -141,8 +129,8 @@ interface FilterParams {
     },
     {
       title: 'Enq',
-      dataIndex: 'projectName',
-      sorter: (a, b) => a.projectName.localeCompare(b.projectName),
+      dataIndex: 'leadNumber',
+      sorter: (a, b) => a.leadNumber.localeCompare(b.leadNumber),
       render: (text, record) => (
         <div
           style={{ cursor: 'pointer' }}
@@ -159,7 +147,7 @@ interface FilterParams {
     },
     {
       title: 'Date',
-      dataIndex: 'date',
+      dataIndex: 'leadDate',
       width: 70,
       ellipsis: false,
       render: (text, record) => (
@@ -171,14 +159,15 @@ interface FilterParams {
             setIsModalOpen(true);
           }}
         >
-          {text}
+          
+          {record.leadDate ? new Date(record.leadDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric'}) : "-"}
         </div>
       ),
     },
     {
       title: 'Budget',
-      dataIndex: 'salePrice',
-      sorter: (a, b) => a.salePrice - b.salePrice,
+      dataIndex: 'budget',
+      sorter: (a, b) => a.budget - b.budget,
       width: 70,
       ellipsis: false,
       render: (text, record) => (
@@ -190,7 +179,7 @@ interface FilterParams {
             setIsModalOpen(true);
           }}
         >
-          {text}
+          {formatNumberShort(text)}
         </div>
       ),
     },
@@ -264,68 +253,33 @@ interface FilterParams {
     const fetchData = async () => {
       setLoading(true);
       let data;
-      
-
+      const startDate = searchParams?.startDate ?? new Date();
+      const toDate = searchParams?.toDate ?? new Date();
       if (loadMode === "search" && searchParams) {
-        data = await
-        getAssignReports( 
+        console.log("searchParams", searchParams);
+        data = await getLeads(
           token,
-          { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
           searchParams.projectName,
-          searchParams.addressUnit
-          );
+          page,
+          pageSize,
+          0,
+          startDate.toString(),
+          toDate.toString(),
+          0, 0, false, 0, 0, searchParams?.parentObjectId ?? 0, true, true, searchParams, searchParams?.favoriteMode ?? false
+        );
       } else if (loadMode === "filter" && filterParams) {
-        console.log("filterParams", filterParams);
-        data = await getAssignReportsFilter(
-          token, 
-          { ...filterParams, page: { current: page, size: pageSize }, orderBy: "asc", assignReportSortType: "Duration", sortType: "Project" },
-          );
+        data = await getLeads(token, "", page, pageSize, 0, startDate.toString(), toDate.toString(), 0, 0, false, 0, 0, filterParams?.parentObjectId ?? 0, true, true, filterParams, filterParams?.favoriteMode ?? false);
       } else {
-        data = await getAssignReports( 
-          token,
-          { page: { current: page, size: pageSize }, orderBy: 'asc', assignReportSortBy: 'Duration' },
-          "",
-          ""
-          );
+        data = await getLeads(token, "", page, pageSize, 0, startDate.toString(), toDate.toString(), 0, 0, false, 0, 0, 0, true, true, {}, false);
       }
 
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-
-      const mapped = items.map((item: PropertyApiItem, index: number) => ({
-        id: item.id ?? 0,
-        // key: item.propertyId ?? index,
-        no: index + 1 + ((data?.currentPage ?? 1) - 1) * (data?.recordPerPage ?? 10),
-        projectName: item.projectName ?? "-",
-        address: item.address ?? "-",
-        size: item.size ?? 0,
-        bedRoom: item.bedRoom ?? 0,
-        bathRoom: item.bathRoom ?? 0,
-        rentalPrice: item.rentalPrice ?? 0,
-        salePrice: item.salePrice ?? 0,
-        status: item.status ?? "-",
-        invId: item.invId ?? "-",
-        tower: item.tower ?? "-",
-        floor: item.floor ?? "-",
-        unitCode: item.unitCode ?? "-",
-        lastedUpdate: item.lastedUpdate ?? "-",
-        saleName: item.saleName ?? "-",
-        startDate: item.startDate ?? "-",
-        toDate: item.toDate ?? "-",
-        assignerName: item.assignerName ?? "-",
-        displayDuration: item.displayDuration ?? "-",
-        toSalePropertyId: item.toSalePropertyId ?? 0,
-        propertyId: item.propertyId ?? 0,
-        revealStatus: item.revealStatus ?? "-",
-        salePG: item.salePrice ?? 0,
-        rentPG: item.rentalPrice ?? 0,
-      }));
-
-      setProperties(mapped);
+      setProperties(items); 
       setTotalRecords(data.allRecord ?? 0);
       setPage(data.currentPage ?? 1);
       setPageSize(data.recordPerPage ?? 10);
       setLoading(false);
-    };
+    }
 
     fetchData();
   }, [page, pageSize, loadMode, searchParams, filterParams, token]);
@@ -333,12 +287,17 @@ interface FilterParams {
   // 🎯 Search Event
   useEffect(() => {
     const handleTableSearch = (e: CustomEvent) => {
+      console.log("handleTableSearch", e.detail);
       setPage(1); // Reset to first page
-      setSearchParams({ projectName: e.detail.projectName ?? "", addressUnit: e.detail.addressUnit ?? "" });
+      setSearchParams({ 
+        projectName: e.detail.projectName ?? "",
+         addressUnit: e.detail.addressUnit ?? "",
+          ...e.detail }); 
+      // setFilterParams({ ...filterParams, startDate: e.detail.startDate ?? new Date(), toDate: e.detail.toDate ?? new Date(), parentObjectId: e.detail.parentObjectId ?? 0 });
       setLoadMode("search");
     };
-    window.addEventListener("assignTableSearch", handleTableSearch as EventListener);
-    return () => window.removeEventListener("assignTableSearch", handleTableSearch as EventListener);
+    window.addEventListener("leadTableSearch", handleTableSearch as EventListener);
+    return () => window.removeEventListener("leadTableSearch", handleTableSearch as EventListener);
   }, []);
 
    // 🎯 Filter Event
@@ -346,11 +305,12 @@ interface FilterParams {
     const handleTableReload = (e: CustomEvent) => {
       console.log("handleTableReloadFilter", e.detail);
       setPage(1); // Reset to first page
-      setFilterParams(e.detail);
+      setFilterParams({ ...e.detail });
+      // setSearchParams({ ...searchParams, startDate: e.detail.startDate ?? new Date(), toDate: e.detail.toDate ?? new Date(), parentObjectId: e.detail.parentObjectId ?? 0 });
       setLoadMode("filter");
     };
-    window.addEventListener("assignTableReload", handleTableReload as EventListener);
-    return () => window.removeEventListener("assignTableReload", handleTableReload as EventListener);
+    window.addEventListener("leadTableReload", handleTableReload as EventListener);
+    return () => window.removeEventListener("leadTableReload", handleTableReload as EventListener);
   }, []); 
 
   const emptyDataType: DataType = {
@@ -378,17 +338,28 @@ interface FilterParams {
     toSalePropertyId: 0,
     propertyId: 0,
     revealStatus: "",
+    unitTypeId: [],
+    leadNumber: "",
+    leadDate: "",
+    budget: 0,
   };
 
   const rowKeyFunc = (record: DataType) => {
-    if (record.propertyId && record.propertyId) {
-        return `${record.propertyId}-${record.propertyId}`;
-    }
-    if (record.id && record.id !== 0) {
-        return `id-${record.id}`;
-    }
-    // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
-    return `fallback-${record.propertyId || 0}-${record.no}`;
+    // if (record.propertyId && record.propertyId) {
+    //     return `${record.propertyId}-${record.propertyId}`;
+    // }
+    // if (record.id && record.id !== 0) {
+    //     return `id-${record.id}`;
+    // }
+    // // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
+    // return `fallback-${record.propertyId || 0}-${record.no}`;
+    if (record.propertyId) {
+      return `property-${record.propertyId}`;
+  }
+  if (record.id) {
+      return `id-${record.id}`;
+  }
+  return `fallback-${record.propertyId || 0}-${record.no}`;
 };
   return (
     <div className="mt-4">
