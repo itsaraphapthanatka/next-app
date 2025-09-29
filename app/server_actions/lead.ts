@@ -1,5 +1,16 @@
 import axios from "axios";
 
+interface propertyFilter {
+    projects: {
+        errors: {
+            code: string;
+            message: string;
+        }[];
+        returnObjectId: number;
+        successMessage: string;
+    }[];
+}
+
 export const getLeads = async (token: string, search: string, page: number, size: number, userId: number, startDate: string, toDate: string, branchId: number, groupId: number, getAllRecord: boolean, projectId: number, developerBrandId: number, parentObjectId: number, searchFromFront: boolean, selectedMode: boolean, propertyFilter: any, favoriteMode: boolean) => {
     const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/leads/search`,
