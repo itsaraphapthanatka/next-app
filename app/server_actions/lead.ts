@@ -1,5 +1,13 @@
 import axios from "axios";
 
+interface propertyFilter {
+  projectName?: string;
+  addressUnit?: string;
+  startSize?: number;
+  toSize?: number;
+  bedRoom?: number;
+} 
+
 interface LeadSearchParams {
   token: string;
   search?: string;
@@ -14,7 +22,7 @@ interface LeadSearchParams {
   developerBrandId?: number;
   parentObjectId?: number;
   selectedMode?: boolean;
-  propertyFilter?: LeadSearchParams;
+  propertyFilter?: propertyFilter;
   favoriteMode?: boolean;
 }
 
@@ -58,7 +66,7 @@ export const getLeads = async (params: LeadSearchParams) => {
     developerBrandId,
     parentObjectId,
     selectedMode = false,
-    propertyFilter = {} as LeadSearchParams,
+    propertyFilter = {},
     favoriteMode = false,
   } = params;
 
