@@ -14,7 +14,7 @@ interface LeadSearchParams {
   developerBrandId?: number;
   parentObjectId?: number;
   selectedMode?: boolean;
-  propertyFilter?: any;
+  propertyFilter?: LeadSearchParams;
   favoriteMode?: boolean;
 }
 
@@ -58,7 +58,7 @@ export const getLeads = async (params: LeadSearchParams) => {
     developerBrandId,
     parentObjectId,
     selectedMode = false,
-    propertyFilter = {},
+    propertyFilter = {} as LeadSearchParams,
     favoriteMode = false,
   } = params;
 
