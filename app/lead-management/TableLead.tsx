@@ -6,7 +6,7 @@ import { Table } from 'antd';
 import { getLeads } from '@/app/server_actions/lead';
 import { ModalProperty } from '../components/ModalProperty';
 import { formatNumberShort } from '../utils/formatNumber';
-import { DateTime } from 'next-auth/providers/kakao';
+import { DateTime } from 'luxon';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -25,11 +25,11 @@ interface DataType {
   bathRoom: number;
   rentalPrice: number;
   salePrice: number;
-  lastedUpdate: string;
+  lastedUpdate: DateTime;
   status: string;
   saleName: string;
-  startDate: string;
-  toDate: string;
+  startDate: DateTime;
+  toDate: DateTime;
   assignerName: string;
   displayDuration: string;
   toSalePropertyId: number;
@@ -37,15 +37,70 @@ interface DataType {
   revealStatus: string;
   unitTypeId: string[];
   leadNumber: string;
-  leadDate: string;
+  leadDate: DateTime;
   budget: number;
+  unitType: string;
+  owner: string;
+  purpose: string;
+  source: string;
+  clientType: string;
+  project: string;
+}
+
+interface SearchParams {
+  unitTypeId: string[];
+  projectName: string;
+  addressUnit: string;
+  startDate: DateTime;
+  toDate: DateTime;
+  parentObjectId: number;
+  pageSize: number;
+  favoriteMode: boolean;
+  startSize: number;
+  toSize: number;
+  bedRoom: number;
+  bathRoom: number;
+  startRentalRate: number;
+  toRentalRate: number;
+  startRentalRatePerSQM: number;
+  toRentalRatePerSQM: number;
+  startSellingRate: number;
+  toSellingRate: number;
+  startSellingRatePerSQM: number;
+  toSellingRatePerSQM: number;
+  decorationIds: string[];
+  pictureStatusIds: string[];
+  startFloor: number;
+  toFloor: number;
+  propertyStatusIds: string[];
+  showOnWeb: number;
+  hotDeal: number;
+  havePicture: number;
+  forRentOrSale: number;
+  railwayStationId: number;
+  startDistance: number;
+  toDistance: number;
+  forwardMKT: number;
+  petFriendly: number;
+  privateLift: number;
+  duplex: number;
+  penthouse: number;
+  fixParking: number;
+  projectTypeIds: string[];
+  bootedProppit: number;
+  vipStatusIds: string[];
+  foreignerOwner: number;
+  propertyId: number;
+  projectID: number;
+  assignFrom: string;
+  revealStatus: string;
 }
 
 interface FilterParams {
   startDate: DateTime;
   toDate: DateTime;
   parentObjectId: number;
-
+  pageSize: number;
   unitTypeId: string[];
   favoriteMode: boolean;
   projectName: string;
@@ -104,7 +159,7 @@ interface FilterParams {
   const [loading, setLoading] = useState(false);
   const [modalType, setModalType] = useState<string>("");
   const [loadMode, setLoadMode] = useState<string>("default");
-  const [searchParams, setSearchParams] = useState<{ projectName: string, addressUnit: string, startDate: DateTime, toDate: DateTime, parentObjectId: number, startSize: number, toSize: number, bedRoom: number, bathRoom: number, startRentalRate: number, toRentalRate: number, startRentalRatePerSQM: number, toRentalRatePerSQM: number, startSellingRate: number, toSellingRate: number, startSellingRatePerSQM: number, toSellingRatePerSQM: number, decorationIds: string[], pictureStatusIds: string[], startFloor: number, toFloor: number, propertyStatusIds: string[], showOnWeb: number, hotDeal: number, havePicture: number, forRentOrSale: number, railwayStationId: number, startDistance: number, toDistance: number, forwardMKT: number, petFriendly: number, privateLift: number, duplex: number, penthouse: number, fixParking: number, projectTypeIds: string[], bootedProppit: number, vipStatusIds: string[], foreignerOwner: number, propertyId: number, projectID: number, assignFrom: string, revealStatus: string, propertyFilter: string[], favoriteMode: boolean }>(); 
+  const [searchParams, setSearchParams] = useState<SearchParams>();
   const [filterParams, setFilterParams] = useState<FilterParams>();
    
 
@@ -159,8 +214,10 @@ interface FilterParams {
             setIsModalOpen(true);
           }}
         >
-          
-          {record.leadDate ? new Date(record.leadDate).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric'}) : "-"}
+          {record.leadDate 
+            ? DateTime.fromISO(record.leadDate.toString()).setLocale("th").toFormat("dd/MM/yyyy")
+            : "-"
+          }
         </div>
       ),
     },
@@ -205,26 +262,32 @@ interface FilterParams {
         <tr className='border-b-2 border-dashed border-gray-200 p-1'>
           <td className='p-1 underline'>Sale</td>
           <td className='p-1 text-right'>{record.saleName}</td>
-          <td className='pl-4 underline'>Bath</td>
-          <td className='p-1 text-right'>{record.bathRoom}</td>
+          <td className='pl-4 underline'>Unit Type</td>
+          <td className='p-1 text-right'>{record.unitType}</td>
         </tr>
         <tr className='border-b border-dashed border-gray-200 p-1'>
-          <td className='p-1 underline'>Assign From</td>
-          <td className='p-1 text-right'>{record.assignerName}</td>
-          <td className='pl-4 underline'>Duration</td>
-          <td className='p-1 text-right'>{record.displayDuration}</td>
+          <td className='p-1 underline'>Status</td>
+          <td className='p-1 text-right'>{record.status}</td>
+          <td className='pl-4 underline'>Client</td>
+          <td className='p-1 text-right'>{record.owner}</td>
         </tr>
         <tr className='border-b border-dashed border-gray-200 p-1'>
-          <td className='p-1 underline'>Unit Code</td>
-          <td className='p-1 text-right'>{record.unitCode}</td>
-          <td className='pl-4 underline'>Lasted Update</td>
-          <td className='p-1 text-right'>{record.lastedUpdate}</td>
+          <td className='p-1 underline'>Purpose</td>
+          <td className='p-1 text-right'>{record.purpose}</td>
+          <td className='pl-4 underline'>Source</td>
+          <td className='p-1 text-right'>{record.source}</td>
         </tr>
-          <tr className='border-b border-dashed border-gray-200 p-1'>
-          <td className='p-1 underline'>INVID</td>
-          <td className='p-1 text-right'>{record.invId}</td>
-          <td className='pl-4 underline'>Reveal Status</td>
-          <td className='p-1 text-right'>{record.revealStatus}</td>
+        <tr className='border-b border-dashed border-gray-200 p-1'>
+          <td className='p-1 underline'>Client Type</td>
+          <td className='p-1 text-right'>{record.clientType}</td>
+          <td className='pl-4 underline'></td>
+          <td className='p-1 text-right'></td>  
+        </tr>
+        <tr className='border-b border-dashed border-gray-200 p-1'>
+          <td className='p-1 underline'>Project</td>
+          <td className='p-1 text-right'>{record.project}</td>
+          <td className='pl-4 underline'></td>
+          <td className='p-1 text-right'></td>  
         </tr>
       </tbody>
     </table>,
@@ -252,37 +315,62 @@ interface FilterParams {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      let data;
-      const startDate = searchParams?.startDate ?? new Date();
+  
+      const startDate = searchParams?.startDate ?? filterParams?.startDate ?? new Date();
       const toDate = searchParams?.toDate ?? new Date();
+  
+      let data;
+  
       if (loadMode === "search" && searchParams) {
         console.log("searchParams", searchParams);
-        data = await getLeads(
+        data = await getLeads({
           token,
-          searchParams.projectName,
+          search: searchParams.projectName,
           page,
-          pageSize,
-          0,
-          startDate.toString(),
-          toDate.toString(),
-          0, 0, false, 0, 0, searchParams?.parentObjectId ?? 0, true, true, searchParams, searchParams?.favoriteMode ?? false
-        );
+          size: searchParams.pageSize ?? 10,
+          startDate: startDate.toString(),
+          toDate: toDate.toString(),
+          parentObjectId: searchParams?.parentObjectId ?? 0,
+          propertyFilter: searchParams,
+          favoriteMode: searchParams?.favoriteMode ?? false,
+          selectedMode: true,
+        });
       } else if (loadMode === "filter" && filterParams) {
-        data = await getLeads(token, "", page, pageSize, 0, startDate.toString(), toDate.toString(), 0, 0, false, 0, 0, filterParams?.parentObjectId ?? 0, true, true, filterParams, filterParams?.favoriteMode ?? false);
+        data = await getLeads({
+          token,
+          page,
+          size: filterParams.pageSize ?? 10,
+          startDate: filterParams.startDate.toString(),
+          toDate: toDate.toString(),
+          parentObjectId: filterParams?.parentObjectId ?? 0,
+          propertyFilter: filterParams,
+          favoriteMode: filterParams?.favoriteMode ?? false,
+          selectedMode: true,
+        });
       } else {
-        data = await getLeads(token, "", page, pageSize, 0, startDate.toString(), toDate.toString(), 0, 0, false, 0, 0, 0, true, true, {}, false);
+        data = await getLeads({
+          token,
+          page,
+          size: searchParams?.pageSize ?? 10,
+          startDate: searchParams?.startDate.toString(),
+          toDate: toDate.toString(),
+          propertyFilter: {},
+          favoriteMode: false,
+          selectedMode: true,
+        });
       }
-
+  
       const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-      setProperties(items); 
+      setProperties(items);
       setTotalRecords(data.allRecord ?? 0);
       setPage(data.currentPage ?? 1);
-      setPageSize(data.recordPerPage ?? 10);
+      setPageSize(searchParams?.pageSize ?? 10);
       setLoading(false);
-    }
-
+    };
+  
     fetchData();
   }, [page, pageSize, loadMode, searchParams, filterParams, token]);
+  
 
   // 🎯 Search Event
   useEffect(() => {
@@ -292,6 +380,7 @@ interface FilterParams {
       setSearchParams({ 
         projectName: e.detail.projectName ?? "",
          addressUnit: e.detail.addressUnit ?? "",
+         pageSize: e.detail.pageSize ?? 10,
           ...e.detail }); 
       // setFilterParams({ ...filterParams, startDate: e.detail.startDate ?? new Date(), toDate: e.detail.toDate ?? new Date(), parentObjectId: e.detail.parentObjectId ?? 0 });
       setLoadMode("search");
@@ -328,11 +417,11 @@ interface FilterParams {
     bathRoom: 0,
     rentalPrice: 0,
     salePrice: 0,
-    lastedUpdate: "",
+    lastedUpdate: DateTime.now(),
     status: "",
     saleName: "",
-    startDate: "",
-    toDate: "",
+    startDate: DateTime.now(),
+    toDate: DateTime.now(),
     assignerName: "",
     displayDuration: "",
     toSalePropertyId: 0,
@@ -340,8 +429,14 @@ interface FilterParams {
     revealStatus: "",
     unitTypeId: [],
     leadNumber: "",
-    leadDate: "",
+    leadDate: DateTime.now(),
     budget: 0,
+    unitType: "",
+    owner: "",
+    purpose: "",
+    source: "",
+    clientType: "",
+    project: "",
   };
 
   const rowKeyFunc = (record: DataType) => {

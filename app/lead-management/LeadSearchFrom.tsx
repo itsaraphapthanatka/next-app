@@ -6,6 +6,8 @@ import { ModalFilter } from "../components/ModalFilter";
 import { getProjectsName } from "@/app/server_actions/projectsName";
 import TableLead from "./TableLead";
 import { NewLead } from "./NewLead";
+import { newLead } from "@/app/server_actions/lead";
+import { App as AntdApp } from "antd";
 
 interface LeadSearchFromProps {
   className?: string;
@@ -17,6 +19,7 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewLeadOpen, setIsNewLeadOpen] = useState(false);
   const [form] = Form.useForm();
+  const { message } = AntdApp.useApp();
 
   const handleSearch = () => {
     const values = form.getFieldsValue();
@@ -125,6 +128,45 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
     setIsNewLeadOpen(false);
   };
 
+  const handleSaveNewLead = async () => {
+    const values = form.getFieldsValue();
+    console.log("values in handleSaveNewLead", values);
+    const payload = {
+      projectName: values.projectName ?? "",
+      leadStatusId: values.leadStatusId ?? 0,
+      leadPurposeId: values.leadPurposeId ?? 0,
+      leadSourceId: values.leadSourceId ?? 0,
+      clientType: values.clientTypeFilter ?? "",
+      unitTypeId: values.unitTypeFilter ?? 0,
+      contactFilter: values.contactFilter ?? "",
+      ownerId: values.ownerId ?? 0,
+    };
+    console.log("payload", payload);
+    const response = await newLead(token, payload);
+    console.log("response", response);
+    if (response?.haveError) {
+      message.error(response?.errors?.[0]?.message);
+      return;
+    }
+    handleCloseNewLead();
+
+    const event = new CustomEvent('newLead', {
+      detail: { 
+        projectName: values.projectName ?? "",
+        leadStatusId: values.leadStatusId ?? 0,
+        leadPurposeId: values.leadPurposeId ?? 0,
+        leadSourceId: values.leadSourceId ?? 0,
+        clientType: values.clientTypeFilter ?? "",
+        unitTypeId: values.unitTypeFilter ?? 0,
+        contactFilter: values.contactFilter ?? "",
+        ownerId: values.ownerId ?? 0,
+      }
+    });
+    window.dispatchEvent(event);
+  };
+  
+
+
   return (
     <>
     
@@ -218,6 +260,7 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
         onCancel={handleCloseNewLead}
         footer={
           <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+            <Button color="primary" size="small" variant="outlined" onClick={handleSaveNewLead}>Save</Button>
             <Button color="default" size="small" variant="outlined" onClick={handleCloseNewLead}>Close</Button>
           </div>
         }

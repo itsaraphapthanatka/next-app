@@ -58,14 +58,23 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
         console.log("search contact");
     };
 
+    useEffect(() => {
+      const handleNewLead = (e: CustomEvent) => {
+        console.log("new lead", e.detail);
+      };
+      window.addEventListener("newLead", handleNewLead as EventListener);
+      return () => window.removeEventListener("newLead", handleNewLead as EventListener);
+    }, []);
+
+    // ปุ่ม save อยู่ file LeadSeaechFrom.tsx
 
     return (
         <Form
             form={form}
             layout="vertical"
-            name="propertyFilter"
+            name="newLead"
             initialValues={{
-              projectNameFilter: "",
+              projectName: "",
               unitTypeFilter: [],
               startSize: 0,
               toSize: 0,
@@ -109,7 +118,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
           >
             <Form.Item
                 label="Project"
-                name="projectNameFilter"
+                name="projectName"
                 style={{ marginBottom: "10px" }}
             >
                 <Select 
@@ -118,7 +127,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
                 placeholder="Project Name" 
                 size="large" 
                 onSearch={handleProjectNameChange}
-                onChange={(val) => form.setFieldsValue({ projectNameFilter: val })}
+                onChange={(val) => form.setFieldsValue({ projectName: val })}
                 options={projectsName}
                 filterOption={false}
                 />
@@ -126,7 +135,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
 
             <Form.Item
             label="Status"
-            name="status"
+            name="leadStatusId"
             style={{ marginBottom: "10px" }}
             >
             <Select placeholder="Show Select Status" size="large">
@@ -143,7 +152,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
 
             <Form.Item
             label="Purpose (wait for API)"
-            name="purpose"
+            name="leadPurposeId"
             style={{ marginBottom: "10px" }}
             >
             <Select placeholder="Show Select Purpose" size="large">
@@ -157,7 +166,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
 
             <Form.Item
             label="Source (wait for API)"
-            name="source"
+            name="leadSourceId"
             style={{ marginBottom: "10px" }}
             >
             <Select placeholder="Show Select Source" size="large">
@@ -173,13 +182,13 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
 
             <Form.Item
             label="Client Type (wait for API)"
-            name="clientType"
+            name="clientTypeFilter"
             style={{ marginBottom: "10px" }}
             >
             <Select placeholder="Show Select Client Type" size="large">
-                <Select.Option value={0}>Show Select Client Type</Select.Option>
-                <Select.Option value={1}>Client</Select.Option>
-                <Select.Option value={2}>CO-Agent</Select.Option>
+                <Select.Option value="0">Show Select Client Type</Select.Option>
+                <Select.Option value="Client">Client</Select.Option>
+                <Select.Option value="CoAgent">CO-Agent</Select.Option>
             </Select>
             </Form.Item>
 
@@ -189,7 +198,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
               style={{ marginBottom: "10px" }}
             >
               <Select
-                mode="multiple"
+                // mode="multiple"
                 allowClear
                 style={{ width: '100%' }}
                 placeholder="Please select" size="large"
@@ -201,21 +210,20 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
 
             <Form.Item
             label="Contact"
-            name="contact"
+            name="contactFilter"
             style={{ marginBottom: "10px"}}
 
             >
                 <Input placeholder="Contact" size="large" readOnly />
             </Form.Item>
 
-            <Button color="orange" size="large"
+            <Button color="cyan" size="large"
             onClick={handleSearchContact}
             variant="solid"
             className="w-full mt-2"
             >
               Search Contact
             </Button>
-
         </Form>
     )
 }
