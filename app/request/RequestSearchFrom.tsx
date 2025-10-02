@@ -12,12 +12,14 @@ type SaleRequestStatus = {
 export const RequestSearchFrom = ({token}: {token: string}) => {
     const [status, setStatus] = useState("");
     const [statusOptions, setStatusOptions] = useState<SaleRequestStatus[]>([]);
-    console.log("RequestSearchFrom token",token);
+    // console.log("RequestSearchFrom token",token);
     const handleSearch = () => {
         const statusValue = status === "" ? 1 : status;
+        console.log("statusValue", statusValue);
         const event = new CustomEvent('requestTableReload', {
             detail: { status: statusValue }
         });
+        console.log("event", event);
         window.dispatchEvent(event);
     };
     

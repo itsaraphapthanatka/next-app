@@ -64,7 +64,7 @@ export const TableRequest = ({token}: {token: string}) => {
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(50);
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-
+    const [saleRequestStatus, setSaleRequestStatus] = useState<number>();
     const columns: ColumnsType<RequestApiItem> = [
         {
             title: 'No.',
@@ -267,9 +267,10 @@ export const TableRequest = ({token}: {token: string}) => {
       };
 
     useEffect(() => {
+        setSaleRequestStatus(saleRequestStatus);
         setLoading(true);
         getRequestReports(
-          { token, saleRequestStatus: 1 },
+          { token, saleRequestStatus: saleRequestStatus , currentPage: page, size: pageSize},
         ).then((data: GetPropertiesResponse) => {
           const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
           const mapped: RequestApiItem[] = items.map((item, index) => ({
@@ -317,14 +318,16 @@ export const TableRequest = ({token}: {token: string}) => {
           setPageSize(data.recordPerPage ?? 10);
           setLoading(false);
         });
-    }, [page, pageSize, token]);
+    }, [page, pageSize, token, saleRequestStatus]);
 
     useEffect(() => {
         const handleTableReload = (e: CustomEvent) => {
+            setSaleRequestStatus(e.detail.status);
           setLoading(true);
           getRequestReports(
-            { token, saleRequestStatus: e.detail.status },
+            { token, saleRequestStatus: e.detail.status, currentPage: page, size: pageSize  },
           ).then((data: GetPropertiesResponse) => {
+            console.log("status", e.detail.status);
             const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
             const mapped: RequestApiItem[] = items.map((item, index) => {
                 return {
@@ -377,7 +380,7 @@ export const TableRequest = ({token}: {token: string}) => {
         return () => {
           window.removeEventListener('requestTableReload', handleTableReload as EventListener);
         };
-    }, [page, pageSize, token]);
+    }, [page, pageSize, token, saleRequestStatus]);
 
     const emptyDataType: RequestApiItem = {
         id: 0,
@@ -468,7 +471,7 @@ export const TableRequest = ({token}: {token: string}) => {
         // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
         return `fallback-${record.propertyId || 0}-${record.no}`;
     };
-    console.log("rowKeyFunc :", rowKeyFunc);
+    // console.log("rowKeyFunc :", rowKeyFunc);
     return (
         <div className="mt-4 w-full h-full">
         <Table<RequestApiItem>
@@ -489,6 +492,10 @@ export const TableRequest = ({token}: {token: string}) => {
                 total: totalRecords,
                 current: page,
                 onChange: (page, pageSize) => {
+                    console.log("page", page);
+                    console.log("pageSize", pageSize);
+                    console.log("saleRequestStatus", saleRequestStatus);
+                    setSaleRequestStatus(saleRequestStatus);
                     setPage(page);
                     setPageSize(pageSize);
                 },
