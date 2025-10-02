@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Form, Input, DatePicker, Select, Checkbox, Col, Row } from 'antd';
+import { Form, Input, DatePicker, Select, Checkbox, Col } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from "dayjs";
 import { getLeadById } from '@/app/server_actions/lead';
@@ -70,41 +70,61 @@ const LeadDetailTab = ({
       <Form.Item name="leadNumber" label="Enq" className="text-[12px]" initialValue={selectedLead.leadNumber} style={{ marginBottom: "10px" }}>
         <Input 
           size="large"
+          readOnly
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
         />
       </Form.Item>
       <Form.Item name="project" label="Project" className="text-[12px]" initialValue={selectedLead.project} style={{ marginBottom: "10px" }}>
         <Input 
           size="large"
+          readOnly
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
         />
       </Form.Item>
       <Form.Item name="owner" label="Owner" className="text-[12px]" initialValue={selectedLead.owner} style={{ marginBottom: "10px" }}>
         <Input 
           size="large"
+          readOnly
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
         />
       </Form.Item>
       <Form.Item name="leadSource" label="Lead Source" className="text-[12px]" initialValue={selectedLead.leadSource} style={{ marginBottom: "10px" }}>
-        <Input 
+        <Select 
           size="large"
+          options={selectedLead.leadSource ? [{ value: selectedLead.leadSource, label: selectedLead.leadSource }] : []}
         />
       </Form.Item>
       <Form.Item name="leadStatus" label="Lead Status" className="text-[12px]" initialValue={selectedLead.leadStatus} style={{ marginBottom: "10px" }}>
-        <Input 
+        <Select 
           size="large"
+          options={selectedLead.leadStatus ? [{ value: selectedLead.leadStatus, label: selectedLead.leadStatus }] : []}
         />
       </Form.Item>
       <Form.Item name="leadPurpose" label="Lead Purpose" className="text-[12px]" initialValue={selectedLead.leadPurpose} style={{ marginBottom: "10px" }}>
-        <Input 
+        <Select 
           size="large"
+          options={selectedLead.leadPurpose ? [{ value: selectedLead.leadPurpose, label: selectedLead.leadPurpose }] : []}
         />
       </Form.Item>
       <Form.Item name="leadDate" label="Date" className="text-[12px]" initialValue={selectedLead.leadDate ? dayjs(selectedLead.leadDate) : null} style={{ marginBottom: "10px" }}>
         <DatePicker 
           size="large"
+          disabled
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
         />
       </Form.Item>
       <Form.Item name="clientType" label="Client Type" className="text-[12px]" initialValue={selectedLead.clientType} style={{ marginBottom: "10px" }}>
-        <Input 
+        <Select 
           size="large"
+          options={selectedLead.clientType ? [{ value: selectedLead.clientType, label: selectedLead.clientType }] : []}
         />
       </Form.Item>
       <Form.Item name="budget" label="Budget" className="text-[12px]" initialValue={selectedLead.budget} style={{ marginBottom: "10px" }}>
@@ -118,8 +138,9 @@ const LeadDetailTab = ({
         />
       </Form.Item>
       <Form.Item name="unitType" label="Unit Type" className="text-[12px]" initialValue={selectedLead.unitType} style={{ marginBottom: "10px" }}>
-        <Input 
+        <Select 
           size="large"
+          options={selectedLead.unitType ? [{ value: selectedLead.unitType, label: selectedLead.unitType }] : []}
         />
       </Form.Item>
       <Form.Item name="moveInDate" label="Move In Date" className="text-[12px]" initialValue={selectedLead.moveInDate ? dayjs(selectedLead.moveInDate) : null} style={{ marginBottom: "10px" }}>

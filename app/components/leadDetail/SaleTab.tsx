@@ -16,6 +16,8 @@ const SaleTab = ({
   selectedLead: SelectedLead;
   token: string;
 }) => {
+    console.log("selectedLead in SaleTab", selectedLead);
+    console.log("token in SaleTab", token);
     return <div>SaleTab</div>;
 };
 
