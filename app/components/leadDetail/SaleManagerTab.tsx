@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Form, Select } from 'antd';
+
 
 type SelectedLead = {
   id?: number;
@@ -18,7 +20,17 @@ const SaleManagerTab = ({
 }) => {
     console.log("selectedLead in SaleManagerTab", selectedLead);
     console.log("token in SaleManagerTab", token);
-  return <div>SaleManagerTab</div>;
+
+    const [form] = Form.useForm();
+  return (  
+    <>
+        <Form form={form} layout="vertical" name="tabsSaleManager">
+            <Form.Item name="saleManager" label="Sale Manager" className="text-[12px]" initialValue={selectedLead.saleManager} style={{ marginBottom: "10px" }}>
+                <Select size="large" options={selectedLead.saleManager ? [{ value: selectedLead.saleManager, label: selectedLead.saleManager }] : []} />
+            </Form.Item>
+        </Form>
+    </>
+  );
 };
 
 export default SaleManagerTab;
