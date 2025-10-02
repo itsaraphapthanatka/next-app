@@ -4,9 +4,9 @@ import { DownCircleOutlined, UpCircleOutlined, DeleteOutlined } from '@ant-desig
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
 import { getLeads } from '@/app/server_actions/lead';
-import { ModalProperty } from '../components/ModalProperty';
 import { formatNumberShort } from '../utils/formatNumber';
 import { DateTime } from 'luxon';
+import { ModalLead } from './ModalLead';
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -155,7 +155,7 @@ interface FilterParams {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50); // ตั้ง default เท่ากับ API
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<DataType | null>(null);
+  const [selectedLead, setSelectedLead] = useState<DataType | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalType, setModalType] = useState<string>("");
   const [loadMode, setLoadMode] = useState<string>("default");
@@ -190,7 +190,7 @@ interface FilterParams {
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            setSelectedProperty(record);
+            setSelectedLead(record);
             setModalType("assign");
             setIsModalOpen(true);
           }}
@@ -209,7 +209,7 @@ interface FilterParams {
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            setSelectedProperty(record);
+            setSelectedLead(record);
             setModalType("assign");
             setIsModalOpen(true);
           }}
@@ -231,7 +231,7 @@ interface FilterParams {
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            setSelectedProperty(record);
+            setSelectedLead(record);
             setModalType("assign");
             setIsModalOpen(true);
           }}
@@ -483,14 +483,11 @@ interface FilterParams {
         }}
       />
 
-      <ModalProperty
-        selectedProperty={selectedProperty ?? emptyDataType}
-        modalType={modalType}
-        text={selectedProperty?.projectName ?? ""}
+      <ModalLead
+        selectedLead={selectedLead ?? emptyDataType}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         token={token}
-        downloadOriginalFiles={null}
       />
     </div>
   );

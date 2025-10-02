@@ -103,7 +103,7 @@ export const getLeads = async (params: LeadSearchParams) => {
 };
 
 // 🟢 getLeadById stays simple
-export const getLeadById = async (id: string, token: string) => {
+export const getLeadById = async (id: number, token: string) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_API}/leads/${id}`,
     {
