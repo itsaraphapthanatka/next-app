@@ -440,22 +440,16 @@ interface FilterParams {
   };
 
   const rowKeyFunc = (record: DataType) => {
-    // if (record.propertyId && record.propertyId) {
-    //     return `${record.propertyId}-${record.propertyId}`;
-    // }
-    // if (record.id && record.id !== 0) {
-    //     return `id-${record.id}`;
-    // }
-    // // ใช้การรวม propertyId กับ no เพื่อสร้าง unique key
-    // return `fallback-${record.propertyId || 0}-${record.no}`;
-    if (record.propertyId) {
-      return `property-${record.propertyId}`;
-  }
-  if (record.id) {
-      return `id-${record.id}`;
-  }
-  return `fallback-${record.propertyId || 0}-${record.no}`;
-};
+      console.log(modalType);
+      if (record.propertyId) {
+        return `property-${record.propertyId}`;
+    }
+    if (record.id) {
+        return `id-${record.id}`;
+    }
+    return `fallback-${record.propertyId || 0}-${record.no}`;
+  };
+
   return (
     <div className="mt-4">
       <Table<DataType>
