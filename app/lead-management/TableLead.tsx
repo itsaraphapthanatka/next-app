@@ -207,17 +207,16 @@ interface FilterParams {
       dataIndex: 'leadDate',
       width: 70,
       ellipsis: false,
-      render: (record) => (
+      render: (text, record) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setSelectedLead(record);
-            setModalType("assign");
             setIsModalOpen(true);
           }}
         >
-          {record.leadDate 
-            ? DateTime.fromISO(record.leadDate.toString()).setLocale("th").toFormat("dd/MM/yyyy")
+          {text
+            ? DateTime.fromISO(text.toString()).setLocale("th").toFormat("dd/MM/yyyy")
             : "-"
           }
         </div>
