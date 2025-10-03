@@ -119,3 +119,33 @@ export const getFacilities = async (token: string) => {
     });
     return response.data;
 }
+
+export const getPurposes = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/purposes/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getLeadStatuses = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leadstatuses/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getLeadSources = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leadsources/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}

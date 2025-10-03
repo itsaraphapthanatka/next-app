@@ -1,4 +1,4 @@
-import { Modal,Tabs } from "antd";
+import { Button, Modal,Tabs } from "antd";
 import LeadDetailTab from "../components/leadDetail/LeadDetailTab";
 import SaleManagerTab from "../components/leadDetail/SaleManagerTab";
 import SaleTab from "../components/leadDetail/SaleTab";
@@ -37,8 +37,34 @@ export const ModalLead = ({ isModalOpen, setIsModalOpen, selectedLead, token }: 
       children: <SaleTab selectedLead={selectedLead} token={token} />,
     },
   ];
+
+  const handleSave = () => {
+    console.log("save");
+  };
+
   return (
-    <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)}>
+    <Modal
+      title="Lead Detail"
+      open={isModalOpen} 
+      onCancel={() => setIsModalOpen(false)}
+      width={1000}
+      style={{ top: 20 }}
+      styles={{
+        header: {
+          padding: '10px',
+          borderBottom: '1px solid #f0f0f0',
+        },
+        body: {
+          padding: '10px',
+        },
+      }}
+      footer={
+        <div className="grid grid-cols-1 gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+          <Button color="orange" size="large" variant="solid" onClick={handleSave}>Save</Button>
+          <Button color="default" size="large" variant="outlined" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+        </div>
+      }
+    >
       <Tabs  
         items={items} 
         defaultActiveKey={"1"}

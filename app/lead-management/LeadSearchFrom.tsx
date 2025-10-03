@@ -258,10 +258,20 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
         title="New Lead"
         open={isNewLeadOpen}
         onCancel={handleCloseNewLead}
+        style={{ top: 20 }}
+        styles={{
+          header: {
+            padding: '10px',
+            borderBottom: '1px solid #f0f0f0',
+          },
+          body: {
+            padding: '10px',
+          },
+        }}
         footer={
-          <div className="flex gap-2 justify-end" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
-            <Button color="primary" size="small" variant="outlined" onClick={handleSaveNewLead}>Save</Button>
-            <Button color="default" size="small" variant="outlined" onClick={handleCloseNewLead}>Close</Button>
+          <div className="grid grid-cols-1 gap-1 w-full" style={{ padding: '10px', borderTop: '1px solid #f0f0f0' }}>
+            <Button color="orange" size="large" variant="solid" onClick={handleSaveNewLead}>Save</Button>
+            <Button color="default" size="large" variant="outlined" onClick={handleCloseNewLead}>Cancel</Button>
           </div>
         }
       >

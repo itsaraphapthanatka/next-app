@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { DownCircleOutlined, UpCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
-import { getLeads } from '@/app/server_actions/lead';
+import { getLeads, deleteLead } from '@/app/server_actions/lead';
 import { formatNumberShort } from '../utils/formatNumber';
 import { DateTime } from 'luxon';
 import { ModalLead } from './ModalLead';
+import { App as AntdApp } from "antd";
 
 type ColumnsType<T extends object> = TableProps<T>['columns'];
 type ExpandableConfig<T extends object> = TableProps<T>['expandable'];
@@ -161,6 +162,7 @@ interface FilterParams {
   const [loadMode, setLoadMode] = useState<string>("default");
   const [searchParams, setSearchParams] = useState<SearchParams>();
   const [filterParams, setFilterParams] = useState<FilterParams>();
+  const { message } = AntdApp.useApp();
    
 
 
@@ -205,7 +207,7 @@ interface FilterParams {
       dataIndex: 'leadDate',
       width: 70,
       ellipsis: false,
-      render: (text, record) => (
+      render: (record) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
@@ -246,9 +248,9 @@ interface FilterParams {
       dataIndex: 'action',
       width: 60,
       ellipsis: false,
-      render: () => (
+      render: (text, record) => (
         <div className='flex flex-row gap-2'>
-          <DeleteOutlined />
+          <DeleteOutlined onClick={() => handleDelete(record.id)} />
         </div>
       ),
     },
@@ -312,7 +314,7 @@ interface FilterParams {
     );
   };
 
-  useEffect(() => {
+
     const fetchData = async () => {
       setLoading(true);
   
@@ -367,7 +369,7 @@ interface FilterParams {
       setPageSize(searchParams?.pageSize ?? 10);
       setLoading(false);
     };
-  
+  useEffect(() => {
     fetchData();
   }, [page, pageSize, loadMode, searchParams, filterParams, token]);
   
@@ -449,6 +451,22 @@ interface FilterParams {
     }
     return `fallback-${record.propertyId || 0}-${record.no}`;
   };
+
+  const handleDelete = (id: number) => {
+    setLoading(true);
+    deleteLead(id, token).then((response) => {
+      console.log("response in handleDelete", response);
+      if (response.status === 200) {
+        message.success("Delete lead successfully");
+        fetchData(); 
+      } else {
+        message.error("Delete lead failed");
+        fetchData();
+      }
+    });
+  };
+
+
 
   return (
     <div className="mt-4">

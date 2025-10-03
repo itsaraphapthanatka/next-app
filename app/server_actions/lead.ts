@@ -160,3 +160,15 @@ export const newLead = async (
   );
   return response.data;
 };
+
+export const deleteLead = async (id: number, token: string) => {
+  const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API}/leads/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+
+  return {data: response.data, status: response.status};
+};
