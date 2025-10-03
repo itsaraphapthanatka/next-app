@@ -64,7 +64,7 @@ export const TableRequest = ({token}: {token: string}) => {
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(50);
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-    const [saleRequestStatus, setSaleRequestStatus] = useState<number>();
+    const [saleRequestStatus, setSaleRequestStatus] = useState<number>(1);
     const columns: ColumnsType<RequestApiItem> = [
         {
             title: 'No.',
