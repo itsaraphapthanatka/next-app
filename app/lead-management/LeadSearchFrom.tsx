@@ -211,7 +211,7 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
         <Button color="orange" size="large"
           variant="solid"
           className="w-full"
-          onClick={() => setIsNewLeadOpen(true)}
+          // onClick={() => setIsNewLeadOpen(true)}
         >
            New Lead
         </Button>
