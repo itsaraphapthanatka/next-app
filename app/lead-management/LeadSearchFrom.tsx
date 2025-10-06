@@ -43,7 +43,8 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
   };
 
   const handleFilter = () => {
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
+    message.info("Filter is not available for this module");
   };
 
   const handleClose = () => {
@@ -201,7 +202,7 @@ export const LeadSearchFrom = ({ className = "", token }: LeadSearchFromProps) =
           </Button>
           <Button color="blue" size='large'
             variant="solid"
-            // onClick={handleFilter}
+            onClick={handleFilter}
             className="flex-1"
           >
             Filter
