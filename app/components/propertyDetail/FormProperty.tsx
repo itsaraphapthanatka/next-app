@@ -149,26 +149,6 @@ export const FormProperty = ({
     // eslint-disable-next-line
   }, [selectedProperty.propertyId, token]);
 
-  // Memoize checkbox checked values for performance
-  const checkboxChecked = useMemo(
-    () => ({
-      forSale: !!property.forSale,
-      penthouse: !!property.penthouse,
-      forRental: !!property.forRental,
-      fixParking: !!property.fixParking,
-      showOnWeb: !!property.showOnWeb,
-      petFriendly: !!property.petFriendly,
-      hotDeal: !!property.hotDeal,
-      mkt: !!property.mkt,
-      splitCommission: !!property.splitCommission,
-      proppitBoosted: !!property.proppitBoosted,
-      privateLift: !!property.privateLift,
-      foreignerOwner: !!property.foreignerOwner,
-      duplexLoft: !!property.duplexLoft,
-    }),
-    [property]
-  );
-
   // Helper to render paired Form.Item in a row
   const renderFormRow = useCallback(
     (
