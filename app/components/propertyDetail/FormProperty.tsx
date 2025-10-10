@@ -135,9 +135,16 @@ export const FormProperty = ({
   // Fetch Property Detail
   useEffect(() => {
     if (!selectedProperty.propertyId) return;
-    getPropertyById(selectedProperty.propertyId as number, token).then((response) => {
-      setProperty(response.propertyDetail);
-      form.setFieldsValue(response.propertyDetail);
+    getPropertyById(selectedProperty.propertyId, token).then((res) => {
+      const detail = res.propertyDetail;
+      setProperty(detail);
+    
+      form.setFieldsValue({
+        ...detail,
+        exampleCheckboxGroup: CHECKBOX_GROUPS
+          .filter((c) => detail[c.value as keyof PropertyDetail])
+          .map((c) => c.value),
+      });
     });
     // eslint-disable-next-line
   }, [selectedProperty.propertyId, token]);
@@ -474,22 +481,12 @@ export const FormProperty = ({
                 placeholder: "Other Room",
             },
         ])}
-        <Form.Item
-          label="Example Checkbox Group"
-          name="exampleCheckboxGroup"
-          initialValue={property.exampleCheckboxGroup}
-          style={{ marginBottom: "10px" }}
-        >
-          <Checkbox.Group style={{ width: "100%" }}>
+        <Form.Item name="exampleCheckboxGroup" label="Example Checkbox Group">
+          <Checkbox.Group>
             <Row>
               {CHECKBOX_GROUPS.map((item) => (
                 <Col span={12} key={item.value}>
-                  <Checkbox
-                    value={item.value}
-                    checked={checkboxChecked[item.value as keyof typeof checkboxChecked]}
-                  >
-                    {item.label}
-                  </Checkbox>
+                  <Checkbox value={item.value}>{item.label}</Checkbox>
                 </Col>
               ))}
             </Row>
