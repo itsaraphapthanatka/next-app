@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
   console.log("🔑 Decoded session:", session);
   console.log("⏳ Age:", Date.now() - session.createdAt, "/", SESSION_TIMEOUT_MS);
 // ✅ log login
-const baseUrl = new URL(req.url).origin
+const baseUrl = process.env.NEXT_PUBLIC_API;
 const ip =
   req.headers.get("x-forwarded-for") ||
   req.headers.get("x-real-ip") ||

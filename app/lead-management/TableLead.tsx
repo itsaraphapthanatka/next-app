@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { DownCircleOutlined, UpCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
-import { getLeads, deleteLead } from '@/app/server_actions/lead';
+import { getLeads, deleteLead, leadSearch } from '@/app/server_actions/lead';
 import { formatNumberShort } from '../utils/formatNumber';
 import { DateTime } from 'luxon';
 import { ModalLead } from './ModalLead';
@@ -324,18 +324,7 @@ interface FilterParams {
   
       if (loadMode === "search" && searchParams) {
         console.log("searchParams", searchParams);
-        data = await getLeads({
-          token,
-          search: searchParams.projectName,
-          page,
-          size: searchParams.pageSize ?? 10,
-          startDate: startDate.toString(),
-          toDate: toDate.toString(),
-          parentObjectId: searchParams?.parentObjectId ?? 0,
-          propertyFilter: searchParams,
-          favoriteMode: searchParams?.favoriteMode ?? false,
-          selectedMode: true,
-        });
+        data = await leadSearch(token, searchParams?.projectID ?? 0);
       } else if (loadMode === "filter" && filterParams) {
         data = await getLeads({
           token,
