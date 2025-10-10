@@ -20,6 +20,7 @@ type SelectedLead = {
 };
 
 export const ModalLead = ({ isModalOpen, setIsModalOpen, selectedLead, token }: ModalLeadProps) => {
+  
   const items = [
     {
       key: '1',
@@ -34,7 +35,7 @@ export const ModalLead = ({ isModalOpen, setIsModalOpen, selectedLead, token }: 
     {
       key: '3',
       label: 'Sale',
-      children: <SaleTab selectedLead={selectedLead} token={token} />,
+      children: <SaleTab token={token} />,
     },
   ];
 
