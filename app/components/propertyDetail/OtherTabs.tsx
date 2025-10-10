@@ -4,6 +4,7 @@ import { getPictureStatuses } from "@/app/server_actions/picturestatuses";
 import { useEffect, useState } from "react";
 import { getPropertyById } from "@/app/server_actions/property";  
 import { getEmployees } from "@/app/server_actions/master";
+import { DateTime } from "luxon";
 
 type SelectedProperty = {
      propertyId?: number;
@@ -114,8 +115,9 @@ export const OtherTabs = ({ selectedProperty, token }: { selectedProperty: Selec
                     ))}
                 </Select>
             </Form.Item>
-            <Form.Item name="expriedDate" label="Expried Date (Clear)" className="text-[12px]"  style={{ marginBottom: "10px" }}>
+            <Form.Item name="expiredDate" label="Expired Date (Clear)" className="text-[12px]"  style={{ marginBottom: "10px" }}>
                 <Input 
+                    value={propertyOther?.expiredDate ? DateTime.fromISO(propertyOther.expiredDate).setLocale("th").toFormat("dd/MM/yyyy") : ""}
                     size="large"
                     readOnly
                     style={{ backgroundColor: "#f0f0f0" }}
