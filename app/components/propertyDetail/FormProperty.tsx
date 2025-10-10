@@ -3,7 +3,7 @@
 import { Form, Input, Select, Checkbox, Col, Row } from "antd";
 
 import TextArea from "antd/es/input/TextArea";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getPropertyById } from "@/app/server_actions/property";
 import { getUnitType } from "@/app/server_actions/unittype";
 import { getPropertyStatuses, getVipStatuses } from "@/app/server_actions/master";
