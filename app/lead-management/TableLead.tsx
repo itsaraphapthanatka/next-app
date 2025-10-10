@@ -318,6 +318,7 @@ interface FilterParams {
       setLoading(true);
   
       const startDate = searchParams?.startDate ?? filterParams?.startDate ?? new Date();
+      console.log("startDate", startDate);
       const toDate = searchParams?.toDate ?? new Date();
   
       let data;
