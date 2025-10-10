@@ -172,3 +172,14 @@ export const deleteLead = async (id: number, token: string) => {
 
   return {data: response.data, status: response.status};
 };
+
+export const leadSearch = async (token: string, projectId: number) => {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leads/search/${projectId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};

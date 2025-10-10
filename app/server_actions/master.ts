@@ -149,3 +149,24 @@ export const getLeadSources = async (token: string) => {
     });
     return response.data;
 }
+
+export const getSaleManagers = async (token: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/salemanagers/gets`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+
+export const getSale = async (token: string, managerId: number) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/salemanagers/teammembers/${managerId}`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    return response.data;
+}
+

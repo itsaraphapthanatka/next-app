@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Select } from 'antd';
+import { getSale } from '@/app/server_actions/master';
 
 type SelectedLead = {
   id?: number;
@@ -10,6 +11,11 @@ type SelectedLead = {
   sale?: string;
 };
 
+type Sale = {
+  id?: number;
+  name?: string;
+};
+
 const SaleTab = ({
   selectedLead,
   token,
@@ -17,14 +23,30 @@ const SaleTab = ({
   selectedLead: SelectedLead;
   token: string;
 }) => {
-    console.log("selectedLead in SaleTab", selectedLead);
-    console.log("token in SaleTab", token);
     const [form] = Form.useForm();
+    const [sale, setSale] = useState<Sale[]>([]);
+    const managerId = "1039";
+    useEffect(() => {
+        form.setFieldsValue({
+            sale: selectedLead.sale,
+        });
+    }, [selectedLead.sale]);
+    
+    useEffect(() => {
+      getSale(token, parseInt(managerId)).then((response: Sale[]) => {
+        setSale(response);
+        form.setFieldsValue({
+            sale: response[0].name,
+        });
+      });
+    }, [token]);
+
+    
     return (
         <>
             <Form form={form} layout="vertical" name="tabsSale">
                 <Form.Item name="sale" label="Sale" className="text-[12px]" initialValue={selectedLead.sale} style={{ marginBottom: "10px" }}>
-                    <Select size="large" options={selectedLead.sale ? [{ value: selectedLead.sale, label: selectedLead.sale }] : []} />
+                    <Select size="large" options={sale && sale.length > 0 ? sale.map((sale) => ({ value: sale.id, label: sale.name })) : []} />
                 </Form.Item>
             </Form>
         </>
