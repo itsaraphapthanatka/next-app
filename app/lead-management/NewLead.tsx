@@ -1,8 +1,10 @@
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Modal, Pagination, Select, Table } from "antd"
 import { FormInstance } from "antd/es/form";
 import { getUnitType } from "@/app/server_actions/unittype";
 import {  useEffect, useState } from "react";
 import { getProjectsName } from "@/app/server_actions/projectsName";
+import { searchContact } from "@/app/server_actions/lead";
+import { Smile } from "lucide-react";
 
 
 export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
@@ -10,7 +12,11 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
     // const token = await getToken();
     const [options, setOptions] = useState<{label: string, value: string}[]>([]);
     const [projectsName, setProjectsName] = useState<{label: string, value: string}[]>([]);
-
+    const [isSearchContactOpen, setIsSearchContactOpen] = useState(false);
+    const [dataSource, setDataSource] = useState<{id: number, firstName: string, lastName: string, email: string, phone: string, address: string}[]>([]);
+    const [total, setTotal] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
       const fetchOptions = async () => {
@@ -54,8 +60,20 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
     };
 
 
-    const handleSearchContact = () => {
-        console.log("search contact");
+    const handleSearchContact = async (contact: string) => {
+      console.log("search contact", contact);
+      const result = await searchContact(token, contact);
+      console.log("result", result);
+      setDataSource(result);
+      setTotal(result.length);
+      setPageSize(10);
+      setPage(1);
+    };
+
+    const handleSelectContact = async (id: number) => {
+      console.log("select contact", id);
+      form.setFieldsValue({ contactFilter: id });
+      setIsSearchContactOpen(false);
     };
 
     useEffect(() => {
@@ -69,6 +87,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
     // ปุ่ม save อยู่ file LeadSeaechFrom.tsx
 
     return (
+      <>  
         <Form
             form={form}
             layout="vertical"
@@ -218,12 +237,76 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
             </Form.Item>
 
             <Button color="cyan" size="large"
-            onClick={handleSearchContact}
+            onClick={() => setIsSearchContactOpen(true)}
             variant="solid"
             className="w-full mt-2"
             >
               Search Contact
             </Button>
         </Form>
+        <Modal open={isSearchContactOpen} onCancel={() => setIsSearchContactOpen(false)}>
+          <Form form={form} layout="vertical">
+            <Form.Item label="search contact" name="searchContact">
+              <Input placeholder="search contact" size="large" />
+            </Form.Item>
+            
+            <Button color="cyan" size="small"
+            onClick={() => handleSearchContact(form.getFieldValue('searchContact'))}
+            variant="solid"
+            className="w-full"
+            >
+              Search Contact
+            </Button>
+          </Form>
+          <Table
+           size="small"
+           loading={false}
+           scroll={{ x: 1000}}  
+           className="text-center" 
+           rowKey="id"  
+           dataSource={dataSource} 
+           columns={[{
+            title: 'Name',
+            dataIndex: 'firstName',
+            key: 'firstName',
+          }, {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+          }, {
+            title: 'Phone',
+            dataIndex: 'telephone',
+            key: 'telephone',
+          }, {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+          },
+          {
+            title: 'Owner',
+            dataIndex: 'isOwner',
+            key: 'isOwner',
+            render: (text, record) => (
+              <div>{text ? <Smile size={16} color="green" /> : null}</div>
+            ),
+          },
+          {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            render: (text, record) => (
+              <Button type="primary" onClick={() => handleSelectContact(record.id)}>Select</Button>
+            ),
+          },
+        ]}
+          pagination={{
+            total: total,
+            pageSize: pageSize,
+            current: page,
+            onChange: (page, pageSize) => setPageSize(pageSize),
+          }}
+          />
+        </Modal>
+    </>
     )
 }

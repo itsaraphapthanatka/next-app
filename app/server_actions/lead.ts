@@ -8,21 +8,84 @@ interface propertyFilter {
   bedRoom?: number;
 } 
 
+interface leadFilter {
+  clientType: "Client";
+  leadStatusId: number;
+  leadPurposeId: number;
+  leadSourceId: number;
+  saleManagerId: number;
+  sale: string;
+  projectName: string;
+}
+
+interface projectSearch {
+  forRent?: boolean;
+  forSale?: boolean;
+  priceRange?: string;
+  roomType?: string;
+  projectName?: string;
+}
+
+interface searchAllFilter {
+  projectName?: string;
+  type?: string;
+  roomType?: string;
+  priceRange?: string;
+  orderBy?: string;
+}
+
+interface backOfficeViewFilter {
+  searchType?: string;
+  propertyId?: number;
+  projectId?: number;
+}
+
 interface LeadSearchParams {
   token: string;
   search?: string;
-  page?: number;
-  size?: number;
+  page?: {
+    current: number;
+    size: number;
+  };
   userId?: number;
   startDate?: string;
   toDate?: string;
   branchId?: number;
   groupId?: number;
+  getAllRecord?: boolean;
   projectId?: number;
   developerBrandId?: number;
   parentObjectId?: number;
+  searchFromFront?: boolean;
   selectedMode?: boolean;
   propertyFilter?: propertyFilter;
+  projectSearch?: projectSearch;
+  searchAllFilter?: searchAllFilter;
+  backOfficeViewFilter?: backOfficeViewFilter;
+  ipAddress?: string;
+  propertyBackOfficeSortType?: string;
+  sortBy?: string;
+  leadFilter?: leadFilter;
+  contactFormStatus?: number;
+  currentLanguage?: string;
+  forRent?: boolean;
+  forSale?: boolean;
+  ids?: Array<number>;
+  homeCategoryType?: string;
+  saleId?: number;
+  assignerId?: number;
+  revealStatus?: number;
+  viewMode?: string;
+  saleName?: string;
+  assignerName?: string;
+  massTransit?: string;
+  minBudget?: number;
+  maxBudget?: number;
+  assignContactReportSortBy?: string;
+  dataEditReportSortBy?: string;
+  roomType?: string;
+  projectDataEditReportSortBy?: string;
+  invIDs?: string;
   favoriteMode?: boolean;
 }
 
@@ -38,7 +101,6 @@ const defaultPayload = {
   backOfficeViewFilter: {},
   propertyBackOfficeSortType: "Project",
   sortBy: "ASC",
-  leadFilter: { clientType: "Client" },
   contactFormStatus: 0,
   currentLanguage: "",
   forRent: true,
@@ -48,6 +110,15 @@ const defaultPayload = {
   assignContactReportSortBy: "Duration",
   dataEditReportSortBy: "RequestDate",
   projectDataEditReportSortBy: "RequestDate",
+  leadFilter: { 
+    clientType: "Client", 
+    leadStatusId: 0, 
+    leadPurposeId: 0, 
+    leadSourceId: 0, 
+    saleManagerId: 0, 
+    sale: "", 
+    projectName: "" 
+  },
 };
 
 // 🟢 getLeads optimized
@@ -55,8 +126,7 @@ export const getLeads = async (params: LeadSearchParams) => {
   const {
     token,
     search = "",
-    page = 1,
-    size = 20,
+    page = { current: 1, size: 20 },
     userId,
     startDate,
     toDate,
@@ -73,7 +143,7 @@ export const getLeads = async (params: LeadSearchParams) => {
   const payload = {
     ...defaultPayload,
     search,
-    page: { current: page, size },
+    page: { current: page, size: 20 },
     userId,
     branchId,
     groupId,
@@ -170,11 +240,26 @@ export const deleteLead = async (id: number, token: string) => {
     },
   });
 
-  return {data: response.data, status: response.status};
+  return {data: response.data, status: response.status};  
 };
 
-export const leadSearch = async (token: string, projectId: number) => {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leads/search/${projectId}`, {
+export const leadSearch = async (token: string, params: LeadSearchParams) => {
+  const payload = {
+    ...defaultPayload,
+    ...params,
+  };
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/leads/search`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};
+
+export const searchContact = async (token: string, contact: string) => {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/contacts/gets/${contact}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
