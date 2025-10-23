@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { DownCircleOutlined, UpCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
-import { getLeads, deleteLead, leadSearch } from '@/app/server_actions/lead';
+import { deleteLead, leadSearch } from '@/app/server_actions/lead';
 import { formatNumberShort } from '../utils/formatNumber';
 import { DateTime } from 'luxon';
 import { ModalLead } from './ModalLead';
@@ -710,7 +710,7 @@ const defaultPayload = {
       dataIndex: 'action',
       width: 60,
       ellipsis: false,
-      render: (text, record) => (
+      render: (record) => (
         <div className='flex flex-row gap-2'>
           <DeleteOutlined onClick={() => handleDelete(record.id)} />
         </div>
@@ -775,34 +775,6 @@ const defaultPayload = {
         : [...prevKeys, key]
     );
   };
-
-
-  // const fetchData = async () => {
-  //     setLoading(true);
-  
-  //     const startDate = searchParams?.startDate ?? filterParams?.startDate ?? new Date('2025-10-23T04:18:21.528Z');
-  //     console.log("startDate", startDate);
-  //     const toDate = searchParams?.toDate ?? new Date();
-  
-  //     let data;
-  
-  //     if (loadMode === "search" && searchParams) {
-  //       console.log("searchParams", searchParams);
-  //       data = await leadSearch(token, { ...searchParams, token: token, page: { current: page, size: pageSize }, startDate: startDate.toString(), toDate: toDate.toString(), revealStatus: Number(searchParams?.revealStatus) });
-  //     } else if (loadMode === "filter" && filterParams) {
-  //       data = await leadSearch(token, { ...filterParams, token: token, page: { current: page, size: pageSize }, startDate: startDate.toString(), toDate: toDate.toString(), revealStatus: Number(filterParams?.revealStatus) });
-  //     } else {
-  //       data = await leadSearch(token, { ...defaultPayload, token: token, page: { current: page, size: pageSize }, startDate: startDate.toString(), toDate: toDate.toString(), revealStatus: 0 });
-  //     }
-  //     console.log("data", data);
-  
-  //     const items = Array.isArray(data?.resultLists) ? data.resultLists : [];
-  //     setProperties(items);
-  //     setTotalRecords(data.allRecord ?? 0);
-  //     setPage(data.currentPage ?? 1);
-  //     setPageSize(searchParams?.pageSize ?? 10);
-  //     setLoading(false);
-  //   };
 
   const fetchData = async () => {
     setLoading(true);
@@ -945,6 +917,7 @@ const defaultPayload = {
 
   const rowKeyFunc = (record: DataType) => {
       if (record.propertyId) {
+        console.log("modalType", modalType);
         return `property-${record.propertyId}`;
     }
     if (record.id) {
@@ -966,8 +939,6 @@ const defaultPayload = {
       }
     });
   };
-
-
 
   return (
     <div className="mt-4">

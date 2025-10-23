@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Pagination, Select, Table } from "antd"
+import { Button, Form, Input, Modal, Select, Table } from "antd"
 import { FormInstance } from "antd/es/form";
 import { getUnitType } from "@/app/server_actions/unittype";
 import {  useEffect, useState } from "react";
@@ -286,7 +286,7 @@ export const NewLead = ({form, token}: {form: FormInstance, token: string}) => {
             title: 'Owner',
             dataIndex: 'isOwner',
             key: 'isOwner',
-            render: (text, record) => (
+            render: (text) => (
               <div>{text ? <Smile size={16} color="green" /> : null}</div>
             ),
           },
